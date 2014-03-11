@@ -1,5 +1,9 @@
 import java.io.File;
 
+/*
+ * Classe que representa um ficheiro local que entrará 
+ * no sistema de backup
+ */
 public class MyFile {
 
 	private int replication;
@@ -9,8 +13,14 @@ public class MyFile {
 		setReplication(0);
 	}
 	
-	public MyFile(int replication) {
+	public MyFile(String path, int replication) {
+		setPath(path);
 		setReplication(replication);
+	}
+	
+	public MyFile(String path, String replication) {
+		setPath(path);
+		setReplication(Integer.parseInt(replication));
 	}
 
 	public int getReplication() {
@@ -25,6 +35,14 @@ public class MyFile {
 			this.replication = replication;
 	}
 
+	public String getPath() {
+		return path;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
+	}
+	
 	public String getId() {
 		//TODO: calcular devidamente os ids
 		
@@ -34,4 +52,6 @@ public class MyFile {
 	
 		return null;
 	}
+
+	
 }
