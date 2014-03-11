@@ -12,6 +12,4 @@ Example:
 */
 
 100
-1 - olaola
-2 - ola3
-3 - ola4
+1 - oi.txt

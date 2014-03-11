@@ -17,6 +17,8 @@ public class LocalFiles {
 	public LocalFiles() {
 		files=new ArrayList<MyFile>();
 		readFile();
+		
+		files.get(0).getId();
 	}
 
 	public float getDiskSpace() {

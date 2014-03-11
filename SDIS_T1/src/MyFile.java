@@ -1,3 +1,14 @@
+import java.io.File;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.attribute.UserPrincipal;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Random;
+
 /*
  * Classe que representa um ficheiro local que entrará 
  * no sistema de backup
@@ -5,20 +16,32 @@
 public class MyFile {
 
 	private int replication;
-	private String path;
+	private String name;
+	private Path path;
+	private File systemFile;
 	
-	public MyFile() {
-		setReplication(0);
-	}
-	
-	public MyFile(String path, int replication) {
-		setPath(path);
+	public MyFile(String name, int replication) {
+		
+		systemFile=new File(name);
+		if(!systemFile.exists()) {
+			System.out.println("ERRO: o ficheiro " + name + " não existe.");
+			return;
+		}
+		setName(name);
 		setReplication(replication);
+		path=Paths.get(name);
 	}
 	
-	public MyFile(String path, String replication) {
-		setPath(path);
+	public MyFile(String name, String replication) {
+	
+		systemFile=new File(name);
+		if(!systemFile.exists()) {
+			System.out.println("ERRO: o ficheiro " + name + " não existe.");
+			return;
+		}
+		setName(name);
 		setReplication(Integer.parseInt(replication));
+		path=Paths.get(name);
 	}
 
 	public int getReplication() {
@@ -33,23 +56,57 @@ public class MyFile {
 			this.replication = replication;
 	}
 
-	public String getPath() {
-		return path;
+	public String getName() {
+		return name;
 	}
 
-	public void setPath(String path) {
-		this.path = path;
+	public void setName(String name) {
+		this.name = name;
 	}
 	
-	public String getId() {
+	public byte[] getId() {
 		//TODO: calcular devidamente os ids
 		
 		//>http://stackoverflow.com/questions/3103652/hash-string-via-sha-256-in-java
 		//>http://stackoverflow.com/questions/4793387/utf-16-encoding-in-java-versus-c-sharp
 		//>http://beginnersbook.com/2013/12/java-string-getbytes-method-example/
-	
+		
+		try {
+			String res=getInfo();
+			return applySHA256(res);
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		} 
 		return null;
 	}
 
+	private byte[] applySHA256(String key) throws NoSuchAlgorithmException, UnsupportedEncodingException {
+		
+		MessageDigest md = MessageDigest.getInstance("SHA-256");
+		md.update(key.getBytes("US-ASCII"));
+		System.out.println(md.digest());
+		
+		return md.digest();
+	}
+
+	private String getInfo() throws IOException {
+		
+		String res="";
+		long last=systemFile.lastModified();
+		UserPrincipal owner=Files.getOwner(path);
+		int random=getRandom();
+		
+		res+=this.path + " " + Long.toString(last) + " " + owner.getName() + " " + Integer.toString(random);
+
+		System.out.println(res);
+
+		return res;
+	}
 	
+	private int getRandom() {
+		Random randomGenerator = new Random();
+		return randomGenerator.nextInt();
+	}
 }
