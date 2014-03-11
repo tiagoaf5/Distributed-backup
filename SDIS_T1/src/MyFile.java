@@ -27,6 +27,11 @@ public class MyFile {
 
 	public String getId() {
 		//TODO: calcular devidamente os ids
+		
+		//>http://stackoverflow.com/questions/3103652/hash-string-via-sha-256-in-java
+		//>http://stackoverflow.com/questions/4793387/utf-16-encoding-in-java-versus-c-sharp
+		//>http://beginnersbook.com/2013/12/java-string-getbytes-method-example/
+	
 		return null;
 	}
 }

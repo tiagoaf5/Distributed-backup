@@ -22,7 +22,7 @@ public class BackupService {
 		}
 		
 		try {
-			BackupService service=new BackupService(args);
+			BackupService service = new BackupService(args);
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		}
