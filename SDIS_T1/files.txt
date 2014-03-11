@@ -1,0 +1,22 @@
+/*File format:
+SizeAvailable (KBytes): 
+xxx
+Files (Path - replicationDegree) :
+<filename>
+<replicationDegree>
+
+Example:
+100
+C:\Users\Y\x.txt
+2
+C:\Users\Y\o12.txt
+8
+*/
+
+100
+ola2 - oo
+1
+ola3
+2
+ola4
+3
