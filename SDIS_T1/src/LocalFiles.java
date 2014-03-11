@@ -9,6 +9,8 @@ import java.util.List;
 public class LocalFiles {
 
 	private static final String FILENAME = "files.txt";
+	private static final String FILEBEGIN = "/*File format:";
+	private static final int COMMENTSIZE = 13;
 	private float diskSpace; //em kBytes
 	private List<MyFile> files; 
 
@@ -29,10 +31,10 @@ public class LocalFiles {
 	/*
 	 * Conteudo Ficheiro files.txt:
 	 * espaçoDisco
-	 * nomeFicheiro1 - replicaçao1
-	 * nomeFicheiro2 - replicaçao2
+	 * replicaçao1 - nomeFicheiro1 
+	 * replicaçao2 - nomeFicheiro2
 	 * ...
-	 * nomeFicheiroN - replicaçaoN
+	 * replicaçaoN - nomeFicheiroN 
 	 */
 	private void readFile() {
 	
@@ -42,38 +44,47 @@ public class LocalFiles {
 			fileStream = new FileInputStream(FILENAME);
 			DataInputStream input = new DataInputStream(fileStream);
 			BufferedReader reader = new BufferedReader(new InputStreamReader(input));
-			
 			String line;
-			for(int i=0; i<15; i++) {
-				line = reader.readLine();
+			
+			if((line=reader.readLine())!=null) {
+				if(line.startsWith(FILEBEGIN)) {
+					for(int i=0; i<COMMENTSIZE; i++) {
+						line = reader.readLine();
+					}
+				}
+				try {
+					setDiskSpace(Float.parseFloat(line));
+					System.out.println(getDiskSpace());
+				} catch(Exception e) {
+					System.out.println("ERRO files.txt mal definido: falta espaço máximo de disco.");
+					return;
+				}
+			} else {
+				System.out.println("ERRO files.txt vazio.");
+				return;
 			}
 			
-			line=reader.readLine();
-			setDiskSpace(Float.parseFloat(line));
-			System.out.println(getDiskSpace());
-			
-			int j=0;
-			String name="";
 			while ((line = reader.readLine()) != null)   {
 				
-				if(j==0) {
-					name=line;
-					j++;
+				String[] splits=line.split(" - ", 2);
+				if(splits.length!=2) {
+					System.out.println("ERRO files.txt: linha " + line + " mal definida.");
+					return;
 				}
-				else {
-					MyFile newFile=new MyFile(name, line);
-					files.add(newFile);
-					j=0;
-				}
+				
+				MyFile newFile=new MyFile(splits[1], splits[0]);
+				files.add(newFile);
+				
 				//System.out.println(line);
-				//System.out.println(name + ", " + line);
+				//System.out.println(splits[0] + ", " + splits[1]);
 			}
 			System.out.println("Numero de ficheiros lidos: " + files.size());
 			
+			reader.close();
 			input.close();
 			
 		} catch (FileNotFoundException e) {
-			System.out.println("ERROR: files.txt not found");
+			System.out.println("ERROR: files.txt não encontrado");
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
