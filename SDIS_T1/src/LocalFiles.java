@@ -15,7 +15,6 @@ public class LocalFiles {
 	private List<MyFile> files; 
 
 	public LocalFiles() {
-		
 		files=new ArrayList<MyFile>();
 		readFile();
 	}
@@ -26,6 +25,10 @@ public class LocalFiles {
 
 	public void setDiskSpace(float diskSpace) {
 		this.diskSpace = diskSpace;
+	}
+
+	public List<MyFile> getFiles() {
+		return files;
 	}
 
 	/*
