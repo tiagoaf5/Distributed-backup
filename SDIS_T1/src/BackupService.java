@@ -15,8 +15,8 @@ public class BackupService {
 	private Map<String, Integer> files;
 	
 	public static void main(String[] args) {
-		
-		if(args.length != 6) {
+		LocalFiles files=new LocalFiles();
+		/*if(args.length != 6) {
 			System.out.println("<MC_ADDRESS> <MC_PORT> <MDB_ADDRESS> <MDB_PORT> <MDR_ADDRESS> <MDR_PORT>");
 			return;
 		}
@@ -25,7 +25,7 @@ public class BackupService {
 			BackupService service = new BackupService(args);
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
-		}
+		}*/
 	}
 	
 	public BackupService(String args[]) throws UnknownHostException {

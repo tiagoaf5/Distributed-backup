@@ -86,9 +86,14 @@ public class MyFile {
 		
 		MessageDigest md = MessageDigest.getInstance("SHA-256");
 		md.update(key.getBytes("US-ASCII"));
-		System.out.println(md.digest());
 		
-		return md.digest();
+		byte[] tmp = md.digest();
+		//System.out.println(tmp);
+		
+		for(int i = 0; i < tmp.length; i++)
+			System.out.print(String.format("%x",tmp[i]));
+		
+		return tmp;
 	}
 
 	private String getInfo() throws IOException {
@@ -98,7 +103,7 @@ public class MyFile {
 		UserPrincipal owner=Files.getOwner(path);
 		int random=getRandom();
 		
-		res+=this.path + " " + Long.toString(last) + " " + owner.getName() + " " + Integer.toString(random);
+		res+=this.path + " " + Long.toString(last) + " " + owner.getName();// + " " + Integer.toString(random);
 
 		System.out.println(res);
 
