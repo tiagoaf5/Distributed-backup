@@ -1,5 +1,3 @@
-import java.io.File;
-
 /*
  * Classe que representa um ficheiro local que entrará 
  * no sistema de backup

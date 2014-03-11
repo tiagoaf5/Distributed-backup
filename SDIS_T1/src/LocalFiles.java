@@ -29,10 +29,10 @@ public class LocalFiles {
 	/*
 	 * Conteudo Ficheiro files.txt:
 	 * espaçoDisco
-	 * nomeFicheiro1 replicaçao1
-	 * nomeFicheiro2 replicaçao2
+	 * nomeFicheiro1 - replicaçao1
+	 * nomeFicheiro2 - replicaçao2
 	 * ...
-	 * nomeFicheiroN replicaçaoN
+	 * nomeFicheiroN - replicaçaoN
 	 */
 	private void readFile() {
 	
@@ -44,19 +44,29 @@ public class LocalFiles {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(input));
 			
 			String line;
-		
+			for(int i=0; i<15; i++) {
+				line = reader.readLine();
+			}
+			
 			line=reader.readLine();
 			setDiskSpace(Float.parseFloat(line));
 			System.out.println(getDiskSpace());
 			
+			int j=0;
+			String name="";
 			while ((line = reader.readLine()) != null)   {
 				
-				String[] splits = line.split(" ");
-				MyFile newFile=new MyFile(splits[0], splits[1]);
-				files.add(newFile);
-				
-				System.out.println(line);
-				//System.out.println(splits[0] + ", " + splits[1]);
+				if(j==0) {
+					name=line;
+					j++;
+				}
+				else {
+					MyFile newFile=new MyFile(name, line);
+					files.add(newFile);
+					j=0;
+				}
+				//System.out.println(line);
+				//System.out.println(name + ", " + line);
 			}
 			System.out.println("Numero de ficheiros lidos: " + files.size());
 			
