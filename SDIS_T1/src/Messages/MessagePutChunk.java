@@ -18,6 +18,7 @@ public class MessagePutChunk extends Message {
 		this.chunkNo = chunkNo;
 		this.replicationDeg = replicationDeg;
 
+		/****testing purpose***/
 		MessageDigest md;
 		try {
 			md = MessageDigest.getInstance("SHA-256");
@@ -27,7 +28,7 @@ public class MessagePutChunk extends Message {
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
 		}
-
+		/*********************/
 
 	}
 
@@ -56,7 +57,6 @@ public class MessagePutChunk extends Message {
 	public boolean parseMessage(byte[] data) {
 		int count = 0; //to count fields
 		int i; //data index
-
 
 		for(i = 0; i < data.length; i++) {
 			if (count == 0) { //read operation
@@ -137,7 +137,7 @@ public class MessagePutChunk extends Message {
 
 				for(;i < data.length; i++,x++)
 					chunk[x] = data[i];
-				
+
 				System.out.println(version + "\n" + fileId + "\n" + chunkNo + "\n" + replicationDeg);
 				System.out.println(byteArrayToHexString(chunk));
 				return true;
@@ -161,13 +161,22 @@ public class MessagePutChunk extends Message {
 
 		/*for(int i = 0; i < message.length; i++)
 			System.out.print(String.format("%x", message[i] & 0xFF));*/
-		
+
 		System.out.println(byteArrayToHexString(message) + "\n");
-		
+
 		MessagePutChunk b = new MessagePutChunk();
 		b.parseMessage(message);
-
 		
+		
+		System.out.println("*************************************");
+		
+		MessageStored c = new MessageStored(byteArrayToString(digest), 2);
+		byte[] message1 = c.getMessage();
+		
+		MessageStored d = new MessageStored();
+		d.parseMessage(message1);
+
+
 	}
 
 	public String getVersion() {
