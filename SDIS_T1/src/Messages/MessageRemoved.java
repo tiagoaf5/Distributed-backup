@@ -1,16 +1,16 @@
 package Messages;
 
-public class MessageStored extends Message {
-	private static final String MESSAGE_TYPE = "STORED";
+public class MessageRemoved extends Message {
+	private static final String MESSAGE_TYPE = "REMOVED";
 
-	public MessageStored(String fileId, int chunkNo) {
+	public MessageRemoved() {
+		
+	}
+	
+	public MessageRemoved(String fileId, int chunkNo) {
 		this.setVersion("1.0");
 		this.fileId = fileId;
 		this.chunkNo = chunkNo;
-	}
-
-	public MessageStored() {
-
 	}
 
 	@Override

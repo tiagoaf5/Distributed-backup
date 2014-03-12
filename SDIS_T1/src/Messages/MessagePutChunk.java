@@ -7,15 +7,11 @@ import java.security.NoSuchAlgorithmException;
 public class MessagePutChunk extends Message {
 
 	private static final String MESSAGE_TYPE = "PUTCHUNK";
-	private String version;
-	private int chunkNo;
 	private int replicationDeg;
 	byte chunk[];
 
 	public MessagePutChunk(String fileId, int chunkNo, int replicationDeg) {
-		this.setVersion("1.0");
-		this.fileId = fileId;
-		this.chunkNo = chunkNo;
+		super(fileId,chunkNo);
 		this.replicationDeg = replicationDeg;
 
 		/****testing purpose***/
@@ -54,97 +50,42 @@ public class MessagePutChunk extends Message {
 	}
 
 	@Override
-	public boolean parseMessage(byte[] data) {
-		int count = 0; //to count fields
-		int i; //data index
-
-		for(i = 0; i < data.length; i++) {
-			if (count == 0) { //read operation
-				while(data[i] != SPACE) {
-					i++;
-				}
-				count++;
-				continue;
-			}
-			else if (count == 1) { //read version
-				byte[] b = new byte[5];
-				int x = 0;
-
-				while(data[i] != SPACE) {
-					if(x >= 5)
-						break;
-					b[x] = data[i];
-					x++;
-					i++;
-				}
-				version = byteArrayToString(b);
-				count++;
-				continue;
-			}
-			else if (count == 2) { // read fileId
-				byte[] b = new byte[32];
-				int x = 0;
-				int k = i + 32;
-
-				for(; i < k; i++,x++)
-					b[x] = data[i];
-
-				fileId = byteArrayToHexString(b);
-				count++;
-				continue;
-			}
-			else if (count == 3) { //read chunkNo
-				byte[] b = new byte[6];
-				int x = 0;
-
-				while(data[i] != SPACE) {
-					if(x >= 6)
-						break;
-					b[x] = data[i];
-					x++;
-					i++;
-				}
-				chunkNo = Integer.parseInt(byteArrayToString(b));
-				count++;
-				continue;
-			}
-			else if (count == 4) { //read replicationDeg
-				byte[] b = new byte[2];
-				int x = 0;
-
-				while(data[i] != SPACE) {
-					if(x >= 1)
-						break;
-					b[x] = data[i];
-					x++;
-					i++;
-				}
-				replicationDeg = Integer.parseInt(byteArrayToString(b));
-				count++;
-				continue;
-			}
-			else if (count == 5) { //checks for  "<CRLF> <CRLF> "
-				while(!(data[i-3] == CRLF && data[i-2] == SPACE && data[i-1] == CRLF && data[i] == SPACE)) {
-					i++;
-				}
-				count++;
-				continue;
-			}
-			else if (count == 6) //read data
-			{
-				chunk = new byte[data.length - i];
-				int x = 0;
-
-				for(;i < data.length; i++,x++)
-					chunk[x] = data[i];
-
-				System.out.println(version + "\n" + fileId + "\n" + chunkNo + "\n" + replicationDeg);
-				System.out.println(byteArrayToHexString(chunk));
-				return true;
-			}
+	public int parseMessage(byte[] data) {
+		int i = super.parseMessage(data);
+	
+		if(i < 0) {
+			System.out.println("Error parsing message of type " + MESSAGE_TYPE);
+			return -1;
 		}
-		System.out.println("Error parsing");
-		return false;
+		
+		//read replicationDeg
+		byte[] b = new byte[2];
+		int x = 0;
+
+		while(data[i] != SPACE) {
+			if(x >= 1)
+				return -1;
+			b[x] = data[i];
+			x++;
+			i++;
+		}
+		replicationDeg = Integer.parseInt(byteArrayToString(b));
+		i++;
+		
+		//Check header's end
+		i = getHeaderTermination(i, data);
+		
+		//read chunkdata
+		chunk = new byte[data.length - i];
+		x = 0;
+
+		for(;i < data.length; i++,x++)
+			chunk[x] = data[i];
+
+		System.out.println(version + "\n" + fileId + "\n" + chunkNo + "\n" + replicationDeg);
+		System.out.println(byteArrayToHexString(chunk));
+		
+		return 0;
 	}
 
 
@@ -170,20 +111,13 @@ public class MessagePutChunk extends Message {
 		
 		System.out.println("*************************************");
 		
-		MessageStored c = new MessageStored(byteArrayToString(digest), 2);
+		MessageRemoved c = new MessageRemoved(byteArrayToString(digest), 2);
 		byte[] message1 = c.getMessage();
 		
-		MessageStored d = new MessageStored();
+		MessageRemoved d = new MessageRemoved();
 		d.parseMessage(message1);
 
-
 	}
 
-	public String getVersion() {
-		return version;
-	}
-
-	public void setVersion(String version) {
-		this.version = version;
-	}
+	
 }
