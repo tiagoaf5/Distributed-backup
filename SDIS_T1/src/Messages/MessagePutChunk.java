@@ -2,22 +2,21 @@ package Messages;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
 
 
 public class MessagePutChunk extends Message {
 
 	private static final String MESSAGE_TYPE = "PUTCHUNK";
-	private static String version;
-	private String chunkNo;
-	private String replicationDeg;
+	private String version;
+	private int chunkNo;
+	private int replicationDeg;
 	byte chunk[];
 
 	public MessagePutChunk(String fileId, int chunkNo, int replicationDeg) {
-		this.version = "1.0";
+		this.setVersion("1.0");
 		this.fileId = fileId;
-		this.chunkNo = Integer.toString(chunkNo);
-		this.replicationDeg = Integer.toString(replicationDeg);
+		this.chunkNo = chunkNo;
+		this.replicationDeg = replicationDeg;
 
 		MessageDigest md;
 		try {
@@ -42,7 +41,7 @@ public class MessagePutChunk extends Message {
 
 	@Override
 	public byte[] getMessage() {
-		String message = MESSAGE_TYPE + " " + version + " " + 
+		String message = MESSAGE_TYPE + " " + getVersion() + " " + 
 				fileId + " " + 
 				chunkNo + " " + 
 				replicationDeg + " ";
@@ -55,58 +54,97 @@ public class MessagePutChunk extends Message {
 
 	@Override
 	public boolean parseMessage(byte[] data) {
-		int count = 0;
-		ArrayList<String> list = new ArrayList<String>(); // save data read
+		int count = 0; //to count fields
+		int i; //data index
 
-		byte[] b = new byte[35]; //temp buffer
-		int x = 0; //buffer index
-		int i; 
 
-		
-		StringBuilder s = new StringBuilder();
-		
-		
-		
-		
-		//get messageType and Version
-		for(i = 0; count < 2; i++,x++) {
-			
-			if(i > data.length) //if can't find enough spaces in the message the protocol isn't respected
-				return false;
-			
-			if (count == 2) { // is about to read fileId
+		for(i = 0; i < data.length; i++) {
+			if (count == 0) { //read operation
+				while(data[i] != SPACE) {
+					i++;
+				}
+				count++;
+				continue;
+			}
+			else if (count == 1) { //read version
+				byte[] b = new byte[5];
+				int x = 0;
+
+				while(data[i] != SPACE) {
+					if(x >= 5)
+						break;
+					b[x] = data[i];
+					x++;
+					i++;
+				}
+				version = byteArrayToString(b);
+				count++;
+				continue;
+			}
+			else if (count == 2) { // read fileId
+				byte[] b = new byte[32];
+				int x = 0;
 				int k = i + 32;
-				
-				for(; i < k; i++)
-					s.append(String.format("%h", data[i]));
-				
-				x = -1;
-				b = new byte[35];
+
+				for(; i < k; i++,x++)
+					b[x] = data[i];
+
+				fileId = byteArrayToHexString(b);
 				count++;
 				continue;
 			}
+			else if (count == 3) { //read chunkNo
+				byte[] b = new byte[6];
+				int x = 0;
 
-			if(data[i] == SPACE) { //if receives a space can export a field now
-				list.add(new String(b).trim());
-				x = -1;
-				b = new byte[35];
+				while(data[i] != SPACE) {
+					if(x >= 6)
+						break;
+					b[x] = data[i];
+					x++;
+					i++;
+				}
+				chunkNo = Integer.parseInt(byteArrayToString(b));
 				count++;
 				continue;
 			}
+			else if (count == 4) { //read replicationDeg
+				byte[] b = new byte[2];
+				int x = 0;
 
-			b[x] = data[i];
-			System.out.print(String.format("%c", data[i]));
+				while(data[i] != SPACE) {
+					if(x >= 1)
+						break;
+					b[x] = data[i];
+					x++;
+					i++;
+				}
+				replicationDeg = Integer.parseInt(byteArrayToString(b));
+				count++;
+				continue;
+			}
+			else if (count == 5) { //checks for  "<CRLF> <CRLF> "
+				while(!(data[i-3] == CRLF && data[i-2] == SPACE && data[i-1] == CRLF && data[i] == SPACE)) {
+					i++;
+				}
+				count++;
+				continue;
+			}
+			else if (count == 6) //read data
+			{
+				chunk = new byte[data.length - i];
+				int x = 0;
+
+				for(;i < data.length; i++,x++)
+					chunk[x] = data[i];
+				
+				System.out.println(version + "\n" + fileId + "\n" + chunkNo + "\n" + replicationDeg);
+				System.out.println(byteArrayToHexString(chunk));
+				return true;
+			}
 		}
-		System.out.println("\n");
-		
-		
-		for(i = 0; i < list.size(); i++)
-			System.out.println(list.get(i));
-		
-		
-
-		System.out.println("\n\nbenfica\n\n" + s.toString());
-		return true;
+		System.out.println("Error parsing");
+		return false;
 	}
 
 
@@ -121,22 +159,22 @@ public class MessagePutChunk extends Message {
 		MessagePutChunk a = new MessagePutChunk(new String(digest),2,5);
 		byte[] message = a.getMessage();
 
-		for(int i = 0; i < message.length; i++)
-			System.out.print(String.format("%x", message[i] & 0xFF));
-		System.out.println("\n");
+		/*for(int i = 0; i < message.length; i++)
+			System.out.print(String.format("%x", message[i] & 0xFF));*/
 		
+		System.out.println(byteArrayToHexString(message) + "\n");
+		
+		MessagePutChunk b = new MessagePutChunk();
+		b.parseMessage(message);
 
+		
+	}
 
+	public String getVersion() {
+		return version;
+	}
 
-		/*System.out.println("\n");
-		System.out.println(digest.length);
-		
-		System.out.println("NABO\n");
-		System.out.println("" + String.format("%c", message[0]));
-		
-		a.parseMessage(message);
-		
-		System.out.println("NABO\n");
-		System.out.println(getMessageType(message));*/
+	public void setVersion(String version) {
+		this.version = version;
 	}
 }
