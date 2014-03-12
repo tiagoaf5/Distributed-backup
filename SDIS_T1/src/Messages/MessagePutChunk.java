@@ -52,12 +52,12 @@ public class MessagePutChunk extends Message {
 	@Override
 	public int parseMessage(byte[] data) {
 		int i = super.parseMessage(data);
-	
+
 		if(i < 0) {
 			System.out.println("Error parsing message of type " + MESSAGE_TYPE);
 			return -1;
 		}
-		
+
 		//read replicationDeg
 		byte[] b = new byte[2];
 		int x = 0;
@@ -71,11 +71,11 @@ public class MessagePutChunk extends Message {
 		}
 		replicationDeg = Integer.parseInt(byteArrayToString(b));
 		i++;
-		
+
 		//Check header's end
 		i = getHeaderTermination(i, data);
-		
-		//read chunkdata
+
+		//read chunk data
 		chunk = new byte[data.length - i];
 		x = 0;
 
@@ -84,7 +84,7 @@ public class MessagePutChunk extends Message {
 
 		System.out.println(version + "\n" + fileId + "\n" + chunkNo + "\n" + replicationDeg);
 		System.out.println(byteArrayToHexString(chunk));
-		
+
 		return 0;
 	}
 
@@ -107,17 +107,17 @@ public class MessagePutChunk extends Message {
 
 		MessagePutChunk b = new MessagePutChunk();
 		b.parseMessage(message);
-		
-		
+
+
 		System.out.println("*************************************");
-		
+
 		MessageRemoved c = new MessageRemoved(byteArrayToString(digest), 2);
 		byte[] message1 = c.getMessage();
-		
+
 		MessageRemoved d = new MessageRemoved();
 		d.parseMessage(message1);
 
 	}
 
-	
+
 }

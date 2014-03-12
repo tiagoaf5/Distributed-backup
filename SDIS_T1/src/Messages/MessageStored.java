@@ -4,9 +4,7 @@ public class MessageStored extends Message {
 	private static final String MESSAGE_TYPE = "STORED";
 
 	public MessageStored(String fileId, int chunkNo) {
-		this.setVersion("1.0");
-		this.fileId = fileId;
-		this.chunkNo = chunkNo;
+		super(fileId, chunkNo);
 	}
 
 	public MessageStored() {
@@ -36,13 +34,5 @@ public class MessageStored extends Message {
 
 		System.out.println(version + "\n" + fileId + "\n" + chunkNo + "\n");
 		return 0;
-	}
-
-	public String getVersion() {
-		return version;
-	}
-
-	public void setVersion(String version) {
-		this.version = version;
 	}
 }

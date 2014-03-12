@@ -84,7 +84,7 @@ public abstract class Message {
 
 			}
 		}
-		
+
 		return -1;
 	}
 
@@ -100,84 +100,6 @@ public abstract class Message {
 		i++;
 		return i;
 	}
-
-	/*protected int parseHeader(String msgType, byte[] data) {
-		int count = 1; //to count fields
-		int i=0; //data index
-
-		//skip messageType
-		while(data[i] != SPACE) {
-			i++;
-		}
-
-		i++;
-
-		if (msgType != "DELETE") {
-			for(; i < data.length; i++) {
-				if (count == 1) { //read version
-					byte[] b = new byte[5];
-					int x = 0;
-
-					while(data[i] != SPACE) {
-						if(x >= 5)
-							break;
-						b[x] = data[i];
-						x++;
-						i++;
-					}
-					version = byteArrayToString(b);
-					count++;
-					continue;
-				}
-				else if (count == 2) { // read fileId
-					byte[] b = new byte[32];
-					int x = 0;
-					int k = i + 32;
-
-					for(; i < k; i++,x++)
-						b[x] = data[i];
-
-					fileId = byteArrayToHexString(b);
-					count++;
-					continue;
-				}
-				else if (count == 3) { //read chunkNo
-					byte[] b = new byte[6];
-					int x = 0;
-
-					while(data[i] != SPACE) {
-						if(x >= 6)
-							break;
-						b[x] = data[i];
-						x++;
-						i++;
-					}
-					chunkNo = Integer.parseInt(byteArrayToString(b));
-					count++;
-					i++;
-					return i;
-
-				}
-			}
-
-
-		}
-		else {
-			byte[] b = new byte[32];
-			int x = 0;
-			int k = i + 32;
-
-			for(; i < k; i++,x++)
-				b[x] = data[i];
-
-			fileId = byteArrayToHexString(b);
-			i++;
-			return i;
-		}
-
-		System.out.println("Error parsing");
-		return -1;
-	}*/
 
 	static public String getMessageType(byte[] msg) {
 		String type = new String();

@@ -1,22 +1,10 @@
 package Messages;
 
 public class MessageGetChunk extends Message {
-
 	private static final String MESSAGE_TYPE = "GETCHUNK";
-	private String version;
-	private int chunkNo;
-	
-	public MessageGetChunk(String fileId, int chunkNo) {
-		this.fileId=fileId;
-		this.chunkNo=chunkNo;
-	}
-	
-	public String getVersion() {
-		return version;
-	}
 
-	public void setVersion(String version) {
-		this.version = version;
+	public MessageGetChunk(String fileId, int chunkNo) {
+		super(fileId, chunkNo);
 	}
 
 	@Override
@@ -31,9 +19,17 @@ public class MessageGetChunk extends Message {
 	}
 
 	@Override
-	public boolean parseMessage(byte[] data) {
-		// TODO Auto-generated method stub
-		return false;
+	public int parseMessage(byte[] data) {
+		int i = super.parseMessage(data);
+
+		//Check header's end
+		i = getHeaderTermination(i, data);
+
+		if (i < 0)
+			return -1;
+
+		System.out.println(version + "\n" + fileId + "\n" + chunkNo + "\n");
+		return 0;
 	}
 
 }

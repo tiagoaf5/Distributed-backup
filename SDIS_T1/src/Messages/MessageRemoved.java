@@ -4,13 +4,11 @@ public class MessageRemoved extends Message {
 	private static final String MESSAGE_TYPE = "REMOVED";
 
 	public MessageRemoved() {
-		
+		super();
 	}
-	
+
 	public MessageRemoved(String fileId, int chunkNo) {
-		this.setVersion("1.0");
-		this.fileId = fileId;
-		this.chunkNo = chunkNo;
+		super(fileId, chunkNo);
 	}
 
 	@Override
@@ -36,13 +34,5 @@ public class MessageRemoved extends Message {
 
 		System.out.println(version + "\n" + fileId + "\n" + chunkNo + "\n");
 		return 0;
-	}
-
-	public String getVersion() {
-		return version;
-	}
-
-	public void setVersion(String version) {
-		this.version = version;
 	}
 }
