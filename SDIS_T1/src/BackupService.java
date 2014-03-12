@@ -13,11 +13,8 @@ public class BackupService {
 	private int mdrPort;
 	
 	public static void main(String[] args) {
-<<<<<<< HEAD
-		
-=======
 		LocalFiles files=new LocalFiles();
->>>>>>> c2c9a3081308fb6382c3be47a928cfb629dc6393
+
 		/*if(args.length != 6) {
 			System.out.println("<MC_ADDRESS> <MC_PORT> <MDB_ADDRESS> <MDB_PORT> <MDR_ADDRESS> <MDR_PORT>");
 			return;
@@ -28,11 +25,6 @@ public class BackupService {
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		}*/
-<<<<<<< HEAD
-		
-		LocalFiles files=new LocalFiles();
-=======
->>>>>>> c2c9a3081308fb6382c3be47a928cfb629dc6393
 	}
 	
 	public BackupService(String args[]) throws UnknownHostException {
