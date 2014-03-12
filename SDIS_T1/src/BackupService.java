@@ -11,12 +11,10 @@ public class BackupService {
 	private int mdbPort;
 	private InetAddress mdrAddress;
 	private int mdrPort;
-	private int diskSpace;
-	private Map<String, Integer> files;
 	
 	public static void main(String[] args) {
 		
-		if(args.length != 6) {
+		/*if(args.length != 6) {
 			System.out.println("<MC_ADDRESS> <MC_PORT> <MDB_ADDRESS> <MDB_PORT> <MDR_ADDRESS> <MDR_PORT>");
 			return;
 		}
@@ -25,7 +23,9 @@ public class BackupService {
 			BackupService service = new BackupService(args);
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
-		}
+		}*/
+		
+		LocalFiles files=new LocalFiles();
 	}
 	
 	public BackupService(String args[]) throws UnknownHostException {
@@ -36,9 +36,6 @@ public class BackupService {
 		this.mdbPort = Integer.parseInt(args[3]);
 		this.mdrAddress = InetAddress.getByName(args[4]);
 		this.mdrPort = Integer.parseInt(args[5]);
-		
-		this.diskSpace=0;
-		this.files=new HashMap<String, Integer>();
 	}
 
 }
