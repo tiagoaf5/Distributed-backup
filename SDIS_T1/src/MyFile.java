@@ -1,4 +1,7 @@
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.file.Files;
@@ -8,6 +11,8 @@ import java.nio.file.attribute.UserPrincipal;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Random;
+
+import Messages.*;
 
 /*
  * Classe que representa um ficheiro local que entrará 
@@ -19,8 +24,12 @@ public class MyFile {
 	private String name;
 	private Path path;
 	private File systemFile;
+	private FileInputStream fileStream;
+	private int offset = 0; //next 64KBytes to read
 	
-	public MyFile(String name, int replication) {
+	private final int CHUNK_SIZE = 64000;
+	
+	public MyFile(String name, int replication) throws FileNotFoundException {
 		
 		systemFile=new File(name);
 		if(!systemFile.exists()) {
@@ -30,6 +39,7 @@ public class MyFile {
 		setName(name);
 		setReplication(replication);
 		path=Paths.get(name);
+		fileStream = new FileInputStream(systemFile);
 	}
 	
 	public MyFile(String name, String replication) {
@@ -101,7 +111,7 @@ public class MyFile {
 		String res="";
 		long last=systemFile.lastModified();
 		UserPrincipal owner=Files.getOwner(path);
-		int random=getRandom();
+		//int random=getRandom();
 		
 		res+=this.path + " " + Long.toString(last) + " " + owner.getName();// + " " + Integer.toString(random);
 
@@ -111,7 +121,34 @@ public class MyFile {
 	}
 	
 	private int getRandom() {
-		Random randomGenerator = new Random();
-		return randomGenerator.nextInt();
+		//Random randomGenerator = new Random();
+		//return randomGenerator.nextInt();
+		return 1;
+	}
+	
+	public byte[] getNextChunk() throws IOException {
+		long size = systemFile.length();
+		byte[] b;
+		
+		if(size / CHUNK_SIZE == offset)
+			b = new byte[CHUNK_SIZE];
+		else if (size / CHUNK_SIZE > offset)
+			b = new byte[CHUNK_SIZE];
+		else return null;
+		
+		int read = fileStream.read(b,0, CHUNK_SIZE);
+		
+		if(read < CHUNK_SIZE)
+			System.out.println("last chunk with size = " + size);
+		
+		
+
+		offset++;
+		
+		System.out.println("<" + Message.byteArrayToHexString(b).trim()+">");
+			
+		return b;
+		
+		
 	}
 }
