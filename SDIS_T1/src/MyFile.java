@@ -126,26 +126,33 @@ public class MyFile {
 		return 1;
 	}
 	
-	public byte[] getNextChunk() throws IOException {
+	public byte[] nextChunk() throws IOException {
 		long size = systemFile.length();
+		int chunkSize;
 		byte[] b;
 		
 		if(size / CHUNK_SIZE == offset)
-			b = new byte[CHUNK_SIZE];
+			//b = new byte[(int) (size % CHUNK_SIZE)];
+			chunkSize = (int) (size % CHUNK_SIZE);
 		else if (size / CHUNK_SIZE > offset)
-			b = new byte[CHUNK_SIZE];
+			//b = new byte[CHUNK_SIZE];
+			chunkSize = CHUNK_SIZE;
 		else return null;
 		
-		int read = fileStream.read(b,0, CHUNK_SIZE);
+		b = new byte[chunkSize];
 		
-		if(read < CHUNK_SIZE)
-			System.out.println("last chunk with size = " + size);
+		int read = fileStream.read(b,0, chunkSize);
+		
+		System.out.println("-> " + b.length + "/" + size);
+				
+		/*if(read < CHUNK_SIZE)
+			System.out.println("last chunk with size = " + size);*/
 		
 		
 
 		offset++;
 		
-		System.out.println("<" + Message.byteArrayToHexString(b).trim()+">");
+		//System.out.println("<" + Message.byteArrayToHexString(b).trim()+">");
 			
 		return b;
 		

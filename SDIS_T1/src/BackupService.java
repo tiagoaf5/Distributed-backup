@@ -25,7 +25,7 @@ public class BackupService {
 			MyFile f = new MyFile("1.pdf", 1);
 			while(true) {
 				
-				nabao = f.getNextChunk();
+				nabao = f.nextChunk();
 				
 				if(nabao == null)
 					break;
