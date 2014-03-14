@@ -7,6 +7,13 @@ public class MessageGetChunk extends Message {
 		super(fileId, chunkNo);
 	}
 
+	//TODO: set MessageChunk com o chunk necessario
+	public byte[] answer() {
+
+		MessageChunk res=new MessageChunk(fileId,chunkNo);
+		return res.getMessage();
+	}
+	
 	@Override
 	public byte[] getMessage() {
 		String message = MESSAGE_TYPE + " " + getVersion() + " " + 

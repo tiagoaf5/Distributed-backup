@@ -1,9 +1,7 @@
 import java.io.IOException;
 import java.net.DatagramPacket;
-import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
-
 
 public class Multicast {
 
@@ -12,7 +10,6 @@ public class Multicast {
 	private InetAddress mAddress;
 	private int mPortNumber;
 	private MulticastSocket mClient;
-	
 	
 	public Multicast() {}
 
