@@ -26,6 +26,7 @@ public class MyFile {
 	private File systemFile;
 	private FileInputStream fileStream;
 	private int offset = 0; //next 64KBytes to read
+	private String fileId;
 	
 	private final int CHUNK_SIZE = 64000;
 	
@@ -40,8 +41,22 @@ public class MyFile {
 		setReplication(replication);
 		path=Paths.get(name);
 		fileStream = new FileInputStream(systemFile);
+		computeFileId();
 	}
 	
+	private void computeFileId() {
+		try {
+			String res=getInfo();
+			fileId = Message.byteArrayToHexString(applySHA256(res));
+			System.out.println(fileId);
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		} 
+		
+	}
+
 	public MyFile(String name, String replication) {
 	
 		systemFile=new File(name);
@@ -74,22 +89,9 @@ public class MyFile {
 		this.name = name;
 	}
 	
-	public byte[] getId() {
-		//TODO: calcular devidamente os ids
-		
-		//>http://stackoverflow.com/questions/3103652/hash-string-via-sha-256-in-java
-		//>http://stackoverflow.com/questions/4793387/utf-16-encoding-in-java-versus-c-sharp
-		//>http://beginnersbook.com/2013/12/java-string-getbytes-method-example/
-		
-		try {
-			String res=getInfo();
-			return applySHA256(res);
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
-		} 
-		return null;
+	public String getId() {
+		return fileId;
+
 	}
 
 	private byte[] applySHA256(String key) throws NoSuchAlgorithmException, UnsupportedEncodingException {
@@ -99,9 +101,7 @@ public class MyFile {
 		
 		byte[] tmp = md.digest();
 		//System.out.println(tmp);
-		
-		for(int i = 0; i < tmp.length; i++)
-			System.out.print(String.format("%x",tmp[i]));
+		System.out.println(Message.byteArrayToHexString(tmp));
 		
 		return tmp;
 	}
@@ -145,8 +145,8 @@ public class MyFile {
 		
 		System.out.println("-> " + b.length + "/" + size);
 				
-		/*if(read < CHUNK_SIZE)
-			System.out.println("last chunk with size = " + size);*/
+		if(read < CHUNK_SIZE)
+			System.out.println("last chunk with size = " + read);
 		
 		
 
