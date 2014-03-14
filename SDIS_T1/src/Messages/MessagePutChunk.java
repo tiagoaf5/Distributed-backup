@@ -3,6 +3,8 @@ package Messages;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+import javax.xml.crypto.dsig.keyinfo.RetrievalMethod;
+
 
 public class MessagePutChunk extends Message {
 
@@ -37,10 +39,13 @@ public class MessagePutChunk extends Message {
 		chunk = s;
 	}
 	
-	public byte[] answer() {
-		
-		MessageStored res=new MessageStored(fileId,chunkNo);
+	public byte[] getAnswer() {
+		MessageStored res = getAnswerMessage(); 
 		return res.getMessage();
+	}
+	
+	public MessageStored getAnswerMessage() {
+		return new MessageStored(fileId,chunkNo);
 	}
 
 	@Override

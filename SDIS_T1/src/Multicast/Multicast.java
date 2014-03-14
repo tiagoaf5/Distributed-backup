@@ -1,3 +1,4 @@
+package Multicast;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
@@ -21,6 +22,14 @@ public class Multicast {
 		mClient.joinGroup(mAddress);
 	}
 	
+	public Multicast(InetAddress address, int port) throws IOException {
+		
+		mAddress=address;
+		mPortNumber = port;
+		mClient = new MulticastSocket(mPortNumber);
+		mClient.joinGroup(mAddress);
+	}
+	
 	public void leaveGroup() {
 		
 		try {
@@ -31,14 +40,14 @@ public class Multicast {
 		mClient.close();
 	}
 	
-	private void send(byte[] toSend) throws IOException {
+	public void send(byte[] toSend) throws IOException {
 
 		DatagramPacket p = new DatagramPacket(toSend, toSend.length, mAddress, mPortNumber);
 		mClient.send(p);
 		//System.out.println("Sent " + new String(p.getData()));
 	}
 	
-	private byte[] receive() throws IOException {
+	public byte[] receive() throws IOException {
 		
 		byte[] buf = new byte[SIZE];
 		DatagramPacket sp = new DatagramPacket(buf, buf.length); 
