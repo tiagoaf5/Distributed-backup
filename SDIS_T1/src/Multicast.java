@@ -7,7 +7,7 @@ import java.net.MulticastSocket;
 
 public class Multicast {
 
-	private final int SIZE = 1024;
+	private final int SIZE = 65000;
 	
 	private InetAddress mAddress;
 	private int mPortNumber;
@@ -34,21 +34,19 @@ public class Multicast {
 		mClient.close();
 	}
 	
-	private void send(String string) throws IOException {
+	private void send(byte[] toSend) throws IOException {
 
-		byte[] buf = new byte[SIZE];
-		DatagramPacket p = new DatagramPacket(string.getBytes(), string.getBytes().length, mAddress, mPortNumber);
+		DatagramPacket p = new DatagramPacket(toSend, toSend.length, mAddress, mPortNumber);
 		mClient.send(p);
 		//System.out.println("Sent " + new String(p.getData()));
 	}
 	
-	private String receive() throws IOException {
+	private byte[] receive() throws IOException {
 		
 		byte[] buf = new byte[SIZE];
 		DatagramPacket sp = new DatagramPacket(buf, buf.length); 
 		mClient.receive(sp);
 		//System.out.println("Received " + new String(sp.getData()));
-		
-		return new String(sp.getData());
+		return sp.getData();
 	}
 }
