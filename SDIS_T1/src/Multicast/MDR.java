@@ -5,12 +5,12 @@ import java.net.InetAddress;
 
 import Messages.Message;
 
-public class MC implements Runnable {
+public class MDR implements Runnable {
+
 	Multicast channel;
 	
-	public MC(InetAddress address, int port) throws IOException {
+	public MDR(InetAddress address, int port) throws IOException {
 		channel = new Multicast(address, port);
-		
 	}
 
 	@Override
@@ -23,4 +23,5 @@ public class MC implements Runnable {
 			}
 		}
 	}
+
 }
