@@ -7,6 +7,7 @@ import java.security.NoSuchAlgorithmException;
 public class MessagePutChunk extends Message {
 
 	private static final String MESSAGE_TYPE = "PUTCHUNK";
+	private static final String MESSAGE_TYPE_ANSWER = "STORED";
 	private int replicationDeg;
 	byte chunk[];
 
@@ -34,6 +35,12 @@ public class MessagePutChunk extends Message {
 
 	void setChunk(byte s[]) {
 		chunk = s;
+	}
+	
+	public byte[] answer() {
+		
+		MessageStored res=new MessageStored(fileId,chunkNo);
+		return res.getMessage();
 	}
 
 	@Override

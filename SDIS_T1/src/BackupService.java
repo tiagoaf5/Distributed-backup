@@ -17,7 +17,7 @@ public class BackupService {
 	
 	public static void main(String[] args) {
 		//LocalFiles files=new LocalFiles();
-		byte[] nabo = new byte[11];
+		/*byte[] nabo = new byte[11];
 		byte[] nabao = new byte[64000];
 		
 		int i= 0;
