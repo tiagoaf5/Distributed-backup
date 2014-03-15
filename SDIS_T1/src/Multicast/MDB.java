@@ -87,7 +87,7 @@ public class MDB extends Thread {
 	
 	public void sendMessage(MessagePutChunk msg) {
 		
-		System.out.println(MESSAGE + " - Sending Message");
+		System.out.println("Sending Message");
 		try {
 			channel.send(msg.getMessage());
 		} catch (IOException e) {
