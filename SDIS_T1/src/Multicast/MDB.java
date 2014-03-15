@@ -28,7 +28,11 @@ public class MDB extends Thread {
 		}
 	}
 <<<<<<< HEAD
+<<<<<<< HEAD
 
+=======
+	
+>>>>>>> 0f66507c20cf49150f8d1c685cae12492e391a1b
 =======
 	
 >>>>>>> 0f66507c20cf49150f8d1c685cae12492e391a1b
