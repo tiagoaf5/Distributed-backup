@@ -151,7 +151,5 @@ public class MyFile {
 		//System.out.println("<" + Message.byteArrayToHexString(b).trim()+">");
 			
 		return b;
-		
-		
 	}
 }

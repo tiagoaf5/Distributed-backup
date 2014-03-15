@@ -11,8 +11,7 @@ public class Chunk {
 	int replicationDeg;
 	int currentReplicationDeg;
 
-
-	Chunk (String fileId, int chunkNo, int replicationDeg, byte[] data) {
+	public Chunk (String fileId, int chunkNo, int replicationDeg, byte[] data) {
 		this.fileId = fileId;
 		this.chunkNo = chunkNo;
 
@@ -35,7 +34,7 @@ public class Chunk {
 		} 
 
 		FileOutputStream o = new FileOutputStream(f); 
-		o.write(data,0,32);
+		o.write(data);
 		o.close();
 		data = null;
 		currentReplicationDeg++;
@@ -53,11 +52,8 @@ public class Chunk {
 
 		FileInputStream fileStream = new FileInputStream(f);
 
-
-
 		long length = f.length();
 		byte[] b = new byte[(int)length];
-
 
 		fileStream.read(b);
 		fileStream.close();
