@@ -7,7 +7,8 @@ import Messages.Message;
 
 public class MDR implements Runnable {
 
-	Multicast channel;
+	private static final String MESSAGE="Multicast data channel RESTORE:";
+	private Multicast channel;
 	
 	public MDR(InetAddress address, int port) throws IOException {
 		channel = new Multicast(address, port);

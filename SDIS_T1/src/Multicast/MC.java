@@ -6,7 +6,9 @@ import java.net.InetAddress;
 import Messages.Message;
 
 public class MC implements Runnable {
-	Multicast channel;
+	
+	private static final String MESSAGE="Multicast data channel CONTROL:";
+	private Multicast channel;
 	
 	public MC(InetAddress address, int port) throws IOException {
 		channel = new Multicast(address, port);

@@ -32,7 +32,7 @@ public class MDB extends Thread {
 			try { 
 				byte[] rcv=channel.receive();
 				String type=Message.getMessageType(rcv);
-				System.out.println(MESSAGE + " received: " + Message.byteArrayToHexString(rcv));
+				System.out.println(MESSAGE + " received - " + Message.byteArrayToHexString(rcv));
 				
 				if(type.equals("PUTCHUNK")) {
 					
@@ -87,7 +87,7 @@ public class MDB extends Thread {
 	
 	public void sendMessage(MessagePutChunk msg) {
 		
-		System.out.println("Sending Message");
+		System.out.print("Sending Message ");
 		try {
 			channel.send(msg.getMessage());
 		} catch (IOException e) {
