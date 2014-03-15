@@ -10,12 +10,14 @@ public class MessageDelete extends Message {
 
 	@Override
 	public byte[] getMessage() {
-		String message = MESSAGE_TYPE + " " + 
-				fileId + " ";
+		byte b[] = {SPACE,CRLF,SPACE,CRLF,SPACE};
 
-		byte b[] = {CRLF,SPACE,CRLF,SPACE};
+		String m1 = MESSAGE_TYPE + " ";
+		
+		//m1 + fileId + b
+		byte p1[] = concatenate(stringToByteArray(m1), hexStringToByteArray(fileId));
 
-		return concatenate(message.getBytes(charset), b);
+		return concatenate(p1,b);
 	}
 
 	@Override

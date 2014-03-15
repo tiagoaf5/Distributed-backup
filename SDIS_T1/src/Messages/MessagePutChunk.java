@@ -52,12 +52,6 @@ public class MessagePutChunk extends Message {
 
 	@Override
 	public byte[] getMessage() {
-		
-		/*String message = MESSAGE_TYPE + " " + getVersion() + " " +
-				fileId + " " + 
-				chunkNo + " " + 
-				replicationDeg + " ";*/
-
 		byte b[] = {CRLF,SPACE,CRLF,SPACE};
 		
 		String m1 = MESSAGE_TYPE + " " + getVersion() + " ";

@@ -11,13 +11,18 @@ public class MessageChunk extends Message {
 
 	@Override
 	public byte[] getMessage() {
-		String message = MESSAGE_TYPE + " " + getVersion() + " " + 
-				fileId + " " + 
-				chunkNo + " ";
-
+		
 		byte b[] = {CRLF,SPACE,CRLF,SPACE};
+		
+		String m1 = MESSAGE_TYPE + " " + getVersion() + " ";
+		String m2 = " " + chunkNo + " ";
+		
+		//m1 + fileId + m2 + b + chunk
+		byte p1[] = concatenate(stringToByteArray(m1), hexStringToByteArray(fileId));
+		byte p2[] = concatenate(p1,stringToByteArray(m2));
+		p1 = null;
 
-		return concatenate(concatenate(message.getBytes(charset), b), chunk);
+		return concatenate(concatenate(p2,b), chunk);
 	}
 
 	@Override
