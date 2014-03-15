@@ -21,9 +21,7 @@ public class BackupService {
 	private LocalFiles localFiles;
 	private Multicast mdb;
 	private Multicast mdr;
-	MC mc;
-
-	private static Map<String, Map<Integer, Integer>> filesStored=null;
+	private MC mc;
 	
 	public static void main(String[] args) {
 
@@ -73,26 +71,6 @@ public class BackupService {
 		mc = new MC(mcAddress, mcPort);
 		mdb = new Multicast(mdbAddress, mdbPort);
 		mdr = new Multicast(mdrAddress, mdrPort);
-	}
-
-	public void addFile(String fileId, int chunkNo, int size) {
-		
-		Map<Integer, Integer> temp = null;
-		temp.put(chunkNo, size);
-		filesStored.put(fileId, temp);
-	}
-
-	public boolean searchFile(String fileId, int chunkNo) {
-		
-		if(filesStored.containsKey(fileId)) {
-			Map<Integer, Integer> res=filesStored.get(fileId);
-			if(res.containsKey(chunkNo))
-				return true;
-		}
-		return false;
-	}
-	
-
-	
+	}	
 
 }
