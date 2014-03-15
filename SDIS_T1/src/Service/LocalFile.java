@@ -44,6 +44,20 @@ public class LocalFile {
 		computeFileId();
 	}
 	
+	public LocalFile(String name, String replication) throws FileNotFoundException {
+		
+		systemFile=new File(name);
+		if(!systemFile.exists()) {
+			System.out.println("ERRO: o ficheiro " + name + " não existe.");
+			return;
+		}
+		setName(name);
+		setReplication(Integer.parseInt(replication));
+		path=Paths.get(name);
+		fileStream = new FileInputStream(systemFile);
+		computeFileId();
+	}
+	
 	private void computeFileId() {
 		try {
 			String res=getInfo();
@@ -57,17 +71,7 @@ public class LocalFile {
 		
 	}
 
-	public LocalFile(String name, String replication) {
 	
-		systemFile=new File(name);
-		if(!systemFile.exists()) {
-			System.out.println("ERRO: o ficheiro " + name + " não existe.");
-			return;
-		}
-		setName(name);
-		setReplication(Integer.parseInt(replication));
-		path=Paths.get(name);
-	}
 
 	public int getReplication() {
 		return replication;

@@ -62,6 +62,7 @@ public abstract class Message {
 				}
 				version = byteArrayToString(b);
 				count++;
+				//System.out.println("Version: " + byteArrayToHexString(b) + " - " + version);
 				continue;
 			}
 			else if (count == 2) { // read fileId
@@ -73,6 +74,7 @@ public abstract class Message {
 					b[x] = data[i];
 
 				fileId = byteArrayToHexString(b);
+				//System.out.println("FileId: " + fileId);
 				count++;
 				continue;
 			}
@@ -87,6 +89,8 @@ public abstract class Message {
 					x++;
 					i++;
 				}
+				//System.out.println("chunkNo: " + byteArrayToHexString(b));
+				
 				chunkNo = Integer.parseInt(byteArrayToString(b));
 				count++;
 				i++;

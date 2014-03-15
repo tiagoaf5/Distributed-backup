@@ -52,15 +52,23 @@ public class MessagePutChunk extends Message {
 
 	@Override
 	public byte[] getMessage() {
-		String message = MESSAGE_TYPE + " " + getVersion() + " " + 
+		
+		/*String message = MESSAGE_TYPE + " " + getVersion() + " " +
 				fileId + " " + 
 				chunkNo + " " + 
-				replicationDeg + " ";
+				replicationDeg + " ";*/
 
 		byte b[] = {CRLF,SPACE,CRLF,SPACE};
+		
+		String m1 = MESSAGE_TYPE + " " + getVersion() + " ";
+		String m2 = " " + chunkNo + " " + replicationDeg + " ";
+		
+		//m1 + fileId + m2 + b + chunk
+		byte p1[] = concatenate(stringToByteArray(m1), hexStringToByteArray(fileId));
+		byte p2[] = concatenate(p1,stringToByteArray(m2));
+		p1 = null;
 
-		return concatenate(concatenate(message.getBytes(charset), b), chunk);
-
+		return concatenate(concatenate(p2,b), chunk);
 	}
 
 	@Override
@@ -96,8 +104,8 @@ public class MessagePutChunk extends Message {
 		for(;i < data.length; i++,x++)
 			chunk[x] = data[i];
 
-		System.out.println(version + "\n" + fileId + "\n" + chunkNo + "\n" + replicationDeg);
-		System.out.println(byteArrayToHexString(chunk));
+		//System.out.println(version + "\n" + fileId + "\n" + chunkNo + "\n" + replicationDeg);
+		//System.out.println(byteArrayToHexString(chunk));
 
 		return 0;
 	}
@@ -111,9 +119,14 @@ public class MessagePutChunk extends Message {
 		byte[] digest = md.digest();
 
 
-		MessagePutChunk a = new MessagePutChunk(new String(digest),2,5);
-		byte[] message = a.getMessage();
+		/*MessagePutChunk a = new MessagePutChunk(new String(digest),2,5);
+		byte[] message = a.getMessage();*/
+		
+		MessagePutChunk a = new MessagePutChunk("41681c7cf03673502976034bfd68260d5663b8075192a89495265e3057ab8b7d", 5, 2);
+		a.setChunk(Message.hexStringToByteArray("41681c7cf03673502976034bfd68260d5663b8075192a89495265e3057ab8b7d41681c7cf03673502976034bfd68260d5663b8075192a89495265e3057ab8b7d"));
 
+		byte[] message = a.getMessage();
+		
 		/*for(int i = 0; i < message.length; i++)
 			System.out.print(String.format("%x", message[i] & 0xFF));*/
 

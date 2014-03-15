@@ -39,7 +39,7 @@ public class MDB extends Thread {
 					MessagePutChunk msg=new MessagePutChunk();
 					msg.parseMessage(rcv);
 					
-					if(!local(msg.getFileId())) {
+					if(!isLocal(msg.getFileId())) {
 						RemoteFile file=remote(msg.getFileId());
 						if(file==null) {
 							file=new RemoteFile(msg.getFileId(), msg.getReplicationDeg());
@@ -64,14 +64,14 @@ public class MDB extends Thread {
 	}
 
 
-	private boolean local(String fileId) {
+	private boolean isLocal(String fileId) {
 		
-		List<LocalFile> localFiles=BackupService.getLocalFiles();
+		List<LocalFile> localFiles = BackupService.getLocalFiles();
 		
 		int i=0;
 		
 		while(i<localFiles.size()) {
-			LocalFile temp=localFiles.get(i);
+			LocalFile temp = localFiles.get(i);
 			if(temp.getId().equals(fileId))
 				return true;
 			i++;

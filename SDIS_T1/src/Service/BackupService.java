@@ -86,6 +86,7 @@ public class BackupService {
 		this.mdrPort = Integer.parseInt(args[5]);
 
 		//localFiles = new LocalFiles(); //get files to backup info
+		remoteFiles = new HashMap<String,RemoteFile>();
 		localFiles = new ArrayList<LocalFile>();
 		readFile();
 

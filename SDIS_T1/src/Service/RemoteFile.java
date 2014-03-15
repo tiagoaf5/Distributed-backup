@@ -18,6 +18,7 @@ public class RemoteFile {
 	public RemoteFile(String fileId, int replicationDeg) {
 		this.fileId = fileId;
 		this.replicationDeg = replicationDeg;
+		chunks = new HashMap<Integer, Chunk>();
 	}
 
 	public boolean addChunk(MessagePutChunk msg) {
