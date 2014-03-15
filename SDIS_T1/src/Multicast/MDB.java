@@ -14,7 +14,8 @@ import Service.RemoteFile;
 
 public class MDB extends Thread {
 
-	Multicast channel;
+	private static final String MESSAGE="Multicast data channel BACKUP:";
+	private Multicast channel;
 	
 	public MDB(InetAddress address, int port) throws IOException {
 		channel = new Multicast(address, port);
@@ -22,17 +23,16 @@ public class MDB extends Thread {
 
 	public void run() {
 		
-		System.out.println("...");
+		System.out.println("Running multicast data channel for BACKUP...");
 		
 		while(true) {
-			System.out.println(".");
 			//Can receive:
 			// - PUTCHUNK
 			
 			try { 
 				byte[] rcv=channel.receive();
 				String type=Message.getMessageType(rcv);
-				System.out.println("Received: " + Message.byteArrayToString(rcv));
+				System.out.println(MESSAGE + " received: " + Message.byteArrayToString(rcv));
 				
 				if(type.equals("PUTCHUNK")) {
 					
@@ -45,17 +45,17 @@ public class MDB extends Thread {
 							file=new RemoteFile(msg.getFileId(), msg.getReplicationDeg());
 							file.addChunk(msg);
 							BackupService.addRemoteFile(msg.getFileId(), file);
-							System.out.println("ola");
+							System.out.println(MESSAGE + " added new remote file");
 						} else {
 							if(!file.addChunk(msg))
-								System.out.println("Chunk already stored");
+								System.out.println(MESSAGE + " chunk already stored");
 						}
 					} else {
-						System.out.println("Local file");
+						System.out.println(MESSAGE + " local file");
 						msg=null;
 					}
 				} else {
-					System.out.println("Invalid message!");
+					System.out.println(MESSAGE + " - Invalid message!");
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -87,7 +87,7 @@ public class MDB extends Thread {
 	
 	public void sendMessage(MessagePutChunk msg) {
 		
-		System.out.println("Sending Message");
+		System.out.println(MESSAGE + " - Sending Message");
 		try {
 			channel.send(msg.getMessage());
 		} catch (IOException e) {

@@ -62,7 +62,7 @@ public class LocalFile {
 		try {
 			String res=getInfo();
 			fileId = Message.byteArrayToHexString(applySHA256(res));
-			System.out.println(fileId);
+			//System.out.println(fileId);
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (NoSuchAlgorithmException e) {
@@ -70,8 +70,6 @@ public class LocalFile {
 		} 
 		
 	}
-
-	
 
 	public int getReplication() {
 		return replication;
@@ -105,7 +103,7 @@ public class LocalFile {
 		
 		byte[] tmp = md.digest();
 		//System.out.println(tmp);
-		System.out.println(Message.byteArrayToHexString(tmp));
+		//System.out.println(Message.byteArrayToHexString(tmp));
 		
 		return tmp;
 	}
@@ -119,7 +117,7 @@ public class LocalFile {
 		
 		res+=this.path + " " + Long.toString(last) + " " + owner.getName() + " " + Integer.toString(random);
 
-		System.out.println(res);
+		//System.out.println(res);
 
 		return res;
 	}

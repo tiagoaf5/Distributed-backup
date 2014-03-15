@@ -62,6 +62,7 @@ public class BackupService {
 		MessagePutChunk a = new MessagePutChunk("41681c7cf03673502976034bfd68260d5663b8075192a89495265e3057ab8b7d", 5, 2);
 		a.setChunk(Message.hexStringToByteArray("41681c7cf03673502976034bfd68260d5663b8075192a89495265e3057ab8b7d41681c7cf03673502976034bfd68260d5663b8075192a89495265e3057ab8b7d"));
 		mdb.sendMessage(a);
+		System.out.println("Sended " + Message.byteArrayToString(a.getMessage()));
 
 		/*
 		try {
@@ -111,6 +112,8 @@ public class BackupService {
 		FileInputStream fileStream;
 
 		try {
+			System.out.println("Reading file "+FILENAME+"...");
+			
 			fileStream = new FileInputStream(FILENAME);
 			DataInputStream input = new DataInputStream(fileStream);
 			BufferedReader reader = new BufferedReader(new InputStreamReader(input));
@@ -124,7 +127,7 @@ public class BackupService {
 				}
 				try {
 					diskSpace = Integer.parseInt(line);
-					System.out.println(diskSpace);
+					System.out.println("Total disk space: " + diskSpace);
 				} catch(Exception e) {
 					System.out.println("ERRO files.txt mal definido: falta espaço máximo de disco.");
 					reader.close();
@@ -151,7 +154,7 @@ public class BackupService {
 				//System.out.println(line);
 				//System.out.println(splits[0] + ", " + splits[1]);
 			}
-			System.out.println("Numero de ficheiros lidos: " + localFiles.size());
+			System.out.println("Number of local files: " + localFiles.size() +"\n");
 
 			reader.close();
 			input.close();
