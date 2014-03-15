@@ -46,5 +46,9 @@ public class Chunk {
 		return new String(fileId + ".part" + chunkNo);
 	}
 	
+	private void getData() {
+		
+	}
+	
 
 }

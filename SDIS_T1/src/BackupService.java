@@ -60,6 +60,21 @@ public class BackupService {
 		}	*/
 	}
 
+	private void initReceivingThreads() {
+		
+		/*
+		try {
+			while(true) {
+				mc.sendMessage(abc);
+				System.out.println(Message.byteArrayToHexString(abc.getMessage()));
+				Thread.sleep(2000);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}*/
+		
+	}
+
 	public BackupService(String args[]) throws UnknownHostException {
 
 		this.mcAddress =  InetAddress.getByName(args[0]);
@@ -102,15 +117,7 @@ public class BackupService {
 		return false;
 	}
 	
-		try {
-			while(true) {
-				mc.sendMessage(abc);
-				System.out.println(Message.byteArrayToHexString(abc.getMessage()));
-				Thread.sleep(2000);
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}*/
-	}
+
+	
 
 }
