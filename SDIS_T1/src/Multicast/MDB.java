@@ -52,8 +52,8 @@ public class MDB extends Thread {
 						}
 					} else {
 						System.out.println(MESSAGE + " local file");
-						msg=null;
 					}
+					msg=null;
 				} else {
 					System.out.println(MESSAGE + " - Invalid message!");
 				}

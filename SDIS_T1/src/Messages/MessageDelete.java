@@ -8,6 +8,8 @@ public class MessageDelete extends Message {
 		super(fileId);
 	}
 
+	public MessageDelete() {}
+
 	@Override
 	public byte[] getMessage() {
 		byte b[] = {SPACE,CRLF,SPACE,CRLF,SPACE};

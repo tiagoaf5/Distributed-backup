@@ -45,8 +45,8 @@ public class MDR implements Runnable {
 						//TODO: o que fazer com o chunk?
 					} else {
 						System.out.println(MESSAGE + " chunk not asked");
-						msg=null;
 					}
+					msg=null;
 				} else {
 					System.out.println(MESSAGE + " - Invalid message!");
 				}

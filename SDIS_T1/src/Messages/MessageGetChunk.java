@@ -7,6 +7,8 @@ public class MessageGetChunk extends Message {
 		super(fileId, chunkNo);
 	}
 
+	public MessageGetChunk() { }
+
 	//TODO: set MessageChunk com o chunk necessario
 	public byte[] answer() {
 

@@ -4,6 +4,11 @@ import java.io.IOException;
 import java.net.InetAddress;
 
 import Messages.Message;
+import Messages.MessageChunk;
+import Messages.MessageDelete;
+import Messages.MessageGetChunk;
+import Messages.MessageRemoved;
+import Messages.MessageStored;
 
 public class MC implements Runnable {
 	
@@ -27,7 +32,34 @@ public class MC implements Runnable {
 			// - DELETE
 			// - REMOVED
 			try {
-				System.out.println(Message.getMessageType(channel.receive()));
+				byte[] rcv=channel.receive();
+				String type=Message.getMessageType(rcv);
+				System.out.println(MESSAGE + " received - " + Message.byteArrayToHexString(rcv));
+
+				if(type.equals("STORED")) {
+
+					MessageStored msg=new MessageStored();
+					msg.parseMessage(rcv);
+
+					msg=null;
+				} else if(type.equals("GETCHUNK")) {
+					MessageGetChunk msg=new MessageGetChunk();
+					msg.parseMessage(rcv);
+					
+					msg=null;
+				} else if(type.equals("DELETE")) {
+					MessageDelete msg=new MessageDelete();
+					msg.parseMessage(rcv);
+					
+					msg=null;
+				} else if(type.equals("REMOVED")) {
+					MessageRemoved msg=new MessageRemoved();
+					msg.parseMessage(rcv);
+					
+					msg=null;
+				} else {
+					System.out.println(MESSAGE + " - Invalid message!");
+				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
