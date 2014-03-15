@@ -1,7 +1,6 @@
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.file.Files;
@@ -111,9 +110,9 @@ public class MyFile {
 		String res="";
 		long last=systemFile.lastModified();
 		UserPrincipal owner=Files.getOwner(path);
-		//int random=getRandom();
+		int random=getRandom();
 		
-		res+=this.path + " " + Long.toString(last) + " " + owner.getName();// + " " + Integer.toString(random);
+		res+=this.path + " " + Long.toString(last) + " " + owner.getName() + " " + Integer.toString(random);
 
 		System.out.println(res);
 
@@ -121,9 +120,8 @@ public class MyFile {
 	}
 	
 	private int getRandom() {
-		//Random randomGenerator = new Random();
-		//return randomGenerator.nextInt();
-		return 1;
+		Random randomGenerator = new Random();
+		return randomGenerator.nextInt();
 	}
 	
 	public byte[] nextChunk() throws IOException {
@@ -148,8 +146,6 @@ public class MyFile {
 		if(read < CHUNK_SIZE)
 			System.out.println("last chunk with size = " + read);
 		
-		
-
 		offset++;
 		
 		//System.out.println("<" + Message.byteArrayToHexString(b).trim()+">");
