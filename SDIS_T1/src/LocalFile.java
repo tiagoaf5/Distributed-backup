@@ -17,7 +17,7 @@ import Messages.*;
  * Classe que representa um ficheiro local que entrará 
  * no sistema de backup
  */
-public class MyFile {
+public class LocalFile {
 
 	private int replication;
 	private String name;
@@ -29,7 +29,7 @@ public class MyFile {
 	
 	private final int CHUNK_SIZE = 64000;
 	
-	public MyFile(String name, int replication) throws FileNotFoundException {
+	public LocalFile(String name, int replication) throws FileNotFoundException {
 		
 		systemFile=new File(name);
 		if(!systemFile.exists()) {
@@ -56,7 +56,7 @@ public class MyFile {
 		
 	}
 
-	public MyFile(String name, String replication) {
+	public LocalFile(String name, String replication) {
 	
 		systemFile=new File(name);
 		if(!systemFile.exists()) {

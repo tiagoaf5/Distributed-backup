@@ -61,4 +61,17 @@ public class Chunk {
 
 		return b;
 	}
+	
+	public void increaseCurReplicationDeg() {
+		currentReplicationDeg++;
+	}
+	
+	public boolean delete() {
+		File f = new File(getNameOnDisk());
+
+		if (!f.exists())
+			return true;
+		
+		return f.delete();
+	}
 }
