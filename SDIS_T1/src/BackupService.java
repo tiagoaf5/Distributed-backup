@@ -10,7 +10,7 @@ import Multicast.*;
 
 
 public class BackupService {
-
+	
 	private InetAddress mcAddress;
 	private int mcPort;
 	private InetAddress mdbAddress;
@@ -32,32 +32,7 @@ public class BackupService {
 			a.initReceivingThreads();
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
 		}
-		/*
-		byte[] nabo = new byte[11];
-		byte[] nabao = new byte[64000];
-
-		int i= 0;
-		try {
-			MyFile f = new MyFile("1.pdf", 1);
-			while(true) {
-
-				nabao = f.nextChunk();
-
-				if(nabao == null)
-					break;
-
-				nabo[i] =nabao[0];
-				System.out.println(i);
-				i++;
-			}
-
-			System.out.println("->"+ Message.byteArrayToHexString(nabo) + "<-");
-		} catch (IOException e) {
-			e.printStackTrace();
-		}	*/
 	}
 
 	private void initReceivingThreads() {
