@@ -12,10 +12,10 @@ public class LocalFiles {
 	private static final String FILEBEGIN = "/*File format:";
 	private static final int COMMENTSIZE = 13;
 	private float diskSpace; //em kBytes
-	private List<MyFile> files; 
+	private List<LocalFile> files; 
 
 	public LocalFiles() {
-		files=new ArrayList<MyFile>();
+		files=new ArrayList<LocalFile>();
 		readFile();
 		
 		files.get(0).getId();
@@ -29,7 +29,7 @@ public class LocalFiles {
 		this.diskSpace = diskSpace;
 	}
 
-	public List<MyFile> getFiles() {
+	public List<LocalFile> getFiles() {
 		return files;
 	}
 
@@ -77,7 +77,7 @@ public class LocalFiles {
 					return;
 				}
 				
-				MyFile newFile=new MyFile(splits[1], splits[0]);
+				LocalFile newFile=new LocalFile(splits[1], splits[0]);
 				files.add(newFile);
 				
 				//System.out.println(line);

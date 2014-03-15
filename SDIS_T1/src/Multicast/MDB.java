@@ -4,8 +4,9 @@ import java.io.IOException;
 import java.net.InetAddress;
 
 import Messages.Message;
+import Messages.MessagePutChunk;
 
-public class MDB implements Runnable {
+public class MDB extends Thread {
 
 	Multicast channel;
 	
@@ -13,8 +14,8 @@ public class MDB implements Runnable {
 		channel = new Multicast(address, port);
 	}
 
-	@Override
 	public void run() {
+		System.out.println("...");
 		while(true) {
 			
 			//Can receive:
@@ -26,7 +27,7 @@ public class MDB implements Runnable {
 			}
 		}
 	}
-	
+
 	public boolean processMessage(String message) {
 		
 		if(message.equals("PUTCHUNK")) {
@@ -34,5 +35,14 @@ public class MDB implements Runnable {
 			return true;
 		} else
 			return false;
+	}
+	
+	public void sendMessage(MessagePutChunk msg) {
+		System.out.println("Sending Message");
+		try {
+			channel.send(msg.getMessage());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }
