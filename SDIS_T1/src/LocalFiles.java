@@ -95,5 +95,7 @@ public class LocalFiles {
 			e.printStackTrace();
 		}
 	}
+	
+	//TODO: funcao que te diga se um fileID pertence a este PCs
 
 }
