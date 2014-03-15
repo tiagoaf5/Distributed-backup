@@ -134,6 +134,10 @@ public class MessagePutChunk extends Message {
 		d.parseMessage(message1);
 
 	}
+	
+	public int getReplicationDeg() {
+		return replicationDeg;
+	}
 
 
 }

@@ -20,9 +20,10 @@ public class Chunk {
 		this.currentReplicationDeg = 0;
 
 
-		data = null;
+
 		try {
 			storeData(data);
+			data = null;
 		} catch (IOException e) {
 			System.out.println("Problem storing fileId: " + fileId + " Chunkno: " + chunkNo);
 			e.printStackTrace();
@@ -36,7 +37,7 @@ public class Chunk {
 		} 
 
 		FileOutputStream o = new FileOutputStream(f); 
-		o.write(data,0,32);
+		o.write(data);
 		o.close();
 		data = null;
 		currentReplicationDeg++;
