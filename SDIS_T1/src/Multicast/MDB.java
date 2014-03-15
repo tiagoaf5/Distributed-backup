@@ -28,14 +28,6 @@ public class MDB extends Thread {
 		}
 	}
 
-	public boolean processMessage(String message) {
-		
-		if(message.equals("PUTCHUNK")) {
-			
-			return true;
-		} else
-			return false;
-	}
 	
 	public void sendMessage(MessagePutChunk msg) {
 		System.out.println("Sending Message");
