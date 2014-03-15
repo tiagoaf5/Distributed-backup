@@ -35,8 +35,12 @@ public class MessagePutChunk extends Message {
 
 	}
 
-	void setChunk(byte s[]) {
+	public void setChunk(byte s[]) {
 		chunk = s;
+	}
+	
+	public byte[] getChunk() {
+		return chunk;
 	}
 	
 	public byte[] getAnswer() {
