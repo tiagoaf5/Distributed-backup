@@ -174,5 +174,15 @@ public class BackupService {
 	public static HashMap<String, RemoteFile> getRemoteFiles() {
 		return remoteFiles;
 	}
+	
+	public static boolean addRemoteFile(String fileId, RemoteFile file) {
+		
+		if(remoteFiles.containsKey(fileId))
+			return false;
+		else {
+			remoteFiles.put(fileId, file);
+			return true;
+		}
+	}
 
 }

@@ -2,12 +2,14 @@ package Multicast;
 
 import java.io.IOException;
 import java.net.InetAddress;
+import java.util.HashMap;
 import java.util.List;
 
 import Messages.Message;
 import Messages.MessagePutChunk;
 import Service.BackupService;
 import Service.LocalFile;
+import Service.RemoteFile;
 
 
 public class MDB extends Thread {
@@ -30,26 +32,31 @@ public class MDB extends Thread {
 			try { 
 				byte[] rcv=channel.receive();
 				String type=Message.getMessageType(rcv);
-				System.out.println("Received: " + Message.getMessageType(channel.receive()));
+				System.out.println("Received: " + Message.getMessageType(rcv));
 				
 				if(type.equals("PUTCHUNK")) {
 					
-					MessagePutChunk msg=new MessagePutChunk(); //TODO: assim nao estou a guardar o chunk mesmo
-					//que afinal nao fosse para guardar??
+					MessagePutChunk msg=new MessagePutChunk();
 					msg.parseMessage(rcv);
 					
 					if(!local(msg.getFileId())) {
-						
-					} else 
+						RemoteFile file=remote(msg.getFileId());
+						if(file==null) {
+							file=new RemoteFile(msg.getFileId(), msg.getReplicationDeg());
+							file.addChunk(msg);
+							BackupService.addRemoteFile(msg.getFileId(), file);
+							System.out.println("ola");
+						} else {
+							if(!file.addChunk(msg))
+								System.out.println("Chunk already stored");
+						}
+					} else {
 						System.out.println("Local file");
-					
+						msg=null;
+					}
 				} else {
 					System.out.println("Invalid message!");
 				}
-				
-				//TODO: é isto que tens de fazer
-				//o que fazer quando recebe uma mensagem PUTCHUNK tens de ignorar as provenientes do teu pcs
-				//capcihe?? o que faz isto
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -72,6 +79,12 @@ public class MDB extends Thread {
 		return false;
 	}
 
+	private RemoteFile remote(String fileId) {
+		
+		HashMap<String, RemoteFile> remoteFiles=BackupService.getRemoteFiles();
+		return remoteFiles.get(fileId);
+	}
+	
 	public void sendMessage(MessagePutChunk msg) {
 		
 		System.out.println("Sending Message");
