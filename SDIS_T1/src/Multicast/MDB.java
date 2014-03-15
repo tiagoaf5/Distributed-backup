@@ -20,22 +20,16 @@ public class MDB extends Thread {
 			
 			//Can receive:
 			// - PUTCHUNK
-			try {
-				System.out.println(Message.getMessageType(channel.receive()));
+			try { //isto eu usei para experimentar agora tens de fazer o que se tem de fazer
+				System.out.println(Message.getMessageType(channel.receive())); //TODO: é isto que tens de fazer
+				//o que fazer quando recebe uma mensagem PUTCHUNK tens de ignorar as provenientes do teu pcs
+				//capcihe?? o que faz isto
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
 	}
-<<<<<<< HEAD
-<<<<<<< HEAD
 
-=======
-	
->>>>>>> 0f66507c20cf49150f8d1c685cae12492e391a1b
-=======
-	
->>>>>>> 0f66507c20cf49150f8d1c685cae12492e391a1b
 	public void sendMessage(MessagePutChunk msg) {
 		System.out.println("Sending Message");
 		try {
