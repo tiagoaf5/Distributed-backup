@@ -1,3 +1,4 @@
+package Service;
 import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.FileInputStream;
@@ -27,7 +28,6 @@ public class BackupService {
 	private MDR mdr;
 	private MC mc;
 
-
 	private static final String FILENAME = "files.txt";
 	private static final String FILEBEGIN = "/*File format:";
 	private static final int COMMENTSIZE = 13;
@@ -35,7 +35,6 @@ public class BackupService {
 	static private int diskSpace; //em kBytes
 	static private List<LocalFile> localFiles; 
 	static private HashMap<String, RemoteFile> remoteFiles;
-
 
 	public static void main(String[] args) throws IOException {
 		/*
