@@ -26,4 +26,13 @@ public class MDB implements Runnable {
 			}
 		}
 	}
+	
+	public boolean processMessage(String message) {
+		
+		if(message.equals("PUTCHUNK")) {
+			
+			return true;
+		} else
+			return false;
+	}
 }
