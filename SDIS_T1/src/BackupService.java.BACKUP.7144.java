@@ -18,10 +18,18 @@ public class BackupService {
 	private InetAddress mdrAddress;
 	private int mdrPort;
 
+<<<<<<< HEAD
+	LocalFiles localFiles;
+	Multicast mdb;
+	Multicast mdr;
+	MC mc;
+
+=======
 	private LocalFiles localFiles;
 	private Multicast mdb;
 	private Multicast mdr;
-	MC mc;
+	private Multicast mc;
+>>>>>>> 89c4d4ce0b1f377f36fe9873696e5afcb4f550b6
 
 	private static Map<String, Map<Integer, Integer>> filesStored=null;
 	
@@ -85,6 +93,15 @@ public class BackupService {
 		mdr = new Multicast(mdrAddress, mdrPort);
 	}
 
+<<<<<<< HEAD
+	public void initReceivingThreads() throws InterruptedException {/*
+		MessageStored abc = new MessageStored("41681c7cf03673502976034bfd68260d5663b8075192a89495265e3057ab8b7d",5);
+		try {
+			while(true) {
+				mc.sendMessage(abc);
+				System.out.println(Message.byteArrayToHexString(abc.getMessage()));
+				Thread.sleep(2000);
+=======
 	public void addFile(String fileId, int chunkNo, int size) {
 		
 		Map<Integer, Integer> temp = null;
@@ -102,11 +119,48 @@ public class BackupService {
 		return false;
 	}
 	
-		try {
-			while(true) {
-				mc.sendMessage(abc);
-				System.out.println(Message.byteArrayToHexString(abc.getMessage()));
-				Thread.sleep(2000);
+	public void initReceivingThreads() {
+		new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				while (true) {
+					try {
+						System.out.println(Message.getMessageType(mc.receive()));
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}
+		});
+		new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				while (true) {
+					try {
+						System.out.println(Message.getMessageType(mc.receive()));
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}
+		});
+		new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				while (true) {
+					try {
+						System.out.println(Message.getMessageType(mc.receive()));
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+>>>>>>> 89c4d4ce0b1f377f36fe9873696e5afcb4f550b6
 			}
 		} catch (IOException e) {
 			e.printStackTrace();

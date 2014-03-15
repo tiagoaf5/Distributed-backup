@@ -18,13 +18,12 @@ public class BackupService {
 	private InetAddress mdrAddress;
 	private int mdrPort;
 
-	private LocalFiles localFiles;
-	private Multicast mdb;
-	private Multicast mdr;
+	LocalFiles localFiles;
+	Multicast mdb;
+	Multicast mdr;
 	MC mc;
 
-	private static Map<String, Map<Integer, Integer>> filesStored=null;
-	
+
 	public static void main(String[] args) {
 
 		try {
@@ -35,6 +34,10 @@ public class BackupService {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+
+
+
+
 		/*
 		byte[] nabo = new byte[11];
 		byte[] nabao = new byte[64000];
@@ -85,23 +88,8 @@ public class BackupService {
 		mdr = new Multicast(mdrAddress, mdrPort);
 	}
 
-	public void addFile(String fileId, int chunkNo, int size) {
-		
-		Map<Integer, Integer> temp = null;
-		temp.put(chunkNo, size);
-		filesStored.put(fileId, temp);
-	}
-
-	public boolean searchFile(String fileId, int chunkNo) {
-		
-		if(filesStored.containsKey(fileId)) {
-			Map<Integer, Integer> res=filesStored.get(fileId);
-			if(res.containsKey(chunkNo))
-				return true;
-		}
-		return false;
-	}
-	
+	public void initReceivingThreads() throws InterruptedException {/*
+		MessageStored abc = new MessageStored("41681c7cf03673502976034bfd68260d5663b8075192a89495265e3057ab8b7d",5);
 		try {
 			while(true) {
 				mc.sendMessage(abc);

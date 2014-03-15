@@ -11,14 +11,16 @@ public abstract class Message {
 	protected String version;
 	protected String fileId;
 	protected int chunkNo;
-
+	
 	public Message() {
 		version = "1.0";
 	}
+	
 	public Message(String fileId) {
 		version = "1.0";
 		this.fileId = fileId;
 	}
+	
 	public Message(String fileId, int chunkNo) {
 		version = "1.0";
 		this.fileId = fileId;
@@ -26,6 +28,14 @@ public abstract class Message {
 	}
 
 	abstract public byte [] getMessage();
+
+	public int getChunkNo() {
+		return chunkNo;
+	}
+
+	public String getFileId() {
+		return fileId;
+	}
 
 	public int parseMessage(byte[] data) {
 
