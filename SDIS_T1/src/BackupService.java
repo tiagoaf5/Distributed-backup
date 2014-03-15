@@ -26,38 +26,21 @@ public class BackupService {
 	private static Map<String, Map<Integer, Integer>> filesStored=null;
 	
 	public static void main(String[] args) {
-
+/*
 		try {
 			BackupService a = new BackupService(args);
 			a.initReceivingThreads();
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		/*
-		byte[] nabo = new byte[11];
-		byte[] nabao = new byte[64000];
-
-		int i= 0;
+		}*/
+		Chunk c = new Chunk("41681c7cf03673502976034bfd68260d5663b8075192a89495265e3057ab8b7d", 5, 2, Message.hexStringToByteArray("41681c7cf03673502976034bfd68260d5663b8075192a89495265e3057ab8b7d41681c7cf03673502976034bfd68260d5663b8075192a89495265e3057ab8b7d"));
+	/*
 		try {
-			MyFile f = new MyFile("1.pdf", 1);
-			while(true) {
-
-				nabao = f.nextChunk();
-
-				if(nabao == null)
-					break;
-
-				nabo[i] =nabao[0];
-				System.out.println(i);
-				i++;
-			}
-
-			System.out.println("->"+ Message.byteArrayToHexString(nabo) + "<-");
+			System.out.println(Message.byteArrayToHexString(c.getData()));
 		} catch (IOException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}	*/
+		}*/
 	}
 
 	private void initReceivingThreads() {
