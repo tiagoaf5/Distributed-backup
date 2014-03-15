@@ -9,6 +9,13 @@ public class MessageChunk extends Message {
 		super(fileId, chunkNo);
 	}
 
+	public MessageChunk() {
+	}
+
+	public byte[] getChunk() {
+		return chunk;
+	}
+	
 	@Override
 	public byte[] getMessage() {
 		
@@ -33,7 +40,6 @@ public class MessageChunk extends Message {
 			System.out.println("Error parsing message of type " + MESSAGE_TYPE);
 			return -1;
 		}
-
 
 		//Check header's end
 		i = getHeaderTermination(i, data);

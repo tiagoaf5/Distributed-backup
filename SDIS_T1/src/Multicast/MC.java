@@ -19,6 +19,8 @@ public class MC implements Runnable {
 	public void run() {
 		while(true) {
 			
+			System.out.println("Running multicast data channel for CONTROL...");
+			
 			//Can receive:
 			// - STORED
 			// - GETCHUNK
