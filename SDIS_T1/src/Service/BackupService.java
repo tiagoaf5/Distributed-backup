@@ -1,6 +1,7 @@
 package Service;
 import java.io.BufferedReader;
 import java.io.DataInputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -47,6 +48,7 @@ public class BackupService {
 
 		MyFile f = new MyFile("1.pdf", 1);
 		 */
+		
 		BackupService a = new BackupService(args);
 		a.initReceivingThreads();
 	}
@@ -90,6 +92,7 @@ public class BackupService {
 		remoteFiles = new HashMap<String,RemoteFile>();
 		localFiles = new ArrayList<LocalFile>();
 		readFile();
+		createFolders();
 
 		try {
 			openMulticastSessions();
@@ -97,6 +100,7 @@ public class BackupService {
 			e.printStackTrace();
 		}
 
+		
 	}
 
 	private void openMulticastSessions() throws IOException {
@@ -192,6 +196,17 @@ public class BackupService {
 	public static void deleteRemoteFile(String fileId) {
 		remoteFiles.remove(fileId);
 		//TODO: apagar as coisas do disco
+	}
+	
+	private void createFolders() {
+		File dir1 = new File("RemoteFiles");
+		File dir2 = new File("tmp");
+		
+		if (!dir1.exists())
+			dir1.mkdir();
+		
+		if (!dir2.exists())
+			dir2.mkdir();
 	}
 
 }

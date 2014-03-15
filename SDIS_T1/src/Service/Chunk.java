@@ -6,6 +6,7 @@ import java.io.IOException;
 
 public class Chunk {
 	//TODO: save Chunks in a specific folder
+	private final String PATH = "RemoteFiles/";
 	String fileId;
 	int chunkNo;
 
@@ -43,7 +44,7 @@ public class Chunk {
 	}
 
 	private String getNameOnDisk() {
-		return new String(fileId + ".part" + chunkNo);
+		return new String(PATH + fileId + ".part" + chunkNo);
 	}
 
 	public byte[] getData() throws IOException {

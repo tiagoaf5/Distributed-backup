@@ -51,8 +51,14 @@ public class Multicast {
 		
 		byte[] buf = new byte[SIZE];
 		DatagramPacket sp = new DatagramPacket(buf, buf.length); 
+		/*sp.getLength();*/
+		
 		mClient.receive(sp);
+		
+		byte[] data = new byte[sp.getLength()];
+		System.arraycopy(sp.getData(), sp.getOffset(), data, 0, sp.getLength());
+		
 		//System.out.println("Received " + new String(sp.getData()));
-		return sp.getData();
+		return data;
 	}
 }
