@@ -16,6 +16,9 @@ public class MDB implements Runnable {
 	@Override
 	public void run() {
 		while(true) {
+			
+			//Can receive:
+			// - PUTCHUNK
 			try {
 				System.out.println(Message.getMessageType(channel.receive()));
 			} catch (IOException e) {

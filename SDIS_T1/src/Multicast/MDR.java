@@ -16,6 +16,8 @@ public class MDR implements Runnable {
 	@Override
 	public void run() {
 		while(true) {
+			//Can receive:
+			// - CHUNK
 			try {
 				System.out.println(Message.getMessageType(channel.receive()));
 			} catch (IOException e) {

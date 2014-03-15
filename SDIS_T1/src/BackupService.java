@@ -5,7 +5,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import Messages.Message;
-import Multicast.Multicast;
+import Messages.MessageStored;
+import Multicast.*;
+
 
 public class BackupService {
 
@@ -19,14 +21,17 @@ public class BackupService {
 	LocalFiles localFiles;
 	Multicast mdb;
 	Multicast mdr;
-	Multicast mc;
+	MC mc;
 
 
 	public static void main(String[] args) {
 
 		try {
 			BackupService a = new BackupService(args);
+			a.initReceivingThreads();
 		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
 
@@ -67,7 +72,7 @@ public class BackupService {
 		this.mdrAddress = InetAddress.getByName(args[4]);
 		this.mdrPort = Integer.parseInt(args[5]);
 
-		localFiles = new LocalFiles(); //get files to backup info
+		//localFiles = new LocalFiles(); //get files to backup info
 
 		try {
 			openMulticastSessions();
@@ -78,54 +83,22 @@ public class BackupService {
 	}
 
 	private void openMulticastSessions() throws IOException {
-		mc = new Multicast(mcAddress, mcPort);
+		mc = new MC(mcAddress, mcPort);
 		mdb = new Multicast(mdbAddress, mdbPort);
 		mdr = new Multicast(mdrAddress, mdrPort);
 	}
 
-	public void initReceivingThreads() {
-		new Thread(new Runnable() {
-
-			@Override
-			public void run() {
-				while (true) {
-					try {
-						System.out.println(Message.getMessageType(mc.receive()));
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
+	public void initReceivingThreads() throws InterruptedException {/*
+		MessageStored abc = new MessageStored("41681c7cf03673502976034bfd68260d5663b8075192a89495265e3057ab8b7d",5);
+		try {
+			while(true) {
+				mc.sendMessage(abc);
+				System.out.println(Message.byteArrayToHexString(abc.getMessage()));
+				Thread.sleep(2000);
 			}
-		});
-		new Thread(new Runnable() {
-			
-			@Override
-			public void run() {
-				while (true) {
-					try {
-						System.out.println(Message.getMessageType(mc.receive()));
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
-			}
-		});
-		new Thread(new Runnable() {
-			
-			@Override
-			public void run() {
-				while (true) {
-					try {
-						System.out.println(Message.getMessageType(mc.receive()));
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
-			}
-		});
+		} catch (IOException e) {
+			e.printStackTrace();
+		}*/
 	}
 
 }

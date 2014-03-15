@@ -16,11 +16,21 @@ public class MC implements Runnable {
 	@Override
 	public void run() {
 		while(true) {
+			
+			//Can receive:
+			// - STORED
+			// - GETCHUNK
+			// - DELETE
+			// - REMOVED
 			try {
 				System.out.println(Message.getMessageType(channel.receive()));
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	public void sendMessage(Message x) throws IOException {
+		channel.send(x.getMessage());
 	}
 }
