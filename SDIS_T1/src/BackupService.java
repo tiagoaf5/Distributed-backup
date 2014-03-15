@@ -1,13 +1,9 @@
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.HashMap;
-import java.util.Map;
 
 import Messages.Message;
-import Messages.MessageStored;
 import Multicast.*;
-
 
 public class BackupService {
 	
@@ -23,18 +19,17 @@ public class BackupService {
 	private Multicast mdr;
 	private MC mc;
 	
-	public static void main(String[] args) {
-/*
+	public static void main(String[] args) throws IOException {
+		/*
 		try {
 			BackupService a = new BackupService(args);
 			a.initReceivingThreads();
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
-		}*/
-		Chunk c = new Chunk("41681c7cf03673502976034bfd68260d5663b8075192a89495265e3057ab8b7d", 5, 2, Message.hexStringToByteArray("41681c7cf03673502976034bfd68260d5663b8075192a89495265e3057ab8b7d41681c7cf03673502976034bfd68260d5663b8075192a89495265e3057ab8b7d"));
-		/*
-			MyFile f = new MyFile("1.pdf", 1);
-		}	*/
+		}
+		
+		MyFile f = new MyFile("1.pdf", 1);
+		 */
 	}
 
 	private void initReceivingThreads() {

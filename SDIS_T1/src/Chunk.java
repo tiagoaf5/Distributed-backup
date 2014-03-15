@@ -11,15 +11,12 @@ public class Chunk {
 	int replicationDeg;
 	int currentReplicationDeg;
 
-
-	Chunk (String fileId, int chunkNo, int replicationDeg, byte[] data) {
+	public Chunk (String fileId, int chunkNo, int replicationDeg, byte[] data) {
 		this.fileId = fileId;
 		this.chunkNo = chunkNo;
 
 		this.replicationDeg = replicationDeg;
 		this.currentReplicationDeg = 0;
-
-
 
 		try {
 			storeData(data);
@@ -28,6 +25,7 @@ public class Chunk {
 			System.out.println("Problem storing fileId: " + fileId + " Chunkno: " + chunkNo);
 			e.printStackTrace();
 		}
+		data = null;
 	}
 
 	private void storeData(byte[] data) throws IOException {
@@ -55,11 +53,8 @@ public class Chunk {
 
 		FileInputStream fileStream = new FileInputStream(f);
 
-
-
 		long length = f.length();
 		byte[] b = new byte[(int)length];
-
 
 		fileStream.read(b);
 		fileStream.close();
