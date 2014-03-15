@@ -16,12 +16,13 @@ public class BackupService {
 	private InetAddress mdrAddress;
 	private int mdrPort;
 
-	LocalFiles localFiles;
-	Multicast mdb;
-	Multicast mdr;
-	Multicast mc;
+	private LocalFiles localFiles;
+	private Multicast mdb;
+	private Multicast mdr;
+	private Multicast mc;
 
-
+	private static Map<String, Map<Integer, Integer>> filesStored=null;
+	
 	public static void main(String[] args) {
 
 		try {
@@ -29,10 +30,6 @@ public class BackupService {
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		}
-
-
-
-
 		/*
 		byte[] nabo = new byte[11];
 		byte[] nabao = new byte[64000];
@@ -83,6 +80,23 @@ public class BackupService {
 		mdr = new Multicast(mdrAddress, mdrPort);
 	}
 
+	public void addFile(String fileId, int chunkNo, int size) {
+		
+		Map<Integer, Integer> temp = null;
+		temp.put(chunkNo, size);
+		filesStored.put(fileId, temp);
+	}
+
+	public boolean searchFile(String fileId, int chunkNo) {
+		
+		if(filesStored.containsKey(fileId)) {
+			Map<Integer, Integer> res=filesStored.get(fileId);
+			if(res.containsKey(chunkNo))
+				return true;
+		}
+		return false;
+	}
+	
 	public void initReceivingThreads() {
 		new Thread(new Runnable() {
 
