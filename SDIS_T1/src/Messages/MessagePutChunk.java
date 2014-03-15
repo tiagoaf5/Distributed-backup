@@ -3,13 +3,11 @@ package Messages;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-import javax.xml.crypto.dsig.keyinfo.RetrievalMethod;
-
 
 public class MessagePutChunk extends Message {
 
 	private static final String MESSAGE_TYPE = "PUTCHUNK";
-	private static final String MESSAGE_TYPE_ANSWER = "STORED";
+	//private static final String MESSAGE_TYPE_ANSWER = "STORED";
 	private int replicationDeg;
 	byte chunk[];
 

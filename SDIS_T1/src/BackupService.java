@@ -1,7 +1,14 @@
+import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import Messages.Message;
 import Messages.MessagePutChunk;
@@ -16,13 +23,19 @@ public class BackupService {
 	private InetAddress mdrAddress;
 	private int mdrPort;
 
-	private LocalFiles localFiles;
 	private MDB mdb;
 	private MDR mdr;
 	private MC mc;
 
+
+	private static final String FILENAME = "files.txt";
+	private static final String FILEBEGIN = "/*File format:";
+	private static final int COMMENTSIZE = 13;
+
+	static private int diskSpace; //em kBytes
+	static private List<LocalFile> localFiles; 
 	static private HashMap<String, RemoteFile> remoteFiles;
-	//static private HashMap<String, LocalFile> localFiles;
+
 
 	public static void main(String[] args) throws IOException {
 		/*
@@ -50,7 +63,7 @@ public class BackupService {
 		MessagePutChunk a = new MessagePutChunk("41681c7cf03673502976034bfd68260d5663b8075192a89495265e3057ab8b7d", 5, 2);
 		a.setChunk(Message.hexStringToByteArray("41681c7cf03673502976034bfd68260d5663b8075192a89495265e3057ab8b7d41681c7cf03673502976034bfd68260d5663b8075192a89495265e3057ab8b7d"));
 		mdb.sendMessage(a);
-		
+
 		/*
 		try {
 			while(true) {
@@ -74,6 +87,8 @@ public class BackupService {
 		this.mdrPort = Integer.parseInt(args[5]);
 
 		//localFiles = new LocalFiles(); //get files to backup info
+		localFiles = new ArrayList<LocalFile>();
+		readFile();
 
 		try {
 			openMulticastSessions();
@@ -88,5 +103,77 @@ public class BackupService {
 		mdb = new MDB(mdbAddress, mdbPort);
 		mdr = new MDR(mdrAddress, mdrPort);
 	}	
+
+
+
+	private void readFile() {
+		
+		FileInputStream fileStream;
+
+		try {
+			fileStream = new FileInputStream(FILENAME);
+			DataInputStream input = new DataInputStream(fileStream);
+			BufferedReader reader = new BufferedReader(new InputStreamReader(input));
+			String line;
+
+			if((line=reader.readLine())!=null) {
+				if(line.startsWith(FILEBEGIN)) {
+					for(int i=0; i<COMMENTSIZE; i++) {
+						line = reader.readLine();
+					}
+				}
+				try {
+					diskSpace = Integer.parseInt(line);
+					System.out.println(diskSpace);
+				} catch(Exception e) {
+					System.out.println("ERRO files.txt mal definido: falta espaço máximo de disco.");
+					reader.close();
+					return;
+				}
+			} else {
+				System.out.println("ERRO files.txt vazio.");
+				reader.close();
+				return;
+			}
+
+			while ((line = reader.readLine()) != null)   {
+
+				String[] splits=line.split(" - ", 2);
+				if(splits.length!=2) {
+					System.out.println("ERRO files.txt: linha " + line + " mal definida.");
+					reader.close();
+					return;
+				}
+
+				LocalFile newFile=new LocalFile(splits[1], splits[0]);
+				localFiles.add(newFile);
+
+				//System.out.println(line);
+				//System.out.println(splits[0] + ", " + splits[1]);
+			}
+			System.out.println("Numero de ficheiros lidos: " + localFiles.size());
+
+			reader.close();
+			input.close();
+
+		} catch (FileNotFoundException e) {
+			System.out.println("ERROR: files.txt não encontrado");
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static int getDiskSpace() {
+		return diskSpace;
+	}
+
+	public static List<LocalFile> getLocalFiles() {
+		return localFiles;
+	}
+
+	public static HashMap<String, RemoteFile> getRemoteFiles() {
+		return remoteFiles;
+	}
 
 }

@@ -17,7 +17,7 @@ public class MDB extends Thread {
 	public void run() {
 		System.out.println("...");
 		while(true) {
-			
+			System.out.println(".");
 			//Can receive:
 			// - PUTCHUNK
 			try {
