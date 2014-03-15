@@ -9,7 +9,9 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.InputMismatchException;
 import java.util.List;
+import java.util.Scanner;
 
 import Messages.Message;
 import Messages.MessagePutChunk;
@@ -49,6 +51,7 @@ public class BackupService {
 		 */
 		BackupService a = new BackupService(args);
 		a.initReceivingThreads();
+		//a.showInterface();
 	}
 
 	private void initReceivingThreads() {
@@ -194,4 +197,95 @@ public class BackupService {
 		//TODO: apagar as coisas do disco
 	}
 
+	public void showInterface() {
+		
+		boolean menu=true;
+		Scanner in = new Scanner(System.in);
+		
+		while(menu) {
+			System.out.println("Choose an option (1-5): \n 1. Backup a file \n"
+					+ " 2. Restore a file\n 3. Delete a file\n"
+					+ " 4. Free disk space\n 5. Terminate");
+
+			String s;
+			int option;
+			s=in.nextLine();
+			
+			try{
+				option=Integer.parseInt(s);
+				int res;
+				switch(option) {
+				case 1:
+					res=chooseFile();
+					//TODO: backup
+					break;
+				case 2:
+					res=chooseFile();
+					//TODO: restore
+					break;
+				case 3:
+					res=chooseFile();
+					//TODO: delete
+					break;
+				case 4: 
+					res=getQuantity();
+					//TODO: free disk space
+					break;
+				case 5:
+					menu=false;
+					break;
+				}
+			} catch (NumberFormatException e){
+				
+			}
+		}
+		in.close();
+	}
+	
+	private int getQuantity() {
+		
+		Scanner in = new Scanner(System.in);
+		while(true) {
+			System.out.println("Choose a size between 1 and "+diskSpace+":");
+
+			String s;
+			int size;
+			s=in.nextLine();
+
+			try{
+				size=Integer.parseInt(s);
+				if(size>0 && size<=diskSpace)
+					return size;
+			} catch (NumberFormatException e){
+
+			}
+		}
+	}
+
+	private int chooseFile() {
+
+		Scanner in = new Scanner(System.in);
+		while(true) {
+			System.out.println("Choose a file (1-"+localFiles.size()+"):");
+			
+			int i=0; int j=1;
+			while(i<localFiles.size()) {
+				System.out.println(j+". "+localFiles.get(i).getName());
+				j++;
+				i++;
+			}
+			
+			String s;
+			int option;
+			s=in.nextLine();
+
+			try{
+				option=Integer.parseInt(s);
+				if(option>0 && option<=localFiles.size())
+					return option;
+			} catch (NumberFormatException e){
+
+			}
+		}
+	}
 }
