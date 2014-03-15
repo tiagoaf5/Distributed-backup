@@ -10,7 +10,7 @@ import Multicast.*;
 
 
 public class BackupService {
-
+	
 	private InetAddress mcAddress;
 	private int mcPort;
 	private InetAddress mdbAddress;
@@ -21,9 +21,7 @@ public class BackupService {
 	private LocalFiles localFiles;
 	private Multicast mdb;
 	private Multicast mdr;
-	MC mc;
-
-	private static Map<String, Map<Integer, Integer>> filesStored=null;
+	private MC mc;
 	
 	public static void main(String[] args) {
 /*
@@ -34,13 +32,10 @@ public class BackupService {
 			e.printStackTrace();
 		}*/
 		Chunk c = new Chunk("41681c7cf03673502976034bfd68260d5663b8075192a89495265e3057ab8b7d", 5, 2, Message.hexStringToByteArray("41681c7cf03673502976034bfd68260d5663b8075192a89495265e3057ab8b7d41681c7cf03673502976034bfd68260d5663b8075192a89495265e3057ab8b7d"));
-	/*
-		try {
-			System.out.println(Message.byteArrayToHexString(c.getData()));
-		} catch (IOException e) {
+		/*
+			MyFile f = new MyFile("1.pdf", 1);
 			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}*/
+		}	*/
 	}
 
 	private void initReceivingThreads() {
@@ -81,26 +76,6 @@ public class BackupService {
 		mc = new MC(mcAddress, mcPort);
 		mdb = new Multicast(mdbAddress, mdbPort);
 		mdr = new Multicast(mdrAddress, mdrPort);
-	}
-
-	public void addFile(String fileId, int chunkNo, int size) {
-		
-		Map<Integer, Integer> temp = null;
-		temp.put(chunkNo, size);
-		filesStored.put(fileId, temp);
-	}
-
-	public boolean searchFile(String fileId, int chunkNo) {
-		
-		if(filesStored.containsKey(fileId)) {
-			Map<Integer, Integer> res=filesStored.get(fileId);
-			if(res.containsKey(chunkNo))
-				return true;
-		}
-		return false;
-	}
-	
-
-	
+	}	
 
 }
