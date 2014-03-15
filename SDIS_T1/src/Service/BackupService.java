@@ -189,4 +189,9 @@ public class BackupService {
 		}
 	}
 
+	public static void deleteRemoteFile(String fileId) {
+		remoteFiles.remove(fileId);
+		//TODO: apagar as coisas do disco
+	}
+
 }
