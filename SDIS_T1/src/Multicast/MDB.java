@@ -27,7 +27,11 @@ public class MDB extends Thread {
 			}
 		}
 	}
+<<<<<<< HEAD
 
+=======
+	
+>>>>>>> 0f66507c20cf49150f8d1c685cae12492e391a1b
 	public void sendMessage(MessagePutChunk msg) {
 		System.out.println("Sending Message");
 		try {
