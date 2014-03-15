@@ -19,14 +19,13 @@ public class Chunk {
 		this.replicationDeg = replicationDeg;
 		this.currentReplicationDeg = 0;
 
-
-		data = null;
 		try {
 			storeData(data);
 		} catch (IOException e) {
 			System.out.println("Problem storing fileId: " + fileId + " Chunkno: " + chunkNo);
 			e.printStackTrace();
 		}
+		data = null;
 	}
 
 	private void storeData(byte[] data) throws IOException {
