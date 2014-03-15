@@ -32,7 +32,7 @@ public class MDB extends Thread {
 			try { 
 				byte[] rcv=channel.receive();
 				String type=Message.getMessageType(rcv);
-				System.out.println("Received: " + Message.getMessageType(rcv));
+				System.out.println("Received: " + Message.byteArrayToString(rcv));
 				
 				if(type.equals("PUTCHUNK")) {
 					
