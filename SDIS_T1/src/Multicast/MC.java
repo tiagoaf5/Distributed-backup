@@ -16,7 +16,7 @@ import Service.RemoteFile;
 
 public class MC extends Thread {
 	
-	private static final String MESSAGE="Multicast data channel CONTROL:";
+	private static final String MESSAGE="Multicast data channel CONTROL: ";
 	private Multicast channel;
 	private static String filePut;
 	private static int chunkPut;
@@ -38,11 +38,12 @@ public class MC extends Thread {
 			try {
 				byte[] rcv=channel.receive();
 				String type=Message.getMessageType(rcv);
-				System.out.println(MESSAGE + " received - " + Message.byteArrayToHexString(rcv));
 
 				if(type.equals("STORED")) {
 					MessageStored msg=new MessageStored();
 					msg.parseMessage(rcv);
+					
+					System.out.println(MESSAGE + " received - STORED FileId: " + msg.getFileId() + " ChunkNo: " + msg.getChunkNo());
 					
 					if(askedPut(msg.getFileId(), msg.getChunkNo())) {
 						//TODO o que fazer com isto??
@@ -58,7 +59,7 @@ public class MC extends Thread {
 						System.out.println(MESSAGE + " chunk not found");
 					} else {
 						
-						byte[] data=file.getChunk(msg.getChunkNo());
+						byte[] data=file.getChunkData(msg.getChunkNo());
 						//TODO enviar chunk
 						System.out.println(MESSAGE + " sending chunk");
 					}
@@ -104,7 +105,7 @@ public class MC extends Thread {
 	}
 
 	public void sendMessage(Message x) throws IOException {
-		System.out.println(MESSAGE + " Sending Message ");
+		System.out.println(MESSAGE + "Sending Message..");
 		channel.send(x.getMessage());
 	}
 }

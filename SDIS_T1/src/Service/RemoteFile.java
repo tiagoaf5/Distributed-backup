@@ -32,7 +32,7 @@ public class RemoteFile {
 		return true;
 	}
 
-	public byte[] getChunk(int chunkNo) {
+	public byte[] getChunkData(int chunkNo) {
 		if(!chunks.containsKey(chunkNo))
 			return null;
 
@@ -42,6 +42,13 @@ public class RemoteFile {
 			e.printStackTrace();
 		}
 		return null;
+	}
+	
+	public Chunk getChunk(int chunkNo) {
+		if(!chunks.containsKey(chunkNo))
+			return null;
+		
+		return chunks.get(chunkNo);
 	}
 
 	public boolean increaseCurReplicationDeg (int chunkNo) {
@@ -70,6 +77,11 @@ public class RemoteFile {
 			it.next().getValue().delete();
 			it.remove(); // avoids a ConcurrentModificationException
 		}
+	}
+
+	public void removeChunk(int chunkNo) {
+		chunks.get(chunkNo).delete();
+		chunks.remove(chunkNo);
 	}
 
 }

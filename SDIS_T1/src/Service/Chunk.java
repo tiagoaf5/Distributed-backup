@@ -64,8 +64,11 @@ public class Chunk {
 		return b;
 	}
 	
-	public void increaseCurReplicationDeg() {
+	public synchronized void increaseCurReplicationDeg() {
 		currentReplicationDeg++;
+	}
+	public synchronized int getCurReplicationDeg() {
+		return currentReplicationDeg;
 	}
 	
 	public boolean delete() {

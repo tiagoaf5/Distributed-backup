@@ -84,7 +84,7 @@ public class BackupService {
 				MessagePutChunk msg = new MessagePutChunk(x.getId(), x.getOffset(), x.getReplication());
 				msg.setChunk(z);
 				mdb.sendMessage(msg);
-				System.out.println(Message.byteArrayToHexString(msg.getMessage()));
+				//System.out.println(Message.byteArrayToHexString(msg.getMessage()));
 				Thread.sleep(r.nextInt(400)+1);
 				
 			} catch (IOException e) {
