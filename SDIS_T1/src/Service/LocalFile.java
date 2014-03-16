@@ -155,4 +155,8 @@ public class LocalFile {
 			
 		return b;
 	}
+
+	public int getOffset() {
+		return offset;
+	}
 }

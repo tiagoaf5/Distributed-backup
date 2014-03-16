@@ -14,7 +14,7 @@ import Messages.MessageStored;
 import Service.BackupService;
 import Service.RemoteFile;
 
-public class MC implements Runnable {
+public class MC extends Thread {
 	
 	private static final String MESSAGE="Multicast data channel CONTROL:";
 	private Multicast channel;
@@ -27,12 +27,9 @@ public class MC implements Runnable {
 		chunkPut=0;
 	}
 
-	@Override
 	public void run() {
+		System.out.println("Running multicast data channel for CONTROL...");
 		while(true) {
-			
-			System.out.println("Running multicast data channel for CONTROL...");
-			
 			//Can receive:
 			// - STORED
 			// - GETCHUNK
@@ -102,10 +99,12 @@ public class MC implements Runnable {
 	}
 	
 	private boolean askedPut(String fileId, int chunkNo) {
-		return (filePut.equals(fileId)&&chunkNo==chunkPut);
+		return true;
+		//return (filePut.equals(fileId)&&chunkNo==chunkPut);
 	}
 
 	public void sendMessage(Message x) throws IOException {
+		System.out.println(MESSAGE + " Sending Message ");
 		channel.send(x.getMessage());
 	}
 }

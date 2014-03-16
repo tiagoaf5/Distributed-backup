@@ -78,7 +78,7 @@ public class MessagePutChunk extends Message {
 		byte[] b = new byte[2];
 		int x = 0;
 
-		while(data[i] != SPACE) {
+		while(data[i] != SPACE) {	
 			if(x >= 1)
 				return -1;
 			b[x] = data[i];

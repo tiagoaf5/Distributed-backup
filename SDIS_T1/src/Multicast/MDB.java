@@ -7,6 +7,7 @@ import java.util.List;
 
 import Messages.Message;
 import Messages.MessagePutChunk;
+import Messages.MessageStored;
 import Service.BackupService;
 import Service.LocalFile;
 import Service.RemoteFile;
@@ -39,7 +40,7 @@ public class MDB extends Thread {
 					MessagePutChunk msg=new MessagePutChunk();
 					msg.parseMessage(rcv);
 					
-					if(!isLocal(msg.getFileId())) {
+					if(!isLocal(msg.getFileId()) || true) {
 						RemoteFile file=remote(msg.getFileId());
 						if(file==null) {
 							file=new RemoteFile(msg.getFileId(), msg.getReplicationDeg());
@@ -50,6 +51,23 @@ public class MDB extends Thread {
 							if(!file.addChunk(msg))
 								System.out.println(MESSAGE + " chunk already stored");
 						}
+						final String fileId = msg.getFileId();
+						final int chunkNo = msg.getChunkNo();
+						
+						new Thread(new Runnable() {
+							
+							@Override
+							public void run() {
+								
+								try {
+									BackupService.getMc().sendMessage(new MessageStored(fileId, chunkNo));
+								} catch (IOException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
+								
+							}
+						}).start();
 					} else {
 						System.out.println(MESSAGE + " local file");
 					}

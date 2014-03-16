@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.InputMismatchException;
 import java.util.List;
+import java.util.Random;
 import java.util.Scanner;
 
 import Messages.Message;
@@ -27,9 +28,9 @@ public class BackupService {
 	private InetAddress mdrAddress;
 	private int mdrPort;
 
-	private MDB mdb;
-	private MDR mdr;
-	private MC mc;
+	private static MDB mdb;
+	private static MDR mdr;
+	private static MC mc;
 
 	private static final String FILENAME = "files.txt";
 	private static final String FILEBEGIN = "/*File format:";
@@ -58,16 +59,42 @@ public class BackupService {
 
 	private void initReceivingThreads() {
 		mdb.start();
+		mc.start();
+		
 		try {
 			Thread.sleep(5000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
 
-		MessagePutChunk a = new MessagePutChunk("41681c7cf03673502976034bfd68260d5663b8075192a89495265e3057ab8b7d", 5, 2);
+		/*MessagePutChunk a = new MessagePutChunk("41681c7cf03673502976034bfd68260d5663b8075192a89495265e3057ab8b7d", 5, 2);
 		a.setChunk(Message.hexStringToByteArray("41681c7cf03673502976034bfd68260d5663b8075192a89495265e3057ab8b7d41681c7cf03673502976034bfd68260d5663b8075192a89495265e3057ab8b7d"));
 		mdb.sendMessage(a);
-		System.out.println(Message.byteArrayToHexString(a.getMessage()));
+		System.out.println(Message.byteArrayToHexString(a.getMessage()));*/
+		
+		LocalFile x = localFiles.get(0);
+		Random r = new Random();
+		while(true) {
+			try {
+				byte[] z = x.nextChunk();
+				
+				if(z == null)
+					break;
+				
+				MessagePutChunk msg = new MessagePutChunk(x.getId(), x.getOffset(), x.getReplication());
+				msg.setChunk(z);
+				mdb.sendMessage(msg);
+				System.out.println(Message.byteArrayToHexString(msg.getMessage()));
+				Thread.sleep(r.nextInt(400)+1);
+				
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 
 		/*
 		try {
@@ -302,5 +329,17 @@ public class BackupService {
 
 			}
 		}
+	}
+
+	public static MDB getMdb() {
+		return mdb;
+	}
+
+	public static MDR getMdr() {
+		return mdr;
+	}
+
+	public static MC getMc() {
+		return mc;
 	}
 }
