@@ -61,6 +61,8 @@ public class BackupService {
 		mdb.start();
 		mc.start();
 		
+		mdb.backupFile(localFiles.get(0));
+		
 	/*	try {
 			Thread.sleep(5000);
 		} catch (InterruptedException e) {

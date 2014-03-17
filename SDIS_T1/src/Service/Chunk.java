@@ -29,6 +29,14 @@ public class Chunk {
 		}
 		data = null;
 	}
+	
+	public Chunk (String fileId, int chunkNo, int replicationDeg) {
+		this.fileId = fileId;
+		this.chunkNo = chunkNo;
+
+		this.replicationDeg = replicationDeg;
+		this.currentReplicationDeg = 0;
+	}
 
 	private void storeData(byte[] data) throws IOException {
 		File f = new File(getNameOnDisk());
