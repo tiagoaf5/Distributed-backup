@@ -12,6 +12,7 @@ import Messages.MessagePutChunk;
 import Messages.MessageRemoved;
 import Messages.MessageStored;
 import Service.BackupService;
+import Service.LocalFile;
 import Service.RemoteFile;
 
 public class MC extends Thread {
@@ -45,16 +46,23 @@ public class MC extends Thread {
 					
 					System.out.println(MESSAGE + " received - STORED FileId: " + msg.getFileId() + " ChunkNo: " + msg.getChunkNo());
 					
-					if(askedPut(msg.getFileId(), msg.getChunkNo())) {
-						//TODO o que fazer com isto??
+					LocalFile local=BackupService.getLocal(msg.getFileId());
+					if(!(local==null)) {
+						local.increaseCurReplicationDeg(msg.getChunkNo());
 					}
 					
+					RemoteFile remote = BackupService.getRemote(msg.getFileId());
+					if(!(remote==null)) {
+						remote.increaseCurReplicationDeg(msg.getChunkNo());
+					}	
+		
 					msg=null;
+					
 				} else if(type.equals("GETCHUNK")) {
 					MessageGetChunk msg=new MessageGetChunk();
 					msg.parseMessage(rcv);
 
-					RemoteFile file=remote(msg.getFileId());
+					RemoteFile file=BackupService.getRemote(msg.getFileId());
 					if(file==null) {
 						System.out.println(MESSAGE + " chunk not found");
 					} else {
@@ -69,7 +77,7 @@ public class MC extends Thread {
 					MessageDelete msg=new MessageDelete();
 					msg.parseMessage(rcv);
 					
-					RemoteFile file=remote(msg.getFileId());
+					RemoteFile file=BackupService.getRemote(msg.getFileId());
 					if(file==null) {
 						System.out.println(MESSAGE + " file not found");
 					} else {
@@ -93,16 +101,6 @@ public class MC extends Thread {
 		}
 	}
 	
-	private RemoteFile remote(String fileId) {
-	
-		HashMap<String, RemoteFile> remoteFiles=BackupService.getRemoteFiles();
-		return remoteFiles.get(fileId);
-	}
-	
-	private boolean askedPut(String fileId, int chunkNo) {
-		return true;
-		//return (filePut.equals(fileId)&&chunkNo==chunkPut);
-	}
 
 	public void sendMessage(Message x) throws IOException {
 		System.out.println(MESSAGE + "Sending Message..");

@@ -44,8 +44,8 @@ public class MDB extends Thread {
 
 					System.out.println(MESSAGE + " received - PUTCHUNK FileId: " + msg.getFileId() + " ChunkNo: " + msg.getChunkNo());
 
-					if(!isLocal(msg.getFileId()) || true) { //TODO: Remove this true
-						RemoteFile file = getRemote(msg.getFileId());
+					if(!BackupService.isLocal(msg.getFileId()) || true) { //TODO: Remove this true
+						RemoteFile file = BackupService.getRemote(msg.getFileId());
 
 						final String fileId = msg.getFileId();
 						final int chunkNo = msg.getChunkNo();
@@ -72,7 +72,7 @@ public class MDB extends Thread {
 
 									try {
 										int r = ThreadLocalRandom.current().nextInt(0,401);
-										RemoteFile f = getRemote(fileId);
+										RemoteFile f = BackupService.getRemote(fileId);
 										sleep(r);
 										
 										//Enhancement 1 - if the current replication degree is greater or equal than the wanted discard chunk
@@ -103,28 +103,6 @@ public class MDB extends Thread {
 				e.printStackTrace();
 			}
 		}
-	}
-
-
-	private boolean isLocal(String fileId) {
-
-		List<LocalFile> localFiles = BackupService.getLocalFiles();
-
-		int i=0;
-
-		while(i<localFiles.size()) {
-			LocalFile temp = localFiles.get(i);
-			if(temp.getId().equals(fileId))
-				return true;
-			i++;
-		}
-		return false;
-	}
-
-	private RemoteFile getRemote(String fileId) {
-
-		HashMap<String, RemoteFile> remoteFiles=BackupService.getRemoteFiles();
-		return remoteFiles.get(fileId);
 	}
 
 	public void sendMessage(MessagePutChunk msg) {
