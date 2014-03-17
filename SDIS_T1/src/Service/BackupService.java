@@ -91,7 +91,6 @@ public class BackupService {
 			}
 		}*/
 
-
 	}
 
 	public BackupService(String args[]) throws UnknownHostException {
@@ -326,5 +325,40 @@ public class BackupService {
 
 	public static MC getMc() {
 		return mc;
+	}
+	
+	public static boolean isLocal(String fileId) {
+
+		List<LocalFile> localFiles = BackupService.getLocalFiles();
+
+		int i=0;
+
+		while(i<localFiles.size()) {
+			LocalFile temp = localFiles.get(i);
+			if(temp.getId().equals(fileId))
+				return true;
+			i++;
+		}
+		return false;
+	}
+
+	public static RemoteFile getRemote(String fileId) {
+
+		HashMap<String, RemoteFile> remoteFiles=BackupService.getRemoteFiles();
+		return remoteFiles.get(fileId);
+	}
+	
+	public static LocalFile getLocal(String fileId) {
+
+		List<LocalFile> localFiles = BackupService.getLocalFiles();
+		int i=0;
+
+		while(i<localFiles.size()) {
+			LocalFile temp = localFiles.get(i);
+			if(temp.getId().equals(fileId))
+				return temp;
+			i++;
+		}
+		return null;
 	}
 }
