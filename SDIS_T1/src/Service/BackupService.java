@@ -61,12 +61,11 @@ public class BackupService {
 		mdb.start();
 		mc.start();
 		
-		try {
+	/*	try {
 			Thread.sleep(5000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		
 		LocalFile x = localFiles.get(0);
 		Random r = new Random();
 		
