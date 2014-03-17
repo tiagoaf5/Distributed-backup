@@ -61,17 +61,12 @@ public class BackupService {
 		mdb.start();
 		mc.start();
 		
-		try {
+	/*	try {
 			Thread.sleep(5000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
 
-		/*MessagePutChunk a = new MessagePutChunk("41681c7cf03673502976034bfd68260d5663b8075192a89495265e3057ab8b7d", 5, 2);
-		a.setChunk(Message.hexStringToByteArray("41681c7cf03673502976034bfd68260d5663b8075192a89495265e3057ab8b7d41681c7cf03673502976034bfd68260d5663b8075192a89495265e3057ab8b7d"));
-		mdb.sendMessage(a);
-		System.out.println(Message.byteArrayToHexString(a.getMessage()));*/
-		
 		LocalFile x = localFiles.get(0);
 		Random r = new Random();
 		while(true) {

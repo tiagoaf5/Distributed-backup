@@ -58,7 +58,6 @@ public class MDB extends Thread {
 							BackupService.addRemoteFile(msg.getFileId(), file);
 							System.out.println(MESSAGE + " added new remote file");
 
-
 						} else {
 							alreadyStored = !file.addChunk(msg);
 							if(alreadyStored)
