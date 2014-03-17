@@ -10,6 +10,7 @@ import java.nio.file.Paths;
 import java.nio.file.attribute.UserPrincipal;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+
 import java.util.Random;
 
 import Messages.*;
@@ -18,17 +19,14 @@ import Messages.*;
  * Classe que representa um ficheiro local que entrará 
  * no sistema de backup
  */
-public class LocalFile {
-
-	private int replication;
+public class LocalFile extends MyFile{
 	private String name;
 	private Path path;
 	private File systemFile;
 	private FileInputStream fileStream;
 	private int offset = 0; //next 64KBytes to read
-	private String fileId;
 	
-	private final int CHUNK_SIZE = 64000;
+	
 	
 	public LocalFile(String name, int replication) throws FileNotFoundException {
 		
@@ -71,18 +69,6 @@ public class LocalFile {
 		
 	}
 
-	public int getReplication() {
-		return replication;
-	}
-
-	public void setReplication(int replication) {
-		
-		if(replication>9)
-			this.replication=9;
-		else
-			this.replication = replication;
-	}
-
 	public String getName() {
 		return name;
 	}
@@ -91,11 +77,6 @@ public class LocalFile {
 		this.name = name;
 	}
 	
-	public String getId() {
-		return fileId;
-
-	}
-
 	private byte[] applySHA256(String key) throws NoSuchAlgorithmException, UnsupportedEncodingException {
 		
 		MessageDigest md = MessageDigest.getInstance("SHA-256");
@@ -150,6 +131,7 @@ public class LocalFile {
 			System.out.println("last chunk with size = " + read);
 		
 		offset++;
+		
 		
 		//System.out.println("<" + Message.byteArrayToHexString(b).trim()+">");
 			

@@ -137,4 +137,29 @@ public class MDB extends Thread {
 			e.printStackTrace();
 		}
 	}
+	
+	
+	public void backupFile(LocalFile f) {
+		/*while(true) {
+			try {
+				byte[] z = x.nextChunk();
+				
+				if(z == null)
+					break;
+				
+				MessagePutChunk msg = new MessagePutChunk(x.getId(), x.getOffset(), x.getReplication());
+				msg.setChunk(z);
+				mdb.sendMessage(msg);
+				//System.out.println(Message.byteArrayToHexString(msg.getMessage()));
+				Thread.sleep(r.nextInt(400)+1);
+				
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}*/
+	}
 }

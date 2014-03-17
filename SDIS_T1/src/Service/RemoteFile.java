@@ -1,24 +1,12 @@
 package Service;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 
 import Messages.MessagePutChunk;
 
 
-public class RemoteFile {
+public class RemoteFile extends MyFile{
 	
-	private String fileId;
-	private int replicationDeg;
-	
-	private HashMap<Integer, Chunk> chunks; //<chunkNo,chunk>
-
-
 	public RemoteFile(String fileId, int replicationDeg) {
-		this.fileId = fileId;
-		this.replicationDeg = replicationDeg;
-		chunks = new HashMap<Integer, Chunk>();
+		super(fileId, replicationDeg);
 	}
 
 	public boolean addChunk(MessagePutChunk msg) {
@@ -30,58 +18,6 @@ public class RemoteFile {
 		chunks.put(msg.getChunkNo(), chunk);
 
 		return true;
-	}
-
-	public byte[] getChunkData(int chunkNo) {
-		if(!chunks.containsKey(chunkNo))
-			return null;
-
-		try {
-			return chunks.get(chunkNo).getData();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-	
-	public Chunk getChunk(int chunkNo) {
-		if(!chunks.containsKey(chunkNo))
-			return null;
-		
-		return chunks.get(chunkNo);
-	}
-
-	public boolean increaseCurReplicationDeg (int chunkNo) {
-		if(!chunks.containsKey(chunkNo))
-			return false;
-
-		chunks.get(chunkNo).increaseCurReplicationDeg();
-		return true;
-	}
-
-	public int getReplicationDeg() {
-		return replicationDeg;
-	}
-
-	public void setReplicationDeg(int replicationDeg) {
-		this.replicationDeg = replicationDeg;
-	}
-
-	public String getFileId() {
-		return fileId;
-	}
-
-	public void delete() {
-		Iterator<Map.Entry<Integer,Chunk>> it = chunks.entrySet().iterator();
-		while (it.hasNext()) {
-			it.next().getValue().delete();
-			it.remove(); // avoids a ConcurrentModificationException
-		}
-	}
-
-	public void removeChunk(int chunkNo) {
-		chunks.get(chunkNo).delete();
-		chunks.remove(chunkNo);
 	}
 
 }
