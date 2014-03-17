@@ -28,10 +28,6 @@ public abstract class MyFile {
 	public String getId() {
 		return fileId;
 	}
-	
-	public int getReplication() {
-		return replicationDeg;
-	}
 
 	public void setReplication(int replication) {
 		

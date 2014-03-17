@@ -63,7 +63,7 @@ public class MDB extends Thread {
 							if(alreadyStored)
 								System.out.println(MESSAGE + " chunk already stored");
 						}
-						
+
 						if(!alreadyStored) {
 							new Thread(new Runnable() {
 
@@ -74,7 +74,7 @@ public class MDB extends Thread {
 										int r = ThreadLocalRandom.current().nextInt(0,401);
 										RemoteFile f = getRemote(fileId);
 										sleep(r);
-										
+
 										//Enhancement 1 - if the current replication degree is greater or equal than the wanted discard chunk
 										if(f.getChunk(chunkNo).getCurReplicationDeg() - 1 >= f.getReplicationDeg()) {
 											f.removeChunk(chunkNo);
@@ -136,29 +136,47 @@ public class MDB extends Thread {
 			e.printStackTrace();
 		}
 	}
-	
-	
+
+
 	public void backupFile(LocalFile f) {
-		/*while(true) {
+		MDB mdb = BackupService.getMdb();
+
+		int previousLenght = 64000;
+		while(true) {
 			try {
-				byte[] z = x.nextChunk();
+				byte[] z = f.nextChunk();
+
+				if(z == null && previousLenght < 64000) //The previous loop was the last chunk
+					break;
+
+				int deltaT = 400;
+				int count = 0;
 				
-				if(z == null)
+				MessagePutChunk msg = new MessagePutChunk(f.getId(), f.getOffset(), f.getReplicationDeg());
+				msg.setChunk(z);
+
+				while(count < 5) {
+					mdb.sendMessage(msg); //send Message
+					Thread.sleep(deltaT); //wait for stored messages
+					
+					//check replication rate
+					if(f.getChunk(f.getOffset()).getCurReplicationDeg() >= f.getReplicationDeg())
+						break;
+					
+					count++;
+					deltaT *= 2;
+				}
+				
+				previousLenght = z.length;
+				
+				if(z == null) //last chunk with size 0
 					break;
 				
-				MessagePutChunk msg = new MessagePutChunk(x.getId(), x.getOffset(), x.getReplication());
-				msg.setChunk(z);
-				mdb.sendMessage(msg);
-				//System.out.println(Message.byteArrayToHexString(msg.getMessage()));
-				Thread.sleep(r.nextInt(400)+1);
-				
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		}*/
+		}
 	}
 }

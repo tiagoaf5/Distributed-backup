@@ -66,6 +66,11 @@ public class BackupService {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+<<<<<<< HEAD
+		
+=======
+
+>>>>>>> 1bea443640b2806cfea0275dfd63114bc9e497b1
 		LocalFile x = localFiles.get(0);
 		Random r = new Random();
 		
@@ -89,7 +94,7 @@ public class BackupService {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		}*/
+		}
 
 
 	}
