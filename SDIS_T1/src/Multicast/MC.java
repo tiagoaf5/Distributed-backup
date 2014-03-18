@@ -53,17 +53,34 @@ public class MC extends Thread {
 				} else if(type.equals("GETCHUNK")) {
 					MessageGetChunk msg = new MessageGetChunk();
 					msg.parseMessage(rcv);
-					//TODO: ana andou a mexer aqui na aula, cuidado!!!!
+					
 					if(BackupService.isRemote(msg.getFileId(), msg.getChunkNo())) {
 						
 						RemoteFile file=BackupService.getRemote(msg.getFileId());
 						byte[] data=file.getChunkData(msg.getChunkNo());
 						
-						//TODO: esperar e mandar pelo MDR MessageChunk
-						MessageChunk answer = msg.getAnswer(data);
+						final MessageChunk answer=msg.getAnswer(data);
 						
+						new Thread(new Runnable() {
+
+							@Override
+							public void run() {
+
+								try {
+									int r = ThreadLocalRandom.current().nextInt(0,401);
+									sleep(r);
+									//TODO: caso em que recebe uma mensagem chunk? nao entendi :'(
+									BackupService.getMdr().sendMessage(answer);
+								} catch (IOException e) {
+									e.printStackTrace();
+								} catch (InterruptedException e) {
+									e.printStackTrace();
+								}
+							}
+						}).start();
+
 						System.out.println(MESSAGE + " sending chunk");
-						
+
 					} else {
 						System.out.println(MESSAGE + " chunk not found");
 					}
