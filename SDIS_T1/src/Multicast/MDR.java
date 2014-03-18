@@ -6,6 +6,7 @@ import java.net.InetAddress;
 import Messages.Message;
 import Messages.MessageChunk;
 import Service.BackupService;
+import Service.Chunk;
 import Service.LocalFile;
 
 public class MDR extends Thread {
@@ -37,17 +38,41 @@ public class MDR extends Thread {
 					
 					System.out.println(MESSAGE + " received - CHUNK FileId: " + msg.getFileId() + " ChunkNo: " + msg.getChunkNo());
 					
-					LocalFile file = BackupService.getLocal(msg.getFileId());
+					final LocalFile file = BackupService.getLocal(msg.getFileId());
+					String fileId = msg.getFileId();
+					int chunkNo = msg.getChunkNo();
 					
 					if(file != null) {
-						//byte[] chunk = msg.getChunk();
-						//TODO: save it in tmp folder
+						
+						//it's a file I asked to restore -> save it in tmp folder
+						
+						Chunk c = file.getChunk(chunkNo);
+						c.setPath("tmp/");
+						int length = c.storeData(msg.getChunk());
 						System.out.println(MESSAGE + " I received my Chunk :)");
 						
+						//TODO: Check if last chunk -> if so Merge it together
+						
+						
+						if (length < 64000) //last Chunk
+						{
+							//TODO: Check if has all Chunks
+							
+							new Thread (new Runnable() {
+								
+								@Override
+								public void run() {
+									file.selfRestore();
+								}
+							}).start();
+						}
+						
+						
+						
 					} 
-					else if(BackupService.isRemote(msg.getFileId(), msg.getChunkNo())) {
+					else if(BackupService.isRemote(fileId, chunkNo)) {
 						//Checks that chunk to let MC know that there was a peer o answered faster
-						BackupService.getRemote(msg.getFileId()).getChunk(msg.getChunkNo()).setCheck(true);
+						BackupService.getRemote(fileId).getChunk(chunkNo).setCheck(true);
 					} 
 					else {
 						System.out.println(MESSAGE + " chunk not asked and I'm not tracking that chunk");

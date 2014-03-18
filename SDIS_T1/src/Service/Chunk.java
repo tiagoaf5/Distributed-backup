@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 public class Chunk {
 	//TODO: save Chunks in a specific folder
-	private final String PATH = "RemoteFiles/";
+	private String path = "RemoteFiles/";
 	String fileId;
 	int chunkNo;
 
@@ -51,7 +51,7 @@ public class Chunk {
 		addresses = new ArrayList<String>();
 	}
 
-	private void storeData(byte[] data) throws IOException { //TODO: Maybe we need to change to public
+	public int storeData(byte[] data) throws IOException {
 		File f = new File(getNameOnDisk());
 		if(!f.exists()) {
 			f.createNewFile();
@@ -60,15 +60,35 @@ public class Chunk {
 		FileOutputStream o = new FileOutputStream(f); 
 		o.write(data);
 		o.close();
+		
+		int length = data.length;
 		data = null;
+		
+		return length;
 		//currentReplicationDeg++;
 	}
 
 	private String getNameOnDisk() {
-		return new String(PATH + fileId + ".part" + chunkNo);
+		return new String(path + fileId + ".part" + chunkNo);
 	}
 
 	public byte[] getData() throws IOException {
+		File f = new File(getNameOnDisk());
+
+		if (!f.exists())
+			return null;
+
+		FileInputStream fileStream = new FileInputStream(f);
+
+		byte[] b = new byte[(int)f.length()];
+
+		fileStream.read(b);
+		fileStream.close();
+
+		return b;
+	}
+	
+	public byte[] recoverData() throws IOException {
 		File f = new File(getNameOnDisk());
 
 		if (!f.exists())
@@ -114,5 +134,13 @@ public class Chunk {
 
 	public synchronized void setCheck(boolean check) {
 		this.check = check;
+	}
+
+	public String getPath() {
+		return path;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
 	}
 }

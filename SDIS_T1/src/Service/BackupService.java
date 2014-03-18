@@ -69,7 +69,10 @@ public class BackupService {
 		
 		try {
 			Thread.sleep(10000);
-			mc.sendMessage(new MessageGetChunk(localFiles.get(0).getId(),2));
+			for(int i = 0; i < 11; i++) {
+				mc.sendMessage(new MessageGetChunk(localFiles.get(0).getId(),i));
+				Thread.sleep(500);
+			}
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
