@@ -54,7 +54,7 @@ public class MDB extends Thread {
 						if(file == null) { //fileId not found
 
 							file = new RemoteFile(msg.getFileId(), msg.getReplicationDeg());
-							file.addChunk(msg);
+							file.addChunk(msg); //creates file with chunk data
 							BackupService.addRemoteFile(msg.getFileId(), file);
 							System.out.println(MESSAGE + " added new remote file");
 
