@@ -54,5 +54,11 @@ public class MDR implements Runnable {
 			}
 		}
 	}
+	
+
+	public void sendMessage(Message x) throws IOException {
+		System.out.println(MESSAGE + "Sending Message..");
+		channel.send(x.getMessage());
+	}
 }
 
