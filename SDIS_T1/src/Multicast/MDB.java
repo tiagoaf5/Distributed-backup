@@ -46,7 +46,7 @@ public class MDB extends Thread {
 
 					if(!BackupService.isLocal(msg.getFileId()) || true) { //TODO: Remove this true
 						RemoteFile file = BackupService.getRemote(msg.getFileId());
-
+				
 						final String fileId = msg.getFileId();
 						final int chunkNo = msg.getChunkNo();
 						boolean alreadyStored = false;
@@ -60,7 +60,7 @@ public class MDB extends Thread {
 
 						} else {
 							alreadyStored = !file.addChunk(msg);
-							if(alreadyStored)
+							if(alreadyStored) //true if chunkNo already stored
 								System.out.println(MESSAGE + " chunk already stored");
 						}
 
@@ -80,7 +80,7 @@ public class MDB extends Thread {
 											f.removeChunk(chunkNo);
 											return;
 										}
-
+										//if(chunkNo % 2 == 0)
 										BackupService.getMc().sendMessage(new MessageStored(fileId, chunkNo));
 									} catch (IOException e) {
 										e.printStackTrace();

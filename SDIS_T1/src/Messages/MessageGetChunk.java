@@ -10,10 +10,11 @@ public class MessageGetChunk extends Message {
 	public MessageGetChunk() { }
 
 	//TODO: set MessageChunk com o chunk necessario
-	public byte[] answer() {
+	public MessageChunk getAnswer(byte[] data) {
 
 		MessageChunk res=new MessageChunk(fileId,chunkNo);
-		return res.getMessage();
+		res.setChunk(data);
+		return res;
 	}
 
 	@Override

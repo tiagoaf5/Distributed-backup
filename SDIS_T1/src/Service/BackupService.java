@@ -350,6 +350,13 @@ public class BackupService {
 		return remoteFiles.get(fileId);
 	}
 	
+	public static boolean isRemote(String fileId, int chunkNo) {
+
+		HashMap<String, RemoteFile> remoteFiles=BackupService.getRemoteFiles();
+		RemoteFile file=remoteFiles.get(fileId);
+		return (file.getChunk(chunkNo)!=null);
+	}
+	
 	public static LocalFile getLocal(String fileId) {
 
 		List<LocalFile> localFiles = BackupService.getLocalFiles();

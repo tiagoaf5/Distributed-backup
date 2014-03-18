@@ -7,19 +7,16 @@ import Messages.Message;
 import Messages.MessageChunk;
 import Messages.MessagePutChunk;
 import Service.BackupService;
+import Service.LocalFile;
 import Service.RemoteFile;
 
 public class MDR implements Runnable {
 
 	private static final String MESSAGE="Multicast data channel RESTORE:";
 	private Multicast channel;
-	private static String fileId;
-	private static int chunkNo;
 	
 	public MDR(InetAddress address, int port) throws IOException {
 		channel = new Multicast(address, port);
-		fileId=null;
-		chunkNo=0;
 	}
 
 	@Override
@@ -39,13 +36,15 @@ public class MDR implements Runnable {
 
 					MessageChunk msg=new MessageChunk();
 					msg.parseMessage(rcv);
-
-					if(asked(msg.getFileId(), msg.getChunkNo())) {
+					
+					LocalFile local=BackupService.getLocal(msg.getFileId());
+					if(!(local==null)) {
 						byte[] chunk=msg.getChunk();
-						//TODO: o que fazer com o chunk?
+						
 					} else {
 						System.out.println(MESSAGE + " chunk not asked");
 					}
+					
 					msg=null;
 				} else {
 					System.out.println(MESSAGE + " - Invalid message!");
@@ -54,10 +53,6 @@ public class MDR implements Runnable {
 				e.printStackTrace();
 			}
 		}
-	}
-
-	private boolean asked(String id, int chunk) {
-		return (id.equals(fileId)&&chunkNo==chunk);
 	}
 }
 

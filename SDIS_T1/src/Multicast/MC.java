@@ -19,17 +19,15 @@ public class MC extends Thread {
 	
 	private static final String MESSAGE="Multicast data channel CONTROL: ";
 	private Multicast channel;
-	private static String filePut;
-	private static int chunkPut;
 	
 	public MC(InetAddress address, int port) throws IOException {
 		channel = new Multicast(address, port);
-		filePut=null;
-		chunkPut=0;
 	}
 
 	public void run() {
+		
 		System.out.println("Running multicast data channel for CONTROL...");
+		
 		while(true) {
 			//Can receive:
 			// - STORED
@@ -52,7 +50,8 @@ public class MC extends Thread {
 					}
 					
 					RemoteFile remote = BackupService.getRemote(msg.getFileId());
-					if(!(remote==null)) {
+					if(!(remote==null)) { 
+						//if file doesn't have chunkNo chunk doesn't do anything
 						remote.increaseCurReplicationDeg(msg.getChunkNo());
 					}	
 		
@@ -61,15 +60,19 @@ public class MC extends Thread {
 				} else if(type.equals("GETCHUNK")) {
 					MessageGetChunk msg=new MessageGetChunk();
 					msg.parseMessage(rcv);
-
-					RemoteFile file=BackupService.getRemote(msg.getFileId());
-					if(file==null) {
-						System.out.println(MESSAGE + " chunk not found");
-					} else {
+					//TODO: ana andou a mexer aqui na aula, cuidado!!!!
+					if(BackupService.isRemote(msg.getFileId(), msg.getChunkNo())) {
 						
+						RemoteFile file=BackupService.getRemote(msg.getFileId());
 						byte[] data=file.getChunkData(msg.getChunkNo());
-						//TODO enviar chunk
+						
+						//TODO: esperar e mandar pelo MDR MessageChunk
+						MessageChunk answer=msg.getAnswer(data);
+						
 						System.out.println(MESSAGE + " sending chunk");
+						
+					} else {
+						System.out.println(MESSAGE + " chunk not found");
 					}
 
 					msg=null;
@@ -78,10 +81,11 @@ public class MC extends Thread {
 					msg.parseMessage(rcv);
 					
 					RemoteFile file=BackupService.getRemote(msg.getFileId());
+					//TODO: questao de ver chunkNo
 					if(file==null) {
 						System.out.println(MESSAGE + " file not found");
 					} else {
-						BackupService.deleteRemoteFile(msg.getFileId());
+						BackupService.deleteRemoteFile(msg.getFileId()); //TODO:
 						System.out.println(MESSAGE + " deleting file");
 					}
 					

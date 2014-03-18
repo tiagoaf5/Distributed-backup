@@ -16,6 +16,10 @@ public class MessageChunk extends Message {
 		return chunk;
 	}
 	
+	public void setChunk(byte[] chunk1) {
+		chunk=chunk1;
+	}
+	
 	@Override
 	public byte[] getMessage() {
 		
