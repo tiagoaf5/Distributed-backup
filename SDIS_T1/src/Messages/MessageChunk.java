@@ -55,8 +55,8 @@ public class MessageChunk extends Message {
 		for(;i < data.length; i++,x++)
 			chunk[x] = data[i];
 
-		System.out.println(version + "\n" + fileId + "\n" + chunkNo + "\n");
-		System.out.println(byteArrayToHexString(chunk));
+		//System.out.println(version + "\n" + fileId + "\n" + chunkNo + "\n");
+		//System.out.println(byteArrayToHexString(chunk));
 
 		return 0;
 	}

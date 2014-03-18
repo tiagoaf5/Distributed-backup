@@ -5,14 +5,12 @@ import java.net.InetAddress;
 
 import Messages.Message;
 import Messages.MessageChunk;
-import Messages.MessagePutChunk;
 import Service.BackupService;
 import Service.LocalFile;
-import Service.RemoteFile;
 
-public class MDR implements Runnable {
+public class MDR extends Thread {
 
-	private static final String MESSAGE="Multicast data channel RESTORE:";
+	private static final String MESSAGE="Multicast data channel RESTORE: ";
 	private Multicast channel;
 	
 	public MDR(InetAddress address, int port) throws IOException {
@@ -30,24 +28,34 @@ public class MDR implements Runnable {
 			try { 
 				byte[] rcv=channel.receive();
 				String type=Message.getMessageType(rcv);
-				System.out.println(MESSAGE + " received - " + Message.byteArrayToHexString(rcv));
+				
 
 				if(type.equals("CHUNK")) {
 
 					MessageChunk msg=new MessageChunk();
 					msg.parseMessage(rcv);
 					
-					LocalFile local = BackupService.getLocal(msg.getFileId());
+					System.out.println(MESSAGE + " received - CHUNK FileId: " + msg.getFileId() + " ChunkNo: " + msg.getChunkNo());
 					
-					if(!(local==null)) {
-						byte[] chunk=msg.getChunk();
+					LocalFile file = BackupService.getLocal(msg.getFileId());
+					
+					if(file != null) {
+						//byte[] chunk = msg.getChunk();
+						//TODO: save it in tmp folder
+						System.out.println(MESSAGE + " I received my Chunk :)");
 						
-					} else {
-						System.out.println(MESSAGE + " chunk not asked");
+					} 
+					else if(BackupService.isRemote(msg.getFileId(), msg.getChunkNo())) {
+						//Checks that chunk to let MC know that there was a peer o answered faster
+						BackupService.getRemote(msg.getFileId()).getChunk(msg.getChunkNo()).setCheck(true);
+					} 
+					else {
+						System.out.println(MESSAGE + " chunk not asked and I'm not tracking that chunk");
 					}
 					
 					msg=null;
-				} else {
+				} 
+				else {
 					System.out.println(MESSAGE + " - Invalid message!");
 				}
 			} catch (IOException e) {

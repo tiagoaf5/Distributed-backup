@@ -16,6 +16,7 @@ import java.util.Random;
 import java.util.Scanner;
 
 import Messages.Message;
+import Messages.MessageGetChunk;
 import Messages.MessagePutChunk;
 import Multicast.*;
 
@@ -58,10 +59,22 @@ public class BackupService {
 	}
 
 	private void initReceivingThreads() {
-		mdb.start();
 		mc.start();
+		mdb.start();
+		mdr.start();
+		
 		
 		mdb.backupFile(localFiles.get(0));
+		
+		
+		try {
+			Thread.sleep(10000);
+			mc.sendMessage(new MessageGetChunk(localFiles.get(0).getId(),2));
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		
 	/*	try {
 			Thread.sleep(5000);

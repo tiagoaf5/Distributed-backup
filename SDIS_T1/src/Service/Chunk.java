@@ -12,7 +12,14 @@ public class Chunk {
 	int chunkNo;
 
 	int replicationDeg;
-	//int currentReplicationDeg;
+
+	/*Used as a flag to:
+	 * - If a peer received a GETCHUNK message MDR will change check flag to let  a peer know 
+	 *   that another peer already answered with a CHUNK message for this Chunk
+	 * 
+	 */
+	boolean check = false; 
+
 	protected ArrayList<String> addresses; //Addresses that acknowledged
 
 
@@ -44,7 +51,7 @@ public class Chunk {
 		addresses = new ArrayList<String>();
 	}
 
-	private void storeData(byte[] data) throws IOException {
+	private void storeData(byte[] data) throws IOException { //TODO: Maybe we need to change to public
 		File f = new File(getNameOnDisk());
 		if(!f.exists()) {
 			f.createNewFile();
@@ -69,8 +76,7 @@ public class Chunk {
 
 		FileInputStream fileStream = new FileInputStream(f);
 
-		long length = f.length();
-		byte[] b = new byte[(int)length];
+		byte[] b = new byte[(int)f.length()];
 
 		fileStream.read(b);
 		fileStream.close();
@@ -97,5 +103,16 @@ public class Chunk {
 			return true;
 
 		return f.delete();
+	}
+
+	public synchronized boolean isChecked() {
+		boolean current = check;
+		this.check = false; //after I checked I want it to be false again
+		
+		return current;
+	}
+
+	public synchronized void setCheck(boolean check) {
+		this.check = check;
 	}
 }
