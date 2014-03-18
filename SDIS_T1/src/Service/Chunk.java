@@ -3,6 +3,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class Chunk {
 	//TODO: save Chunks in a specific folder
@@ -11,14 +12,18 @@ public class Chunk {
 	int chunkNo;
 
 	int replicationDeg;
-	int currentReplicationDeg;
+	//int currentReplicationDeg;
+	protected ArrayList<String> addresses; //Addresses that acknowledged
+
 
 	public Chunk (String fileId, int chunkNo, int replicationDeg, byte[] data) {
 		this.fileId = fileId;
 		this.chunkNo = chunkNo;
 
 		this.replicationDeg = replicationDeg;
-		this.currentReplicationDeg = 0;
+		//this.currentReplicationDeg = 0;
+
+		addresses = new ArrayList<String>();
 
 		try {
 			storeData(data);
@@ -29,13 +34,14 @@ public class Chunk {
 		}
 		data = null;
 	}
-	
+
 	public Chunk (String fileId, int chunkNo, int replicationDeg) {
 		this.fileId = fileId;
 		this.chunkNo = chunkNo;
 
 		this.replicationDeg = replicationDeg;
-		this.currentReplicationDeg = 0;
+		//this.currentReplicationDeg = 0;
+		addresses = new ArrayList<String>();
 	}
 
 	private void storeData(byte[] data) throws IOException {
@@ -48,7 +54,7 @@ public class Chunk {
 		o.write(data);
 		o.close();
 		data = null;
-		currentReplicationDeg++;
+		//currentReplicationDeg++;
 	}
 
 	private String getNameOnDisk() {
@@ -71,20 +77,25 @@ public class Chunk {
 
 		return b;
 	}
-	
-	public synchronized void increaseCurReplicationDeg() {
-		currentReplicationDeg++;
+
+	public synchronized boolean increaseCurReplicationDeg(String ip) {
+		if(addresses.contains(ip))
+			return false;
+		else
+			addresses.add(ip);
+		return true;
+		//currentReplicationDeg++;
 	}
 	public synchronized int getCurReplicationDeg() {
-		return currentReplicationDeg;
+		return addresses.size()+1;
 	}
-	
+
 	public boolean delete() {
 		File f = new File(getNameOnDisk());
 
 		if (!f.exists())
 			return true;
-		
+
 		return f.delete();
 	}
 }

@@ -114,6 +114,7 @@ public abstract class Message {
 		i++;
 		return i;
 	}
+	
 	//returns type of a message
 	static public String getMessageType(byte[] msg) {
 		String type = new String();

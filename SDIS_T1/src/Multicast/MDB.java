@@ -2,8 +2,6 @@ package Multicast;
 
 import java.io.IOException;
 import java.net.InetAddress;
-import java.util.HashMap;
-import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 import Messages.Message;
@@ -46,13 +44,12 @@ public class MDB extends Thread {
 
 					if(!BackupService.isLocal(msg.getFileId()) || true) { //TODO: Remove this true
 						RemoteFile file = BackupService.getRemote(msg.getFileId());
-				
+
 						final String fileId = msg.getFileId();
 						final int chunkNo = msg.getChunkNo();
 						boolean alreadyStored = false;
 
 						if(file == null) {
-
 							file = new RemoteFile(msg.getFileId(), msg.getReplicationDeg());
 							file.addChunk(msg);
 							BackupService.addRemoteFile(msg.getFileId(), file);
@@ -60,37 +57,40 @@ public class MDB extends Thread {
 
 						} else {
 							alreadyStored = !file.addChunk(msg);
+
 							if(alreadyStored) //true if chunkNo already stored
 								System.out.println(MESSAGE + " chunk already stored");
 						}
 
-						if(!alreadyStored) {
-							new Thread(new Runnable() {
+						//if(!alreadyStored) {
+						new Thread(new Runnable() {
 
-								@Override
-								public void run() {
+							@Override
+							public void run() {
 
-									try {
-										int r = ThreadLocalRandom.current().nextInt(0,401);
-										RemoteFile f = BackupService.getRemote(fileId);
-										sleep(r);
+								try {
+									int r = ThreadLocalRandom.current().nextInt(0,401);
+									RemoteFile f = BackupService.getRemote(fileId);
+									sleep(r);
 
-										//Enhancement 1 - if the current replication degree is greater or equal than the wanted discard chunk
-										if(f.getChunk(chunkNo).getCurReplicationDeg() - 1 >= f.getReplicationDeg()) {
-											f.removeChunk(chunkNo);
-											return;
-										}
-										//if(chunkNo % 2 == 0)
-										BackupService.getMc().sendMessage(new MessageStored(fileId, chunkNo));
-									} catch (IOException e) {
-										e.printStackTrace();
-									} catch (InterruptedException e) {
-										e.printStackTrace();
+									//Enhancement 1 - if the current replication degree is greater or equal than the wanted discard chunk
+									if(f.getChunk(chunkNo).getCurReplicationDeg() - 1 >= f.getReplicationDeg()) {
+										f.removeChunk(chunkNo);
+
+										//TODO: IF has no chunks delete file
+										return;
 									}
-
+									//if(chunkNo % 2 == 0)
+									BackupService.getMc().sendMessage(new MessageStored(fileId, chunkNo));
+								} catch (IOException e) {
+									e.printStackTrace();
+								} catch (InterruptedException e) {
+									e.printStackTrace();
 								}
-							}).start();
-						}
+
+							}
+						}).start();
+						//}
 
 					} else {
 						System.out.println(MESSAGE + " local file");
@@ -129,27 +129,29 @@ public class MDB extends Thread {
 
 				int deltaT = 400;
 				int count = 0;
-				
+
 				MessagePutChunk msg = new MessagePutChunk(f.getId(), f.getOffset(), f.getReplicationDeg());
 				msg.setChunk(z);
 
 				while(count < 5) {
 					mdb.sendMessage(msg); //send Message
 					Thread.sleep(deltaT); //wait for stored messages
-					
+
 					//check replication rate
 					if(f.getChunk(f.getOffset()).getCurReplicationDeg() >= f.getReplicationDeg())
 						break;
-					
+
 					count++;
 					deltaT *= 2;
 				}
-				
-				previousLenght = z.length;
-				
+
 				if(z == null) //last chunk with size 0
 					break;
 				
+				previousLenght = z.length;
+
+				
+
 			} catch (IOException e) {
 				e.printStackTrace();
 			} catch (InterruptedException e) {

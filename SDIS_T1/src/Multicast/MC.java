@@ -2,18 +2,8 @@ package Multicast;
 
 import java.io.IOException;
 import java.net.InetAddress;
-import java.util.HashMap;
-
-import Messages.Message;
-import Messages.MessageChunk;
-import Messages.MessageDelete;
-import Messages.MessageGetChunk;
-import Messages.MessagePutChunk;
-import Messages.MessageRemoved;
-import Messages.MessageStored;
-import Service.BackupService;
-import Service.LocalFile;
-import Service.RemoteFile;
+import Messages.*;
+import Service.*;
 
 public class MC extends Thread {
 	
@@ -35,8 +25,11 @@ public class MC extends Thread {
 			// - DELETE
 			// - REMOVED
 			try {
-				byte[] rcv=channel.receive();
-				String type=Message.getMessageType(rcv);
+				
+				Packet pkt = channel.receive1();
+				byte[] rcv = pkt.getData();
+				
+				String type = Message.getMessageType(rcv);
 
 				if(type.equals("STORED")) {
 					MessageStored msg=new MessageStored();
@@ -44,21 +37,21 @@ public class MC extends Thread {
 					
 					System.out.println(MESSAGE + " received - STORED FileId: " + msg.getFileId() + " ChunkNo: " + msg.getChunkNo());
 					
-					LocalFile local=BackupService.getLocal(msg.getFileId());
-					if(!(local==null)) {
-						local.increaseCurReplicationDeg(msg.getChunkNo());
+					LocalFile local = BackupService.getLocal(msg.getFileId());
+					if(!(local == null)) {
+						local.increaseCurReplicationDeg(msg.getChunkNo(), pkt.getIp());
 					}
 					
 					RemoteFile remote = BackupService.getRemote(msg.getFileId());
-					if(!(remote==null)) { 
+					if(!(remote == null)) { 
 						//if file doesn't have chunkNo chunk doesn't do anything
-						remote.increaseCurReplicationDeg(msg.getChunkNo());
+						remote.increaseCurReplicationDeg(msg.getChunkNo(), pkt.getIp());
 					}	
 		
 					msg=null;
 					
 				} else if(type.equals("GETCHUNK")) {
-					MessageGetChunk msg=new MessageGetChunk();
+					MessageGetChunk msg = new MessageGetChunk();
 					msg.parseMessage(rcv);
 					//TODO: ana andou a mexer aqui na aula, cuidado!!!!
 					if(BackupService.isRemote(msg.getFileId(), msg.getChunkNo())) {
@@ -67,7 +60,7 @@ public class MC extends Thread {
 						byte[] data=file.getChunkData(msg.getChunkNo());
 						
 						//TODO: esperar e mandar pelo MDR MessageChunk
-						MessageChunk answer=msg.getAnswer(data);
+						MessageChunk answer = msg.getAnswer(data);
 						
 						System.out.println(MESSAGE + " sending chunk");
 						

@@ -78,13 +78,15 @@ public abstract class MyFile {
 		chunks.get(chunkNo).delete();
 		chunks.remove(chunkNo);
 	}
-	
-	public boolean increaseCurReplicationDeg (int chunkNo) {
+		
+	public boolean increaseCurReplicationDeg (int chunkNo, String addr) {		
 		if(!chunks.containsKey(chunkNo))
 			return false;
 
-		chunks.get(chunkNo).increaseCurReplicationDeg();
+		//increases replication degree only if the address addr haven't acknowledged yet
+		chunks.get(chunkNo).increaseCurReplicationDeg(addr);
 		return true;
 	}
+	
 
 }
