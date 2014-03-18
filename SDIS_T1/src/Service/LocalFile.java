@@ -24,7 +24,7 @@ public class LocalFile extends MyFile{
 	private Path path;
 	private File systemFile;
 	private FileInputStream fileStream;
-	private int offset = 0; //next 64KBytes to read
+	private int offset = -1; //next 64KBytes to read
 	
 	
 	
@@ -113,10 +113,10 @@ public class LocalFile extends MyFile{
 		int chunkSize;
 		byte[] b;
 		
-		if(size / CHUNK_SIZE == offset)
+		if(size / CHUNK_SIZE == offset+1)
 			//b = new byte[(int) (size % CHUNK_SIZE)];
 			chunkSize = (int) (size % CHUNK_SIZE);
-		else if (size / CHUNK_SIZE > offset)
+		else if (size / CHUNK_SIZE > offset+1)
 			//b = new byte[CHUNK_SIZE];
 			chunkSize = CHUNK_SIZE;
 		else return null;

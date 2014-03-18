@@ -15,8 +15,8 @@ public class RemoteFile extends MyFile{
 			return false;
 
 		Chunk chunk = new Chunk(msg.getFileId(), msg.getChunkNo(), msg.getReplicationDeg(), msg.getChunk());
+		
 		chunks.put(msg.getChunkNo(), chunk);
-
 		return true;
 	}
 

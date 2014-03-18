@@ -37,7 +37,8 @@ public class MDR implements Runnable {
 					MessageChunk msg=new MessageChunk();
 					msg.parseMessage(rcv);
 					
-					LocalFile local=BackupService.getLocal(msg.getFileId());
+					LocalFile local = BackupService.getLocal(msg.getFileId());
+					
 					if(!(local==null)) {
 						byte[] chunk=msg.getChunk();
 						
