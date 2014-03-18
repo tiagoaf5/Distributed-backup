@@ -45,7 +45,6 @@ public class MDR extends Thread {
 					if(file != null) {
 						
 						//it's a file I asked to restore -> save it in tmp folder
-						
 						Chunk c = file.getChunk(chunkNo);
 						c.setPath("tmp/");
 						int length = c.storeData(msg.getChunk());
