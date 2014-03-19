@@ -5,6 +5,7 @@ import java.net.InetAddress;
 
 import Messages.Message;
 import Messages.MessageChunk;
+import Messages.MessagePutChunk;
 import Service.BackupService;
 import Service.Chunk;
 import Service.LocalFile;
@@ -93,5 +94,49 @@ public class MDR extends Thread {
 		System.out.println(MESSAGE + "Sending Message..");
 		channel.send(x.getMessage());
 	}
+	
+	
+	 public void askRestoreFile(LocalFile f) {
+		 
+		 MDR mdr = BackupService.getMdr();
+
+		 int previousLenght = 64000;
+		 while(true) {
+			 try {
+				 byte[] z = f.nextChunk();
+
+				 if(z == null && previousLenght < 64000) //The previous loop was the last chunk
+					 break;
+
+				 int deltaT = 400;
+				 int count = 0;
+
+				 MessagePutChunk msg = new MessagePutChunk(f.getId(), f.getOffset(), f.getReplicationDeg());
+				 msg.setChunk(z);
+
+				 while(count < 5) {
+					 mdr.sendMessage(msg); //send Message
+					 Thread.sleep(deltaT); //wait for stored messages
+
+					 //check replication rate
+					 if(f.getChunk(f.getOffset()).getCurReplicationDeg() >= f.getReplicationDeg())
+						 break;
+
+					 count++;
+					 deltaT *= 2;
+				 }
+
+				 if(z == null) //last chunk with size 0
+					 break;
+
+				 previousLenght = z.length;
+			 } catch (IOException e) {
+				 e.printStackTrace();
+			 } catch (InterruptedException e) {
+				 e.printStackTrace();
+			 }
+		 }
+
+	 }
 }
 
