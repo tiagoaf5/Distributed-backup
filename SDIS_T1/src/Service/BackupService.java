@@ -65,13 +65,12 @@ public class BackupService {
 		
 		try {
 			Thread.sleep(10000);
-			for(int i = 0; i < 11; i++) {
+			/*for(int i = 0; i < 11; i++) {
 				mc.sendMessage(new MessageGetChunk(localFiles.get(0).getId(),i));
 				Thread.sleep(500);
-			}
+			}*/
+			mc.askRestoreFile(localFiles.get(0));
 		} catch (InterruptedException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		
@@ -366,7 +365,11 @@ public class BackupService {
 
 		HashMap<String, RemoteFile> remoteFiles=BackupService.getRemoteFiles();
 		RemoteFile file=remoteFiles.get(fileId);
-		return (file.getChunk(chunkNo)!=null);
+		
+		if(file == null)
+			return false;
+		
+		return (file.getChunk(chunkNo) != null);
 	}
 	
 	public static LocalFile getLocal(String fileId) {

@@ -120,7 +120,7 @@ public class Chunk {
 		//currentReplicationDeg++;
 	}
 	public synchronized int getCurReplicationDeg() {
-		return addresses.size()+1;
+		return addresses.size(); //TODO: Changed
 	}
 
 	public boolean delete() {
@@ -144,9 +144,7 @@ public class Chunk {
 	}
 
 	public synchronized boolean getRestored() {
-		boolean current = restored;
-		this.restored = false; //after I checked I want it to be false again
-		return current;
+		return restored;
 	}
 
 	public synchronized void setRestored(boolean restored) {

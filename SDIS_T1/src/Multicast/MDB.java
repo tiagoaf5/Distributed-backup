@@ -42,7 +42,7 @@ public class MDB extends Thread {
 
 					System.out.println(MESSAGE + " received - PUTCHUNK FileId: " + msg.getFileId() + " ChunkNo: " + msg.getChunkNo());
 
-					if(!BackupService.isLocal(msg.getFileId()) || true) { //TODO: Remove this true
+					if(!BackupService.isLocal(msg.getFileId()) /*|| true*/) { //TODO: Remove this true
 						RemoteFile file = BackupService.getRemote(msg.getFileId());
 
 						final String fileId = msg.getFileId();
@@ -136,6 +136,7 @@ public class MDB extends Thread {
 
 				while(count < 5) {
 					mdb.sendMessage(msg); //send Message
+					System.out.println("--------------> Waiting " + deltaT);
 					Thread.sleep(deltaT); //wait for stored messages
 
 					//check replication rate

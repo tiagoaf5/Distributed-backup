@@ -173,4 +173,10 @@ public class LocalFile extends MyFile{
 		}
 
 	}
+
+	public void unCheckReceivedAll() {
+		for(int i=0; i<getNumberChunks(); i++) {
+			getChunk(i).setRestored(false);
+		}
+	}
 }
