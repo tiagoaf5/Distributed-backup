@@ -24,6 +24,9 @@ public abstract class MyFile {
 		chunks = new HashMap<Integer, Chunk>();
 	}
 	
+	public int getNumberChunks() {
+		return chunks.size();
+	}
 	
 	public String getId() {
 		return fileId;

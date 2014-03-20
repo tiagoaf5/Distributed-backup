@@ -130,4 +130,36 @@ public class MC extends Thread {
 		System.out.println(MESSAGE + "Sending Message..");
 		channel.send(x.getMessage());
 	}
+
+
+	public void askRestoreFile(LocalFile f) {
+
+		try {
+
+			int deltaT = 400;
+			int count = 0;
+
+			for(int i=0; i<f.getNumberChunks(); i++) {
+
+				MessageGetChunk msg = new MessageGetChunk(f.getId(), i);
+
+				while(count < 5) {
+					sendMessage(msg); //send Message
+					Thread.sleep(deltaT); //wait for stored messages
+
+					//check replication rate
+					if(f.getChunk(f.getOffset()).getCurReplicationDeg() >= f.getReplicationDeg())
+						break;
+
+					count++;
+					deltaT *= 2;
+				}
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
+	}
 }
