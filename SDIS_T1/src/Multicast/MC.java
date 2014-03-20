@@ -148,7 +148,7 @@ public class MC extends Thread {
 					Thread.sleep(deltaT); //wait for stored messages
 
 					//check replication rate
-					if(f.getChunk(f.getOffset()).getCurReplicationDeg() >= f.getReplicationDeg())
+					if(f.getChunk(i).isChecked())
 						break;
 
 					count++;
