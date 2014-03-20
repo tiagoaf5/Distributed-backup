@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
 
+
 import Messages.MessageGetChunk;
 import Multicast.*;
 
@@ -48,6 +49,10 @@ public class BackupService {
 
 		MyFile f = new MyFile("1.pdf", 1);
 		 */
+		
+		
+
+	    System.out.println("Folder Size: " + folderSize(new File("RemoteFiles")) + " bytes");
 		
 		BackupService a = new BackupService(args);
 		a.initReceivingThreads();
@@ -104,6 +109,17 @@ public class BackupService {
 			}
 		}*/
 
+	}
+	
+	public static long folderSize(File directory) {
+	    long length = 0;
+	    for (File file : directory.listFiles()) {
+	        if (file.isFile())
+	            length += file.length();
+	        else
+	            length += folderSize(file);
+	    }
+	    return length;
 	}
 
 	public BackupService(String args[]) throws UnknownHostException {
