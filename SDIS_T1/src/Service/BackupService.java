@@ -237,8 +237,8 @@ public class BackupService {
 	}
 
 	public static void deleteRemoteFile(String fileId) {
+		getRemote(fileId).delete();
 		remoteFiles.remove(fileId);
-		//TODO: apagar as coisas do disco
 	}
 	
 	private void createFolders() {
