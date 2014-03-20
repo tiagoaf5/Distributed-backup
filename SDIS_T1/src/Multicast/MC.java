@@ -98,15 +98,19 @@ public class MC extends Thread {
 					MessageDelete msg=new MessageDelete();
 					msg.parseMessage(rcv);
 
-					RemoteFile file=BackupService.getRemote(msg.getFileId());
-					
-					if(file==null) {
+					RemoteFile remote=BackupService.getRemote(msg.getFileId());
+					if(remote==null) {
 						System.out.println(MESSAGE + " file not found");
 					} else {
 						BackupService.deleteRemoteFile(msg.getFileId()); 
 						System.out.println(MESSAGE + " deleting file");
 					}
-
+					
+					LocalFile local = BackupService.getLocal(msg.getFileId());
+					if(local != null) {
+						local.increaseCountDeleted();
+					}
+					//TODO: enviar DELETE para os outros
 					msg=null;
 				} else if(type.equals("REMOVED")) {
 					MessageRemoved msg=new MessageRemoved();
@@ -163,6 +167,8 @@ public class MC extends Thread {
 		try {
 			MessageDelete msg = new MessageDelete(f.getId());
 			sendMessage(msg); //send Message
+			
+			//TODO: verificar o countDeleted
 		} catch (IOException e) {
 			e.printStackTrace();
 		} 

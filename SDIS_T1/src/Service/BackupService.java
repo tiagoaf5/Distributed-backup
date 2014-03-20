@@ -52,7 +52,7 @@ public class BackupService {
 		
 		
 
-	    System.out.println("Folder Size: " + folderSize(new File("RemoteFiles")) + " bytes");
+	   // System.out.println("Folder Size: " + folderSize(new File("RemoteFiles")) + " bytes");
 		
 		BackupService a = new BackupService(args);
 		a.initReceivingThreads();
