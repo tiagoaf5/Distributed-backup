@@ -143,14 +143,15 @@ public class MC extends Thread {
 
 				while(count<5) {
 					sendMessage(msg); //send Message
-					Thread.sleep(deltaT); //wait for stored messages
+					Thread.sleep(deltaT); //wait for chunk messages
 
-					//check replication rate
 					if(f.getChunk(i).getRestored())
 						break;
 
+					System.out.println("------- A MANDAR PELA " + count + " VEZ");
 					count++;
 					deltaT+=400;
+					
 				}
 			}
 		} catch (IOException e) {

@@ -120,7 +120,7 @@ public class Chunk {
 		//currentReplicationDeg++;
 	}
 	public synchronized int getCurReplicationDeg() {
-		return addresses.size()+1;
+		return addresses.size();
 	}
 
 	public boolean delete() {

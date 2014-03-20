@@ -63,7 +63,7 @@ public class BackupService {
 		mdb.backupFile(localFiles.get(0));
 		
 		
-		try {
+		/*try {
 			Thread.sleep(10000);
 			for(int i = 0; i < 11; i++) {
 				mc.sendMessage(new MessageGetChunk(localFiles.get(0).getId(),i));
@@ -73,7 +73,7 @@ public class BackupService {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
+		}*/
 		
 	/*	try {
 			Thread.sleep(5000);
