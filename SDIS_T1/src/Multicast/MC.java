@@ -51,7 +51,6 @@ public class MC extends Thread {
 					}	
 
 					msg=null;
-
 				} 
 				else if(type.equals("GETCHUNK")) {
 
@@ -95,17 +94,16 @@ public class MC extends Thread {
 						System.out.println(MESSAGE + " chunk not found");
 					}
 
-					//msg=null; //TODO: Why?
 				} else if(type.equals("DELETE")) {
 					MessageDelete msg=new MessageDelete();
 					msg.parseMessage(rcv);
 
 					RemoteFile file=BackupService.getRemote(msg.getFileId());
-					//TODO: questao de ver chunkNo
+					
 					if(file==null) {
 						System.out.println(MESSAGE + " file not found");
 					} else {
-						BackupService.deleteRemoteFile(msg.getFileId()); //TODO:
+						BackupService.deleteRemoteFile(msg.getFileId()); 
 						System.out.println(MESSAGE + " deleting file");
 					}
 
@@ -148,10 +146,9 @@ public class MC extends Thread {
 					if(f.getChunk(i).getRestored())
 						break;
 
-					System.out.println("------- A MANDAR PELA " + count + " VEZ");
+					//System.out.println("------- A MANDAR PELA " + count + " VEZ");
 					count++;
 					deltaT+=400;
-					
 				}
 			}
 		} catch (IOException e) {
@@ -159,5 +156,16 @@ public class MC extends Thread {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public void askDeleteFile(LocalFile f) {
+		
+		try {
+			MessageDelete msg = new MessageDelete(f.getId());
+			sendMessage(msg); //send Message
+		} catch (IOException e) {
+			e.printStackTrace();
+		} 
+
 	}
 }
