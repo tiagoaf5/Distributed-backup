@@ -169,6 +169,7 @@ public class MC extends Thread {
 			sendMessage(msg); //send Message
 			
 			//TODO: verificar o countDeleted
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		} 
