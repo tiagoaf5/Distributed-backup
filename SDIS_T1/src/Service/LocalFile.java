@@ -56,6 +56,16 @@ public class LocalFile extends MyFile{
 		computeFileId();
 	}
 
+	public boolean hasReceivedAll() { //checks if a file has received all chunks asked to restore
+		
+		for(int i=0; i<getNumberChunks(); i++) {
+			if(!getChunk(i).getRestored()) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
 	private void computeFileId() {
 		try {
 			String res=getInfo();

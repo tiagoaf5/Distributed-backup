@@ -13,7 +13,7 @@ public class MDR extends Thread {
 
 	private static final String MESSAGE="Multicast data channel RESTORE: ";
 	private Multicast channel;
-	
+
 	public MDR(InetAddress address, int port) throws IOException {
 		channel = new Multicast(address, port);
 	}
@@ -29,45 +29,40 @@ public class MDR extends Thread {
 			try { 
 				byte[] rcv=channel.receive();
 				String type=Message.getMessageType(rcv);
-				
+
 
 				if(type.equals("CHUNK")) {
 
 					MessageChunk msg=new MessageChunk();
 					msg.parseMessage(rcv);
-					
+
 					System.out.println(MESSAGE + " received - CHUNK FileId: " + msg.getFileId() + " ChunkNo: " + msg.getChunkNo());
-					
+
 					final LocalFile file = BackupService.getLocal(msg.getFileId());
 					String fileId = msg.getFileId();
 					int chunkNo = msg.getChunkNo();
-					
+
 					if(file != null) {
-						
+
 						//it's a file I asked to restore -> save it in tmp folder
 						Chunk c = file.getChunk(chunkNo);
 						c.setPath("tmp/");
+						c.setRestored(true);
 						int length = c.storeData(msg.getChunk());
 						System.out.println(MESSAGE + " I received my Chunk :)");
-						
-						//TODO: Check if last chunk -> if so Merge it together
-						
-						
-						if (length < 64000) //last Chunk
+
+						if(length<64000) //last Chunk
 						{
-							//TODO: Check if has all Chunks
-							
-							new Thread (new Runnable() {
-								
-								@Override
-								public void run() {
-									file.selfRestore();
-								}
-							}).start();
+							if(file.hasReceivedAll()) {
+								new Thread (new Runnable() {
+
+									@Override
+									public void run() {
+										file.selfRestore();
+									}
+								}).start();
+							}
 						}
-						
-						
-						
 					} 
 					else if(BackupService.isRemote(fileId, chunkNo)) {
 						//Checks that chunk to let MC know that there was a peer o answered faster
@@ -76,7 +71,6 @@ public class MDR extends Thread {
 					else {
 						System.out.println(MESSAGE + " chunk not asked and I'm not tracking that chunk");
 					}
-					
 					msg=null;
 				} 
 				else {
@@ -87,7 +81,6 @@ public class MDR extends Thread {
 			}
 		}
 	}
-	
 
 	public void sendMessage(Message x) throws IOException {
 		System.out.println(MESSAGE + "Sending Message..");

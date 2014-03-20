@@ -18,7 +18,14 @@ public class Chunk {
 	 *   that another peer already answered with a CHUNK message for this Chunk
 	 * 
 	 */
-	boolean check = false; 
+	boolean check = false;
+	
+	/*Used as a flag to:
+	 * - If a peer received a CHUNK message MDR will change check flag to let  a peer know 
+	 *   that another peer already answered with a CHUNK message for this Chunk
+	 * 
+	 */
+	boolean restored=false;
 
 	protected ArrayList<String> addresses; //Addresses that acknowledged
 
@@ -136,6 +143,16 @@ public class Chunk {
 		this.check = check;
 	}
 
+	public synchronized boolean getRestored() {
+		boolean current = restored;
+		this.restored = false; //after I checked I want it to be false again
+		return current;
+	}
+
+	public synchronized void setRestored(boolean restored) {
+		this.restored = restored;
+	}
+	
 	public String getPath() {
 		return path;
 	}

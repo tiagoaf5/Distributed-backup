@@ -135,24 +135,22 @@ public class MC extends Thread {
 	public void askRestoreFile(LocalFile f) {
 
 		try {
-
-			int deltaT = 400;
-			int count = 0;
-
 			for(int i=0; i<f.getNumberChunks(); i++) {
-
+				
+				int deltaT = 400;
+				int count = 0;
 				MessageGetChunk msg = new MessageGetChunk(f.getId(), i);
 
-				while(count < 5) {
+				while(count<5) {
 					sendMessage(msg); //send Message
 					Thread.sleep(deltaT); //wait for stored messages
 
 					//check replication rate
-					if(f.getChunk(i).isChecked())
+					if(f.getChunk(i).getRestored())
 						break;
 
 					count++;
-					deltaT *= 2;
+					deltaT+=400;
 				}
 			}
 		} catch (IOException e) {
@@ -160,6 +158,5 @@ public class MC extends Thread {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-
 	}
 }
