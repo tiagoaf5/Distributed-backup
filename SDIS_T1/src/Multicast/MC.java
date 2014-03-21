@@ -165,17 +165,29 @@ public class MC extends Thread {
 		}
 	}
 	
-	public void askDeleteFile(LocalFile f) {
+	public void askDeleteFile(LocalFile f)  {
 		
 		try {
 			MessageDelete msg = new MessageDelete(f.getId());
-			sendMessage(msg); //send Message
+	
+			int deltaT = 400;
+			int count = 0;
+
+			while(count < 3) { 
+				sendMessage(msg); 
+				Thread.sleep(deltaT); 
 			
-			//TODO: verificar o countDeleted
+				if(f.getCountDeleted()>=f.getReplicationDeg())
+					break;
+
+				count++;
+				deltaT *= 2;
+			}
 			
 		} catch (IOException e) {
 			e.printStackTrace();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
 		} 
-
 	}
 }
