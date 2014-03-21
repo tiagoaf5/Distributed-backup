@@ -91,5 +91,14 @@ public abstract class MyFile {
 		return true;
 	}
 	
+	public boolean decreaseCurReplicationDeg (int chunkNo, String addr) {		
+		if(!chunks.containsKey(chunkNo))
+			return false;
+
+		//increases replication degree only if the address addr haven't acknowledged yet
+		chunks.get(chunkNo).decreaseCurReplicationDeg(addr);
+		return true;
+	}
+	
 
 }

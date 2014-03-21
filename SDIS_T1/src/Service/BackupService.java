@@ -79,6 +79,8 @@ public class BackupService {
 			e.printStackTrace();
 		}
 		
+		System.out.println(getAvailableDiskSpace());
+		
 	/*	try {
 			Thread.sleep(5000);
 		} catch (InterruptedException e) {
@@ -217,6 +219,10 @@ public class BackupService {
 	public static int getDiskSpace() {
 		return diskSpace;
 	}
+	
+	public static int getAvailableDiskSpace() {
+		return (int) (diskSpace - folderSize(new File("RemoteFiles")));
+	}
 
 	public static List<LocalFile> getLocalFiles() {
 		return localFiles;
@@ -244,12 +250,16 @@ public class BackupService {
 	private void createFolders() {
 		File dir1 = new File("RemoteFiles");
 		File dir2 = new File("tmp");
+		File dir3 = new File("RestoredFiles");
 		
 		if (!dir1.exists())
 			dir1.mkdir();
 		
 		if (!dir2.exists())
 			dir2.mkdir();
+		
+		if (!dir3.exists())
+			dir3.mkdir();
 	}
 
 	public void showInterface() {

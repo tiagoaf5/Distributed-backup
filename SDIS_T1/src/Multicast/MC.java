@@ -113,8 +113,15 @@ public class MC extends Thread {
 					//TODO: enviar DELETE para os outros
 					msg=null;
 				} else if(type.equals("REMOVED")) {
-					MessageRemoved msg=new MessageRemoved();
+					MessageRemoved msg = new MessageRemoved();
 					msg.parseMessage(rcv);
+					
+					RemoteFile remote=BackupService.getRemote(msg.getFileId());
+					
+					if(remote!=null) {
+						remote.decreaseCurReplicationDeg(msg.getChunkNo(), pkt.getIp());
+					}
+					
 
 					//TODO:
 					msg=null;

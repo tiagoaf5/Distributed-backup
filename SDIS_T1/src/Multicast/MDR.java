@@ -49,12 +49,12 @@ public class MDR extends Thread {
 						c.setPath("tmp/");
 						c.setRestored(true);
 						int length = c.storeData(msg.getChunk());
-						System.out.println(MESSAGE + " I received my Chunk :) " + length);
+						System.out.println(MESSAGE + " I received my Chunk :) " );
 
 						
 						if(length<64000) //last Chunk
 						{
-							System.out.println(file.hasReceivedAll());
+
 							if(file.hasReceivedAll()) {
 								new Thread (new Runnable() {
 

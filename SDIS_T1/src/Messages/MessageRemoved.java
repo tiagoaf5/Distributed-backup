@@ -36,7 +36,7 @@ public class MessageRemoved extends Message {
 		if (i < 0)
 			return -1;
 
-		System.out.println(version + "\n" + fileId + "\n" + chunkNo + "\n");
+		//System.out.println(version + "\n" + fileId + "\n" + chunkNo + "\n");
 		return 0;
 	}
 }

@@ -162,9 +162,8 @@ public class LocalFile extends MyFile{
 	}
 
 	public void selfRestore() {
-
 		try {
-			File f = new File("tmp/" + path);
+			File f = new File("RestoredFiles/" + path.getFileName());
 
 			if(!f.exists()) {
 				f.createNewFile();

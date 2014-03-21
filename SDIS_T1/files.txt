@@ -1,15 +1,15 @@
 /*File format:
-SizeAvailable (KBytes): 
+SizeAvailable (Bytes): 
 xxx
 Files (Path - replicationDegree) :
 <filename>
 <replicationDegree>
 
 Example:
-100
+100000000 
 2 - C:\Users\Y\x.txt
 8 - C:\Users\Y\o12.txt
 */
 
-100
-1 - oi.txt
+100000000
+1 - C:\Users\Tiago\Documents\FEUP\3º Ano\2º Semestre\SDIS\Slides\AT03_RPC.pdf

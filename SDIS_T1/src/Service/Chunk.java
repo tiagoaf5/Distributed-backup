@@ -119,6 +119,18 @@ public class Chunk {
 		return true;
 		//currentReplicationDeg++;
 	}
+	
+	public boolean decreaseCurReplicationDeg(String ip) {
+		if(addresses.contains(ip)) {
+			addresses.remove(ip);
+			return true;
+		}
+		else
+			
+		return false;
+		
+	}
+	
 	public synchronized int getCurReplicationDeg() {
 		return addresses.size(); //TODO: Changed
 	}
@@ -158,4 +170,6 @@ public class Chunk {
 	public void setPath(String path) {
 		this.path = path;
 	}
+
+	
 }
