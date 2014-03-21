@@ -110,8 +110,11 @@ public class MC extends Thread {
 					if(local != null) {
 						local.increaseCountDeleted();
 					}
-					//TODO: enviar DELETE para os outros
+					
+					//TODO: condiçao para poder nao utilizar isto
+					sendMessage(msg); //enviar DELETE para os outros
 					msg=null;
+					
 				} else if(type.equals("REMOVED")) {
 					MessageRemoved msg=new MessageRemoved();
 					msg.parseMessage(rcv);
