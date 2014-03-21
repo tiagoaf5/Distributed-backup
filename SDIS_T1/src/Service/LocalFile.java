@@ -26,7 +26,7 @@ public class LocalFile extends MyFile{
 	private FileInputStream fileStream;
 	private int offset = -1; //next 64KBytes to read
 
-
+	private int countDeleted=0; //count number of deleted messages received
 
 	public LocalFile(String name, int replication) throws FileNotFoundException {
 
@@ -56,6 +56,14 @@ public class LocalFile extends MyFile{
 		computeFileId();
 	}
 
+	public int getCountDeleted() {
+		return countDeleted;
+	}
+
+	public void increaseCountDeleted() {
+		this.countDeleted++;
+	}
+	
 	public boolean hasReceivedAll() { //checks if a file has received all chunks asked to restore
 		
 		for(int i=0; i<getNumberChunks(); i++) {
