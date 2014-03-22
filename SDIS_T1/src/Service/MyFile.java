@@ -107,8 +107,10 @@ public abstract class MyFile {
 		
 		Iterator<Map.Entry<Integer,Chunk>> it = chunks.entrySet().iterator();
 		while (it.hasNext()) {
-			if (it.next().getValue().getCurReplicationDeg() < replicationDeg)
-				a.add(it.next().getKey());
+			Map.Entry<Integer,Chunk> pair = it.next();
+			
+			if (pair.getValue().getCurReplicationDeg() < replicationDeg)
+				a.add(pair.getKey());
 		}
 		
 		return a;

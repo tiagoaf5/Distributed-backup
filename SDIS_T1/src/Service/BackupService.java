@@ -34,7 +34,7 @@ public class BackupService {
 	private static final int COMMENTSIZE = 13;
 
 	static private int diskSpace; //em kBytes
-	static private List<LocalFile> localFiles; 
+	static private ArrayList<LocalFile> localFiles; 
 	static private HashMap<String, RemoteFile> remoteFiles;
 	
 	private BackupStatusHandler backupHandler;
@@ -71,46 +71,15 @@ public class BackupService {
 		backupHandler.start();
 		
 		
-		try {
+		/*try {
 			Thread.sleep(10000);
-			/*for(int i = 0; i < 11; i++) {
-				mc.sendMessage(new MessageGetChunk(localFiles.get(0).getId(),i));
-				Thread.sleep(500);
-			}*/
+
 			mc.askRestoreFile(localFiles.get(0));
 		} catch (InterruptedException e) {
 			e.printStackTrace();
-		}
+		}*/
 		
 		System.out.println(getAvailableDiskSpace());
-		
-	/*	try {
-			Thread.sleep(5000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		LocalFile x = localFiles.get(0);
-		Random r = new Random();
-		
-		while(true) {
-			try {
-				byte[] z = x.nextChunk();
-				
-				if(z == null)
-					break;
-				
-				MessagePutChunk msg = new MessagePutChunk(x.getId(), x.getOffset(), x.getReplication());
-				msg.setChunk(z);
-				mdb.sendMessage(msg);
-				//System.out.println(Message.byteArrayToHexString(msg.getMessage()));
-				Thread.sleep(r.nextInt(400)+1);
-				
-			} catch (IOException e) {
-				e.printStackTrace();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}*/
 
 	}
 	
@@ -227,7 +196,7 @@ public class BackupService {
 		return (int) (diskSpace - folderSize(new File("RemoteFiles")));
 	}
 
-	public static List<LocalFile> getLocalFiles() {
+	public static ArrayList<LocalFile> getLocalFiles() {
 		return localFiles;
 	}
 

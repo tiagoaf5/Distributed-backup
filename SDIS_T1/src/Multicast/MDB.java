@@ -127,7 +127,7 @@ public class MDB extends Thread {
 				if(z == null && previousLenght < 64000) //The previous loop was the last chunk
 					break;
 
-				int deltaT = 400;
+				int deltaT = 500;
 				int count = 0;
 
 				MessagePutChunk msg = new MessagePutChunk(f.getId(), f.getOffset(), f.getReplicationDeg());
@@ -163,7 +163,7 @@ public class MDB extends Thread {
 	public void backupChunk(LocalFile f, int chunkNo) {
 		try {
 
-			int deltaT = 400;
+			int deltaT = 500;
 			int count = 0;
 
 			MessagePutChunk msg = new MessagePutChunk(f.getId(), chunkNo, f.getReplicationDeg());
