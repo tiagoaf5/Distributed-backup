@@ -117,9 +117,15 @@ public class MC extends Thread {
 					msg.parseMessage(rcv);
 					
 					RemoteFile remote=BackupService.getRemote(msg.getFileId());
+					LocalFile local=BackupService.getLocal(msg.getFileId());
 					
-					if(remote!=null) {
+					if(remote != null) {
 						remote.decreaseCurReplicationDeg(msg.getChunkNo(), pkt.getIp());
+					}
+					else if (local != null) {
+						local.decreaseCurReplicationDeg(msg.getChunkNo(), pkt.getIp());
+						
+						//TODO: Thread to periodically check if the files have the desired replication degree
 					}
 					
 

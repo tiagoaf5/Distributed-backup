@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Scanner;
 
 
-import Messages.MessageGetChunk;
 import Multicast.*;
 
 public class BackupService {
@@ -37,6 +36,8 @@ public class BackupService {
 	static private int diskSpace; //em kBytes
 	static private List<LocalFile> localFiles; 
 	static private HashMap<String, RemoteFile> remoteFiles;
+	
+	private BackupStatusHandler backupHandler;
 
 	public static void main(String[] args) throws IOException {
 		/*
@@ -66,6 +67,8 @@ public class BackupService {
 		
 		
 		mdb.backupFile(localFiles.get(0));
+		
+		backupHandler.start();
 		
 		
 		try {
@@ -103,10 +106,8 @@ public class BackupService {
 				Thread.sleep(r.nextInt(400)+1);
 				
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}*/
@@ -138,6 +139,8 @@ public class BackupService {
 		localFiles = new ArrayList<LocalFile>();
 		readFile();
 		createFolders();
+		
+		backupHandler = new BackupStatusHandler();
 
 		try {
 			openMulticastSessions();

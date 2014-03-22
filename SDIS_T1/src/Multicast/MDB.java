@@ -118,7 +118,6 @@ public class MDB extends Thread {
 
 
 	public void backupFile(LocalFile f) {
-		MDB mdb = BackupService.getMdb();
 
 		int previousLenght = 64000;
 		while(true) {
@@ -135,8 +134,7 @@ public class MDB extends Thread {
 				msg.setChunk(z);
 
 				while(count < 5) {
-					mdb.sendMessage(msg); //send Message
-					System.out.println("--------------> Waiting " + deltaT);
+					sendMessage(msg); //send Message
 					Thread.sleep(deltaT); //wait for stored messages
 
 					//check replication rate
@@ -149,16 +147,43 @@ public class MDB extends Thread {
 
 				if(z == null) //last chunk with size 0
 					break;
-				
+
 				previousLenght = z.length;
 
-				
+
 
 			} catch (IOException e) {
 				e.printStackTrace();
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
+		}
+	}
+
+	public void backupChunk(LocalFile f, int chunkNo) {
+		try {
+
+			int deltaT = 400;
+			int count = 0;
+
+			MessagePutChunk msg = new MessagePutChunk(f.getId(), chunkNo, f.getReplicationDeg());
+			byte[] z = f.getChunkData(chunkNo);
+			msg.setChunk(z);
+
+			while(count < 5) {
+				sendMessage(msg); //send Message
+				Thread.sleep(deltaT); //wait for stored messages
+
+				//check replication rate
+				if(f.getChunk(f.getOffset()).getCurReplicationDeg() >= f.getReplicationDeg())
+					break;
+
+				count++;
+				deltaT *= 2;
+			}
+
+		} catch (InterruptedException e) {
+			e.printStackTrace();
 		}
 	}
 }

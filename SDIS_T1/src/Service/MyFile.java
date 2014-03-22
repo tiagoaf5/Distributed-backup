@@ -1,6 +1,7 @@
 package Service;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -101,4 +102,16 @@ public abstract class MyFile {
 	}
 	
 
+	public ArrayList<Integer> getChunksLowReplication() {
+		ArrayList<Integer> a = new ArrayList<Integer>();
+		
+		Iterator<Map.Entry<Integer,Chunk>> it = chunks.entrySet().iterator();
+		while (it.hasNext()) {
+			if (it.next().getValue().getCurReplicationDeg() < replicationDeg)
+				a.add(it.next().getKey());
+		}
+		
+		return a;
+		
+	}
 }

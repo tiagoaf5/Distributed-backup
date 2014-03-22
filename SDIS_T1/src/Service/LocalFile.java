@@ -11,6 +11,7 @@ import java.nio.file.Paths;
 import java.nio.file.attribute.UserPrincipal;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.Random;
 
 import Messages.*;
@@ -27,7 +28,7 @@ public class LocalFile extends MyFile{
 	private int offset = -1; //next 64KBytes to read
 
 	private int countDeleted=0; //count number of deleted messages received
-
+	
 	public LocalFile(String name, int replication) throws FileNotFoundException {
 
 		systemFile=new File(name);
@@ -186,4 +187,5 @@ public class LocalFile extends MyFile{
 			getChunk(i).setRestored(false);
 		}
 	}
+
 }
