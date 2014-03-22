@@ -27,7 +27,7 @@ public class LocalFile extends MyFile{
 	private int offset = -1; //next 64KBytes to read
 
 	private int countDeleted=0; //count number of deleted messages received
-	
+
 	public LocalFile(String name, int replication) throws FileNotFoundException {
 
 		systemFile=new File(name);
@@ -63,9 +63,9 @@ public class LocalFile extends MyFile{
 	public void increaseCountDeleted() {
 		this.countDeleted++;
 	}
-	
+
 	public boolean hasReceivedAll() { //checks if a file has received all chunks asked to restore
-		
+
 		for(int i=0; i<getNumberChunks(); i++) {
 			if(!getChunk(i).getRestored()) {
 				return false;
@@ -73,7 +73,7 @@ public class LocalFile extends MyFile{
 		}
 		return true;
 	}
-	
+
 	private void computeFileId() {
 		try {
 			String res=getInfo();
@@ -160,6 +160,50 @@ public class LocalFile extends MyFile{
 		return b;
 	}
 
+	public byte[] getChunkData(int chunkNo) {
+		byte[] b2 = super.getChunkData(chunkNo);
+
+
+		if (b2 == null) {
+			try {
+				int offset = -1;
+				long size = systemFile.length();
+				int chunkSize;
+				byte[] b = null;
+
+				fileStream = new FileInputStream(systemFile);
+
+				while(offset != chunkNo) {
+
+					if(size / CHUNK_SIZE == offset+1)
+						chunkSize = (int) (size % CHUNK_SIZE);
+					else if (size / CHUNK_SIZE > offset+1)
+						chunkSize = CHUNK_SIZE;
+					else {
+						break;
+					}
+
+					b = new byte[chunkSize];
+
+					fileStream.read(b,0, chunkSize);
+
+					offset++;
+
+				}
+
+				fileStream.close();
+				return b;
+			}
+			catch (IOException e) {
+				e.printStackTrace();
+			}
+
+
+		}
+
+		return b2;
+	}
+
 	public int getOffset() {
 		return offset;
 	}
@@ -176,7 +220,7 @@ public class LocalFile extends MyFile{
 			for(int i = 0; i < chunks.size(); i++) {
 				o.write(chunks.get(i).getData());
 			}
-			
+
 			o.close();
 		} catch (IOException e) {
 			e.printStackTrace();

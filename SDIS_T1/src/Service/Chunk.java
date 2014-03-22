@@ -30,7 +30,7 @@ public class Chunk implements Comparable<Chunk> {
 	protected ArrayList<String> addresses; //Addresses that acknowledged
 
 
-	public Chunk (String fileId, int chunkNo, int replicationDeg, byte[] data) {
+	public Chunk (String fileId, int chunkNo, int replicationDeg, byte[] data) { //called by remote file
 		this.fileId = fileId;
 		this.chunkNo = chunkNo;
 
