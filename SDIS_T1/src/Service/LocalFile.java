@@ -11,7 +11,6 @@ import java.nio.file.Paths;
 import java.nio.file.attribute.UserPrincipal;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
 import java.util.Random;
 
 import Messages.*;
@@ -138,7 +137,10 @@ public class LocalFile extends MyFile{
 		else if (size / CHUNK_SIZE > offset+1)
 			//b = new byte[CHUNK_SIZE];
 			chunkSize = CHUNK_SIZE;
-		else return null;
+		else {
+			fileStream.close();
+			return null;
+		}
 
 		b = new byte[chunkSize];
 

@@ -167,7 +167,7 @@ public class MDB extends Thread {
 			int count = 0;
 
 			MessagePutChunk msg = new MessagePutChunk(f.getId(), chunkNo, f.getReplicationDeg());
-			byte[] z = f.getChunkData(chunkNo);
+			byte[] z = f.getChunkData(chunkNo); //TODO: change all chunks structure in order to know if it's a local or remote chunk
 			msg.setChunk(z);
 
 			while(count < 5) {

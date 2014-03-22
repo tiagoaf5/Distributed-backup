@@ -105,7 +105,7 @@ public class MC extends Thread {
 						BackupService.deleteRemoteFile(msg.getFileId()); 
 						System.out.println(MESSAGE + " deleting file");
 					}
-					
+
 					LocalFile local = BackupService.getLocal(msg.getFileId());
 					if(local != null) {
 						local.increaseCountDeleted();
@@ -115,19 +115,22 @@ public class MC extends Thread {
 				} else if(type.equals("REMOVED")) {
 					MessageRemoved msg = new MessageRemoved();
 					msg.parseMessage(rcv);
-					
+
+					System.out.println(MESSAGE + "received - REMOVED FileId: " 
+							+ msg.getFileId() + " ChunkNo: " + msg.getChunkNo());
+
 					RemoteFile remote=BackupService.getRemote(msg.getFileId());
 					LocalFile local=BackupService.getLocal(msg.getFileId());
-					
+
 					if(remote != null) {
 						remote.decreaseCurReplicationDeg(msg.getChunkNo(), pkt.getIp());
 					}
-					else if (local != null) {
+					/*else*/ if (local != null) { //TODO: uncomment else 
 						local.decreaseCurReplicationDeg(msg.getChunkNo(), pkt.getIp());
-						
+
 						//TODO: Thread to periodically check if the files have the desired replication degree
 					}
-					
+
 
 					//TODO:
 					msg=null;
@@ -151,8 +154,8 @@ public class MC extends Thread {
 
 		try {
 			for(int i=0; i<f.getNumberChunks(); i++) {
-				
-				int deltaT = 400;
+
+				int deltaT = 500;
 				int count = 0;
 				MessageGetChunk msg = new MessageGetChunk(f.getId(), i);
 
@@ -165,7 +168,7 @@ public class MC extends Thread {
 
 					//System.out.println("------- A MANDAR PELA " + count + " VEZ");
 					count++;
-					deltaT+=400;
+					deltaT+=500;
 				}
 			}
 		} catch (IOException e) {
@@ -174,18 +177,30 @@ public class MC extends Thread {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void askDeleteFile(LocalFile f) {
-		
+
 		try {
 			MessageDelete msg = new MessageDelete(f.getId());
 			sendMessage(msg); //send Message
-			
+
 			//TODO: verificar o countDeleted
-			
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		} 
 
+	}
+	
+	public void sayRemovedFile (Chunk c) {
+		try {
+			MessageRemoved msg = new MessageRemoved(c.getFileId(),c.getChunkNo());
+			sendMessage(msg); //send Message
+			//TODO: find a better way
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		} 
+		
 	}
 }

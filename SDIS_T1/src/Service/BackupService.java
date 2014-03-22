@@ -9,11 +9,21 @@ import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 
+
+
+
+
+
+import Messages.MessageRemoved;
 import Multicast.*;
 
 public class BackupService {
@@ -33,30 +43,20 @@ public class BackupService {
 	private static final String FILEBEGIN = "/*File format:";
 	private static final int COMMENTSIZE = 13;
 
+	private static final String FOLDER_REMOTE_FILES = "RemoteFiles";
+	private static final String FOLDER_RESTORED_FILES = "RestoredFiles";
+	private static final String FOLDER_TMP = "tmp";
+
 	static private int diskSpace; //em kBytes
 	static private ArrayList<LocalFile> localFiles; 
 	static private HashMap<String, RemoteFile> remoteFiles;
-	
+
 	private BackupStatusHandler backupHandler;
 
 	public static void main(String[] args) throws IOException {
-		/*
-		try {
-			BackupService a = new BackupService(args);
-			a.initReceivingThreads();
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		}
-
-		MyFile f = new MyFile("1.pdf", 1);
-		 */
-		
-		
-
-	   // System.out.println("Folder Size: " + folderSize(new File("RemoteFiles")) + " bytes");
-		
 		BackupService a = new BackupService(args);
 		a.initReceivingThreads();
+
 		//a.showInterface();
 	}
 
@@ -64,13 +64,21 @@ public class BackupService {
 		mc.start();
 		mdb.start();
 		mdr.start();
-		
-		
+
+
 		mdb.backupFile(localFiles.get(0));
-		
+
 		backupHandler.start();
-		
-		
+
+
+		try {
+			Thread.sleep(5000);
+			diskSpace = 500000;
+			handleChangedDiskSpace();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
 		/*try {
 			Thread.sleep(10000);
 
@@ -78,20 +86,61 @@ public class BackupService {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}*/
-		
+
 		System.out.println(getAvailableDiskSpace());
 
 	}
-	
+
 	public static long folderSize(File directory) {
-	    long length = 0;
-	    for (File file : directory.listFiles()) {
-	        if (file.isFile())
-	            length += file.length();
-	        else
-	            length += folderSize(file);
-	    }
-	    return length;
+		long length = 0;
+		for (File file : directory.listFiles()) {
+			if (file.isFile())
+				length += file.length();
+			else
+				length += folderSize(file);
+		}
+		return length;
+	}
+
+	public void handleChangedDiskSpace () {
+		if(getAvailableDiskSpace() < 0) {
+
+			ArrayList<Chunk> list = getChunksOrderedByRatio();
+
+			int i = 0;
+
+			while (getAvailableDiskSpace() < 0) {
+				if (i >= list.size())
+					break;
+				System.out.println(i);
+				getRemote(list.get(i).getFileId()).delete(list.get(i).getChunkNo());
+				mc.sayRemovedFile(list.get(i));
+				i++;
+			}
+		}
+	}
+
+	private ArrayList<Chunk> getChunksOrderedByRatio() {
+		ArrayList<Chunk> list = new ArrayList<Chunk>();
+
+
+		Iterator<Map.Entry<String,RemoteFile>> it = remoteFiles.entrySet().iterator();
+		
+		while (it.hasNext()) {
+			
+			Map.Entry<String,RemoteFile> pair = it.next();
+
+			RemoteFile f = pair.getValue();
+
+			ArrayList<Chunk> tmp = f.getChunks();
+
+			for(int j = 0; j < tmp.size(); j++)
+				list.add(tmp.get(j));
+		}
+
+
+		Collections.sort(list,null);
+		return list;
 	}
 
 	public BackupService(String args[]) throws UnknownHostException {
@@ -108,7 +157,7 @@ public class BackupService {
 		localFiles = new ArrayList<LocalFile>();
 		readFile();
 		createFolders();
-		
+
 		backupHandler = new BackupStatusHandler();
 
 		try {
@@ -117,7 +166,7 @@ public class BackupService {
 			e.printStackTrace();
 		}
 
-		
+
 	}
 
 	private void openMulticastSessions() throws IOException {
@@ -129,12 +178,12 @@ public class BackupService {
 
 
 	private void readFile() {
-		
+
 		FileInputStream fileStream;
 
 		try {
 			System.out.println("Reading file "+FILENAME+"...");
-			
+
 			fileStream = new FileInputStream(FILENAME);
 			DataInputStream input = new DataInputStream(fileStream);
 			BufferedReader reader = new BufferedReader(new InputStreamReader(input));
@@ -191,9 +240,9 @@ public class BackupService {
 	public static int getDiskSpace() {
 		return diskSpace;
 	}
-	
+
 	public static int getAvailableDiskSpace() {
-		return (int) (diskSpace - folderSize(new File("RemoteFiles")));
+		return (int) (diskSpace - folderSize(new File(FOLDER_REMOTE_FILES)));
 	}
 
 	public static ArrayList<LocalFile> getLocalFiles() {
@@ -203,9 +252,9 @@ public class BackupService {
 	public static HashMap<String, RemoteFile> getRemoteFiles() {
 		return remoteFiles;
 	}
-	
+
 	public static boolean addRemoteFile(String fileId, RemoteFile file) {
-		
+
 		if(remoteFiles.containsKey(fileId))
 			return false;
 		else {
@@ -218,27 +267,27 @@ public class BackupService {
 		getRemote(fileId).delete();
 		remoteFiles.remove(fileId);
 	}
-	
+
 	private void createFolders() {
-		File dir1 = new File("RemoteFiles");
-		File dir2 = new File("tmp");
-		File dir3 = new File("RestoredFiles");
-		
+		File dir1 = new File(FOLDER_REMOTE_FILES);
+		File dir2 = new File(FOLDER_TMP);
+		File dir3 = new File(FOLDER_RESTORED_FILES);
+
 		if (!dir1.exists())
 			dir1.mkdir();
-		
+
 		if (!dir2.exists())
 			dir2.mkdir();
-		
+
 		if (!dir3.exists())
 			dir3.mkdir();
 	}
 
 	public void showInterface() {
-		
+
 		boolean menu=true;
 		Scanner in = new Scanner(System.in);
-		
+
 		while(menu) {
 			System.out.println("Choose an option (1-5): \n 1. Backup a file \n"
 					+ " 2. Restore a file\n 3. Delete a file\n"
@@ -247,7 +296,7 @@ public class BackupService {
 			String s;
 			int option;
 			s=in.nextLine();
-			
+
 			try{
 				option=Integer.parseInt(s);
 				int res;
@@ -273,14 +322,14 @@ public class BackupService {
 					break;
 				}
 			} catch (NumberFormatException e){
-				
+
 			}
 		}
 		in.close();
 	}
-	
+
 	private int getQuantity() {
-		
+
 		Scanner in = new Scanner(System.in);
 		while(true) {
 			System.out.println("Choose a size between 1 and "+diskSpace+":");
@@ -304,14 +353,14 @@ public class BackupService {
 		Scanner in = new Scanner(System.in);
 		while(true) {
 			System.out.println("Choose a file (1-"+localFiles.size()+"):");
-			
+
 			int i=0; int j=1;
 			while(i<localFiles.size()) {
 				System.out.println(j+". "+localFiles.get(i).getName());
 				j++;
 				i++;
 			}
-			
+
 			String s;
 			int option;
 			s=in.nextLine();
@@ -337,7 +386,7 @@ public class BackupService {
 	public static MC getMc() {
 		return mc;
 	}
-	
+
 	public static boolean isLocal(String fileId) {
 
 		List<LocalFile> localFiles = BackupService.getLocalFiles();
@@ -358,18 +407,18 @@ public class BackupService {
 		HashMap<String, RemoteFile> remoteFiles=BackupService.getRemoteFiles();
 		return remoteFiles.get(fileId);
 	}
-	
+
 	public static boolean isRemote(String fileId, int chunkNo) {
 
 		HashMap<String, RemoteFile> remoteFiles=BackupService.getRemoteFiles();
 		RemoteFile file=remoteFiles.get(fileId);
-		
+
 		if(file == null)
 			return false;
-		
+
 		return (file.getChunk(chunkNo) != null);
 	}
-	
+
 	public static LocalFile getLocal(String fileId) {
 
 		List<LocalFile> localFiles = BackupService.getLocalFiles();

@@ -4,9 +4,9 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Comparator;
 
-public class Chunk {
-	//TODO: save Chunks in a specific folder
+public class Chunk implements Comparable<Chunk> {
 	private String path = "RemoteFiles/";
 	String fileId;
 	int chunkNo;
@@ -171,5 +171,35 @@ public class Chunk {
 		this.path = path;
 	}
 
+	public String getFileId() {
+		return fileId;
+	}
+
+	public int getChunkNo() {
+		return chunkNo;
+	}
+
+	public int getReplicationDeg() {
+		return replicationDeg;
+	}
+	
+	public int compareTo(Chunk x2) {
+		Float ratio1 = new Float((getCurReplicationDeg() - 1) / getReplicationDeg());
+		Float ratio2 = new Float((x2.getCurReplicationDeg() - 1) / x2.getReplicationDeg());
+			
+		return ratio1.compareTo(ratio2) * -1;
+	}
+
+	@Override
+	public boolean equals(Object x) {
+		Chunk x2 = (Chunk) x;
+		
+		Float ratio1 = new Float((getCurReplicationDeg() - 1) / getReplicationDeg());
+		Float ratio2 = new Float((x2.getCurReplicationDeg() - 1) / x2.getReplicationDeg());
+			
+		return ratio1 == ratio2;
+	}
+
+	
 	
 }
