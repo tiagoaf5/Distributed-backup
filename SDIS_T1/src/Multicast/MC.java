@@ -110,8 +110,11 @@ public class MC extends Thread {
 					if(local != null) {
 						local.increaseCountDeleted();
 					}
-					//TODO: enviar DELETE para os outros
+					
+					//TODO: condiçao para poder nao utilizar isto
+					sendMessage(msg); //enviar DELETE para os outros
 					msg=null;
+					
 				} else if(type.equals("REMOVED")) {
 					MessageRemoved msg = new MessageRemoved();
 					msg.parseMessage(rcv);
@@ -178,18 +181,31 @@ public class MC extends Thread {
 		}
 	}
 
-	public void askDeleteFile(LocalFile f) {
+	public void askDeleteFile(LocalFile f)  {
 
 		try {
 			MessageDelete msg = new MessageDelete(f.getId());
-			sendMessage(msg); //send Message
+	
+			int deltaT = 400;
+			int count = 0;
 
-			//TODO: verificar o countDeleted
+			while(count < 3) { 
+				sendMessage(msg); 
+				Thread.sleep(deltaT); 
+			
+		
+				if(f.getCountDeleted()>=f.getReplicationDeg())
+					break;
 
+				count++;
+				deltaT *= 2;
+			}
+			
 		} catch (IOException e) {
 			e.printStackTrace();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
 		} 
-
 	}
 	
 	public void sayRemovedFile (Chunk c) {
