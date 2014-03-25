@@ -9,7 +9,6 @@ import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -19,11 +18,6 @@ import java.util.Scanner;
 
 
 
-
-
-
-
-import Messages.MessageRemoved;
 import Multicast.*;
 
 public class BackupService {
@@ -199,7 +193,7 @@ public class BackupService {
 					diskSpace = Integer.parseInt(line);
 					System.out.println("Total disk space: " + diskSpace);
 				} catch(Exception e) {
-					System.out.println("ERRO files.txt mal definido: falta espaço máximo de disco.");
+					System.out.println("ERRO files.txt mal definido: falta espaï¿½o mï¿½ximo de disco.");
 					reader.close();
 					return;
 				}
@@ -230,7 +224,7 @@ public class BackupService {
 			input.close();
 
 		} catch (FileNotFoundException e) {
-			System.out.println("ERROR: files.txt não encontrado");
+			System.out.println("ERROR: files.txt nï¿½o encontrado");
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
