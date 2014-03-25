@@ -52,17 +52,22 @@ public class MessagePutChunk extends Message {
 
 	@Override
 	public byte[] getMessage() {
-		byte b[] = {CRLF,SPACE,CRLF,SPACE};
+		/*byte b[] = {CRLF,CRLF};
 		
 		String m1 = MESSAGE_TYPE + " " + getVersion() + " ";
-		String m2 = " " + chunkNo + " " + replicationDeg + " ";
+		String m2 = " " + chunkNo + " " + replicationDeg;
 		
 		//m1 + fileId + m2 + b + chunk
 		byte p1[] = concatenate(stringToByteArray(m1), hexStringToByteArray(fileId));
 		byte p2[] = concatenate(p1,stringToByteArray(m2));
 		p1 = null;
 
-		return concatenate(concatenate(p2,b), chunk);
+		return concatenate(concatenate(p2,b), chunk);*/
+		
+		String m1 = MESSAGE_TYPE + " " + getVersion() + " " + fileId + 
+				" " + chunkNo + " " + replicationDeg + "\r\n\r\n" + byteArrayToString(chunk);
+		
+		return stringToByteArray(m1);
 	}
 
 	@Override

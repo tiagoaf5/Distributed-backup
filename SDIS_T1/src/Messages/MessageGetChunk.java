@@ -19,7 +19,7 @@ public class MessageGetChunk extends Message {
 
 	@Override
 	public byte[] getMessage() {
-		byte b[] = {CRLF,SPACE,CRLF,SPACE};
+		/*byte b[] = {CRLF,SPACE,CRLF,SPACE};
 
 		String m1 = MESSAGE_TYPE + " " + getVersion() + " ";
 		String m2 = " " + chunkNo + " ";
@@ -29,7 +29,11 @@ public class MessageGetChunk extends Message {
 		byte p2[] = concatenate(p1,stringToByteArray(m2));
 		p1 = null;
 
-		return concatenate(p2,b);
+		return concatenate(p2,b);*/
+		String m1 = MESSAGE_TYPE + " " + getVersion() + " " + fileId + 
+				" " + chunkNo + "\r\n\r\n";
+		
+		return stringToByteArray(m1);
 	}
 
 	@Override

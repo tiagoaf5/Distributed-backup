@@ -111,8 +111,8 @@ public class MC extends Thread {
 						local.increaseCountDeleted();
 					}
 					
-					//TODO: condiçao para poder nao utilizar isto
-					sendMessage(msg); //enviar DELETE para os outros
+					//TODO: condiï¿½ao para poder nao utilizar isto
+					//sendMessage(msg); //enviar DELETE para os outros
 					msg=null;
 					
 				} else if(type.equals("REMOVED")) {
@@ -151,6 +151,11 @@ public class MC extends Thread {
 		System.out.println(MESSAGE + "Sending Message..");
 		channel.send(x.getMessage());
 	}
+	
+	public void sendBytes(byte[] x) throws IOException {
+		System.out.println(MESSAGE + "Sending Message..");
+		channel.send(x);
+	}
 
 
 	public void askRestoreFile(LocalFile f) {
@@ -188,8 +193,8 @@ public class MC extends Thread {
 	
 			int deltaT = 400;
 			int count = 0;
-
-			while(count < 3) { 
+			sendMessage(msg); 
+			/*while(count < 3) { 
 				sendMessage(msg); 
 				Thread.sleep(deltaT); 
 			
@@ -199,13 +204,11 @@ public class MC extends Thread {
 
 				count++;
 				deltaT *= 2;
-			}
+			}*/
 			
 		} catch (IOException e) {
 			e.printStackTrace();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		} 
+		}
 	}
 	
 	public void sayRemovedFile (Chunk c) {
