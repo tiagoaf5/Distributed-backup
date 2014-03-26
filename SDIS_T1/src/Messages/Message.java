@@ -66,14 +66,14 @@ public abstract class Message {
 				continue;
 			}
 			else if (count == 2) { // read fileId
-				byte[] b = new byte[32];
+				byte[] b = new byte[64];
 				int x = 0;
-				int k = i + 32;
+				int k = i + 64;
 
 				for(; i < k; i++,x++)
 					b[x] = data[i];
 
-				fileId = byteArrayToHexString(b);
+				fileId = byteArrayToString(b);
 				//System.out.println("FileId: " + fileId);
 				count++;
 				continue;
@@ -106,7 +106,7 @@ public abstract class Message {
 
 
 	protected int getHeaderTermination(int i, byte[] data) {
-		while(!(data[i-3] == CRLF && data[i-2] == SPACE && data[i-1] == CRLF && data[i] == SPACE)) {
+		while(!(data[i-3] == 0x0D && data[i-2] == 0x0A && data[i-1] == 0x0D && data[i] == 0x0A)) {
 			i++;
 			if(i >= data.length)
 				return -1;

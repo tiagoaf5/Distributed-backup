@@ -38,7 +38,10 @@ public class MDB extends Thread {
 
 
 					MessagePutChunk msg=new MessagePutChunk();
-					msg.parseMessage(rcv);
+					if(msg.parseMessage(rcv) == -1) { //TODO: Fazer isto nas outras && ignorar as que nao forem da mesma versao
+						System.out.println(MESSAGE + "Wrong format! Ignoring..");
+						continue;
+					}
 
 					System.out.println(MESSAGE + " received - PUTCHUNK FileId: " + msg.getFileId() + " ChunkNo: " + msg.getChunkNo());
 

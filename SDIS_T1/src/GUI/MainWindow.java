@@ -1,51 +1,30 @@
 package GUI;
 
 import java.awt.EventQueue;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.ScrollPaneConstants;
-import javax.swing.border.EtchedBorder;
-import javax.swing.border.TitledBorder;
-import javax.swing.JLabel;
-import javax.swing.JSlider;
-import javax.swing.JList;
-import javax.swing.JSpinner;
-import javax.swing.JButton;
-
-import java.awt.Panel;
-
-import javax.swing.JTextField;
-
 import java.awt.Font;
-
-import javax.swing.JFileChooser;
-import javax.swing.SpinnerListModel;
-import javax.swing.AbstractListModel;
-import javax.swing.JInternalFrame;
-import javax.swing.JComboBox;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.Box;
-import javax.swing.border.BevelBorder;
-import javax.swing.UIManager;
-import javax.swing.border.LineBorder;
-
-import java.awt.Color;
-
-import javax.swing.border.MatteBorder;
-import javax.swing.border.SoftBevelBorder;
-import javax.swing.border.EmptyBorder;
-import javax.swing.SwingConstants;
-
+import java.awt.Panel;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
-import javax.swing.event.ChangeListener;
+import javax.swing.Box;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JScrollPane;
+import javax.swing.JSlider;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.SwingConstants;
+import javax.swing.UIManager;
+import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
+import javax.swing.event.ChangeListener;
 
 public class MainWindow {
 

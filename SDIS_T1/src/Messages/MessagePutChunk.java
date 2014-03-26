@@ -83,7 +83,8 @@ public class MessagePutChunk extends Message {
 		byte[] b = new byte[2];
 		int x = 0;
 
-		while(data[i] != SPACE) {	
+		System.out.println("nabooo-> " + CRLF + " --- " + data[i+1]);
+		while(data[i] != (byte)0x0D && data[i+1] != (byte)0x0A) {	
 			if(x >= 1)
 				return -1;
 			b[x] = data[i];
@@ -91,7 +92,7 @@ public class MessagePutChunk extends Message {
 			i++;
 		}
 		replicationDeg = Integer.parseInt(byteArrayToString(b));
-		i++;
+
 
 		//Check header's end
 		i = getHeaderTermination(i, data);
@@ -129,19 +130,26 @@ public class MessagePutChunk extends Message {
 		/*for(int i = 0; i < message.length; i++)
 			System.out.print(String.format("%x", message[i] & 0xFF));*/
 
-		System.out.println(byteArrayToHexString(message) + "\n");
+		System.out.println(byteArrayToString(message) + "\n");
 
 		MessagePutChunk b = new MessagePutChunk();
 		b.parseMessage(message);
 
 
 		System.out.println("*************************************");
+		
+		System.out.println("version: '" + b.getVersion() + "'");
+		System.out.println("fileId: '" + b.getFileId() + "'");
+		System.out.println("chunkno: '" + b.getChunkNo() + "'");
+		System.out.println("replicationDeg: '" + b.getReplicationDeg() + "'");
+		System.out.println("Data: '" + byteArrayToHexString(b.getChunk()) + "'");
 
-		MessageRemoved c = new MessageRemoved(byteArrayToString(digest), 2);
+		
+		/*MessageRemoved c = new MessageRemoved(byteArrayToString(digest), 2);
 		byte[] message1 = c.getMessage();
 
 		MessageRemoved d = new MessageRemoved();
-		d.parseMessage(message1);
+		d.parseMessage(message1);*/
 
 	}
 	
