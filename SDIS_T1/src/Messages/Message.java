@@ -82,7 +82,7 @@ public abstract class Message {
 				byte[] b = new byte[6];
 				int x = 0;
 
-				while(data[i] != SPACE) {
+				while(data[i] != SPACE && data[i] !=0x0D) {
 					if(x >= 6)
 						break;
 					b[x] = data[i];

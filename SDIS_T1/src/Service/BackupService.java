@@ -44,6 +44,8 @@ public class BackupService {
 	static private int diskSpace; //em kBytes
 	static private ArrayList<LocalFile> localFiles; 
 	static private HashMap<String, RemoteFile> remoteFiles;
+	
+	private static String version="1.0";
 
 	private BackupStatusHandler backupHandler;
 
@@ -169,7 +171,13 @@ public class BackupService {
 		mdr = new MDR(mdrAddress, mdrPort);
 	}	
 
+	static public String getVersion() {
+		return version;
+	}
 
+	static public void setVersion(String version1) {
+		version = version1;
+	}
 
 	private void readFile() {
 

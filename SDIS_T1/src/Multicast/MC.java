@@ -35,8 +35,12 @@ public class MC extends Thread {
 
 				if(type.equals("STORED")) {
 					MessageStored msg=new MessageStored();
-					msg.parseMessage(rcv);
-
+					
+					if(msg.parseMessage(rcv) == -1 || !(msg.getVersion().equals(BackupService.getVersion()))) {
+						System.out.println(MESSAGE + "Wrong format! Ignoring..");
+						continue;
+					}
+					
 					System.out.println(MESSAGE + "received - STORED FileId: " + msg.getFileId() + " ChunkNo: " + msg.getChunkNo());
 
 					LocalFile local = BackupService.getLocal(msg.getFileId());
@@ -55,8 +59,12 @@ public class MC extends Thread {
 				else if(type.equals("GETCHUNK")) {
 
 					final MessageGetChunk msg = new MessageGetChunk();
-					msg.parseMessage(rcv);
-
+					
+					if(msg.parseMessage(rcv) == -1 || !(msg.getVersion().equals(BackupService.getVersion()))) {
+						System.out.println(MESSAGE + "Wrong format! Ignoring..");
+						continue;
+					}
+					
 					System.out.println(MESSAGE + "received - GETCHUNK FileId: " + msg.getFileId() + " ChunkNo: " + msg.getChunkNo());
 
 					if(BackupService.isRemote(msg.getFileId(), msg.getChunkNo())) {
@@ -96,7 +104,11 @@ public class MC extends Thread {
 
 				} else if(type.equals("DELETE")) {
 					MessageDelete msg=new MessageDelete();
-					msg.parseMessage(rcv);
+					
+					if(msg.parseMessage(rcv) == -1 || !(msg.getVersion().equals(BackupService.getVersion()))) {
+						System.out.println(MESSAGE + "Wrong format! Ignoring..");
+						continue;
+					}
 
 					RemoteFile remote=BackupService.getRemote(msg.getFileId());
 					if(remote==null) {
@@ -117,7 +129,11 @@ public class MC extends Thread {
 					
 				} else if(type.equals("REMOVED")) {
 					MessageRemoved msg = new MessageRemoved();
-					msg.parseMessage(rcv);
+					
+					if(msg.parseMessage(rcv) == -1 || !(msg.getVersion().equals(BackupService.getVersion()))) {
+						System.out.println(MESSAGE + "Wrong format! Ignoring..");
+						continue;
+					}
 
 					System.out.println(MESSAGE + "received - REMOVED FileId: " 
 							+ msg.getFileId() + " ChunkNo: " + msg.getChunkNo());

@@ -38,7 +38,7 @@ public class MDB extends Thread {
 
 
 					MessagePutChunk msg=new MessagePutChunk();
-					if(msg.parseMessage(rcv) == -1) { //TODO: Fazer isto nas outras && ignorar as que nao forem da mesma versao
+					if(msg.parseMessage(rcv) == -1 || !(msg.getVersion().equals(BackupService.getVersion()))) { //TODO: Fazer isto nas outras && ignorar as que nao forem da mesma versao
 						System.out.println(MESSAGE + "Wrong format! Ignoring..");
 						continue;
 					}
