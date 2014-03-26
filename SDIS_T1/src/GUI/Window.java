@@ -120,7 +120,7 @@ public class Window {
 	private void initialize() {
 
 		frame = new JFrame();
-		frame.setBounds(100, 100, 900, 500);
+		frame.setBounds(100, 100, 1000, 500);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 
@@ -134,20 +134,21 @@ public class Window {
 		// create the middle panel components
 
 		display = new JTextArea ( 8, 58 );
+		display.setFont(new Font("Arial", Font.PLAIN, 10));
 		display.setEditable ( false ); // set textArea non-editable
 		JScrollPane scroll = new JScrollPane ( display );
-		scroll.setBounds(10, 199, 864, 252);
+		scroll.setBounds(10, 199, 964, 252);
 		frame.getContentPane().add(scroll);
 		scroll.setVerticalScrollBarPolicy ( ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS );
 		scroll.setAutoscrolls(true);
 
 
 		JLabel lblSpaceOnDisk = new JLabel("Space on disk:");
-		lblSpaceOnDisk.setBounds(128, 111, 111, 14);
+		lblSpaceOnDisk.setBounds(140, 111, 111, 14);
 		frame.getContentPane().add(lblSpaceOnDisk);
 
 		lblDiskSpace = new JLabel("50 MB");
-		lblDiskSpace.setBounds(437, 111, 56, 14);
+		lblDiskSpace.setBounds(449, 111, 56, 14);
 		frame.getContentPane().add(lblDiskSpace);
 
 		slider = new JSlider();
@@ -156,7 +157,7 @@ public class Window {
 				lblDiskSpace.setText(slider.getValue() + " MB");
 			}
 		});
-		slider.setBounds(227, 107, 200, 23);
+		slider.setBounds(239, 107, 200, 23);
 		slider.setMinimum(1);
 		slider.setMaximum(200);
 		frame.getContentPane().add(slider);
@@ -172,7 +173,7 @@ public class Window {
 		frame.getContentPane().add(btnUpdate);
 
 		Box horizontalBox = Box.createHorizontalBox();
-		horizontalBox.setBounds(529, 11, 325, 150);
+		horizontalBox.setBounds(623, 15, 325, 150);
 		frame.getContentPane().add(horizontalBox);
 		horizontalBox.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Add File", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 
@@ -286,7 +287,7 @@ public class Window {
 				}
 			}
 		});
-		btnStartService.setBounds(750, 172, 124, 23);
+		btnStartService.setBounds(789, 172, 124, 23);
 		frame.getContentPane().add(btnStartService);
 
 		JButton btnRestore = new JButton("Restore");

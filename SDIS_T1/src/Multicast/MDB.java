@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.util.concurrent.ThreadLocalRandom;
 
+import GUI.Window;
 import Messages.Message;
 import Messages.MessagePutChunk;
 import Messages.MessageStored;
@@ -44,6 +45,7 @@ public class MDB extends Thread {
 					}
 
 					System.out.println(MESSAGE + " received - PUTCHUNK FileId: " + msg.getFileId() + " ChunkNo: " + msg.getChunkNo());
+					Window.log(MESSAGE + " received - PUTCHUNK FileId: " + msg.getFileId() + " ChunkNo: " + msg.getChunkNo());
 
 					if(!BackupService.isLocal(msg.getFileId()) || true) { //TODO: Remove this true
 						RemoteFile file = BackupService.getRemote(msg.getFileId());
