@@ -18,6 +18,7 @@ import java.util.Scanner;
 
 
 
+
 import Multicast.*;
 
 public class BackupService {
@@ -44,7 +45,7 @@ public class BackupService {
 	static private int diskSpace; //em kBytes
 	static private ArrayList<LocalFile> localFiles; 
 	static private HashMap<String, RemoteFile> remoteFiles;
-	
+
 	private static String version="1.0";
 
 	private BackupStatusHandler backupHandler;
@@ -56,7 +57,7 @@ public class BackupService {
 		//a.showInterface();
 	}
 
-	private void initReceivingThreads() {
+	public void initReceivingThreads() {
 		mc.start();
 		mdb.start();
 		mdr.start();
@@ -121,9 +122,9 @@ public class BackupService {
 
 
 		Iterator<Map.Entry<String,RemoteFile>> it = remoteFiles.entrySet().iterator();
-		
+
 		while (it.hasNext()) {
-			
+
 			Map.Entry<String,RemoteFile> pair = it.next();
 
 			RemoteFile f = pair.getValue();
@@ -140,15 +141,27 @@ public class BackupService {
 	}
 
 	public BackupService(String args[]) throws UnknownHostException {
+		setAddresses(args);
+		initialize();
+	}
 
+
+	public BackupService() {
+		initialize();
+	}
+
+	public void setAddresses(String args[]) throws UnknownHostException {
 		this.mcAddress =  InetAddress.getByName(args[0]);
 		this.mcPort = Integer.parseInt(args[1]);
 		this.mdbAddress = InetAddress.getByName(args[2]);
 		this.mdbPort = Integer.parseInt(args[3]);
 		this.mdrAddress = InetAddress.getByName(args[4]);
 		this.mdrPort = Integer.parseInt(args[5]);
+		
+		openMulticastSessions();
+	}
 
-		//localFiles = new LocalFiles(); //get files to backup info
+	private void initialize() {
 		remoteFiles = new HashMap<String,RemoteFile>();
 		localFiles = new ArrayList<LocalFile>();
 		readFile();
@@ -156,19 +169,19 @@ public class BackupService {
 
 		backupHandler = new BackupStatusHandler();
 
+		//openMulticastSessions();
+	}
+
+
+	private void openMulticastSessions() {
 		try {
-			openMulticastSessions();
+			mc = new MC(mcAddress, mcPort);
+			mdb = new MDB(mdbAddress, mdbPort);
+			mdr = new MDR(mdrAddress, mdrPort);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
-
-	}
-
-	private void openMulticastSessions() throws IOException {
-		mc = new MC(mcAddress, mcPort);
-		mdb = new MDB(mdbAddress, mdbPort);
-		mdr = new MDR(mdrAddress, mdrPort);
 	}	
 
 	static public String getVersion() {
@@ -433,5 +446,14 @@ public class BackupService {
 			i++;
 		}
 		return null;
+	}
+
+	public static void addLocalFile(String text, String text2) {
+		try {
+			LocalFile newFile = new LocalFile(text, text2);
+			localFiles.add(newFile);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
 	}
 }
