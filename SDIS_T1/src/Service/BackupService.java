@@ -379,4 +379,8 @@ public class BackupService {
 		
 		return null;
 	}
+	
+	public static void deleteLocalFile(LocalFile f) {
+		localFiles.remove(f);
+	}
 }
