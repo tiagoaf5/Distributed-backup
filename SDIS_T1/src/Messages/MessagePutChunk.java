@@ -104,7 +104,7 @@ public class MessagePutChunk extends Message {
 		MessageDigest md = MessageDigest.getInstance("SHA-256");
 		String text = "nabo";
 		md.update(text.getBytes(charset));
-		byte[] digest = md.digest();
+		//byte[] digest = md.digest();
 
 
 		/*MessagePutChunk a = new MessagePutChunk(new String(digest),2,5);

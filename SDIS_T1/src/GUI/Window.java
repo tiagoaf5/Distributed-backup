@@ -60,7 +60,7 @@ public class Window {
 	private JButton btnRestore;
 
 
-	static public void log(String msg) {
+	static public synchronized void log(String msg) {
 
 		Calendar cal = Calendar.getInstance();
 		System.out.println();
@@ -349,7 +349,13 @@ public class Window {
 		btnRestore.setEnabled(false);
 		btnRestore.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				BackupService.getMc().askRestoreFile(BackupService.getLocalByName((String) comboBox.getSelectedItem()));
+				new Thread(new Runnable() {
+					
+					@Override
+					public void run() {
+						BackupService.getMc().askRestoreFile(BackupService.getLocalByName((String) comboBox.getSelectedItem()));						
+					}
+				}).start();
 			}
 		});
 		btnRestore.setBounds(388, 138, 89, 23);

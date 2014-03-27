@@ -36,7 +36,7 @@ public class BackupStatusHandler extends Thread {
 				for (int i = 0; i < localFiles.size(); i++) {
 				
 					ArrayList<Integer> chunks = localFiles.get(i).getChunksLowReplication();
-					Window.log(localFiles.get(i).getName() +"  " + chunks.size());
+					
 					for(int j = 0; j < chunks.size(); j++) {
 						mdb.backupChunk(localFiles.get(i), chunks.get(j));
 					}
