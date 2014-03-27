@@ -11,7 +11,7 @@ import Service.LocalFile;
 
 public class MDR extends Thread {
 
-	private static final String MESSAGE="Multicast data channel RESTORE: ";
+	private static final String MESSAGE="MDR ";
 	private Multicast channel;
 
 	public MDR(InetAddress address, int port) throws IOException {

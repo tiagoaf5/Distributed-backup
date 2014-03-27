@@ -14,10 +14,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Scanner;
-
-
-
 
 import Multicast.*;
 
@@ -76,13 +72,13 @@ public class BackupService {
 			e.printStackTrace();
 		}*/
 
-		/*try {
+		try {
 			Thread.sleep(10000);
 
-			mc.askRestoreFile(localFiles.get(0));
+			mc.askDeleteFile(localFiles.get(0));
 		} catch (InterruptedException e) {
 			e.printStackTrace();
-		}*/
+		}
 
 		System.out.println(getAvailableDiskSpace());
 
@@ -109,7 +105,7 @@ public class BackupService {
 			while (getAvailableDiskSpace() < 0) {
 				if (i >= list.size())
 					break;
-				System.out.println(i);
+				System.out.println("Disk space: " + i);
 				getRemote(list.get(i).getFileId()).delete(list.get(i).getChunkNo());
 				mc.sayRemovedFile(list.get(i));
 				i++;
@@ -214,7 +210,7 @@ public class BackupService {
 					diskSpace = Integer.parseInt(line);
 					System.out.println("Total disk space: " + diskSpace);
 				} catch(Exception e) {
-					System.out.println("ERRO files.txt mal definido: falta espa�o m�ximo de disco.");
+					System.out.println("ERRO files.txt mal definido: falta espaco maximo de disco.");
 					reader.close();
 					return;
 				}
@@ -245,7 +241,7 @@ public class BackupService {
 			input.close();
 
 		} catch (FileNotFoundException e) {
-			System.out.println("ERROR: files.txt n�o encontrado");
+			System.out.println("ERROR: files.txt nao encontrado");
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -296,98 +292,6 @@ public class BackupService {
 
 		if (!dir3.exists())
 			dir3.mkdir();
-	}
-
-	public void showInterface() {
-
-		boolean menu=true;
-		Scanner in = new Scanner(System.in);
-
-		while(menu) {
-			System.out.println("Choose an option (1-5): \n 1. Backup a file \n"
-					+ " 2. Restore a file\n 3. Delete a file\n"
-					+ " 4. Free disk space\n 5. Terminate");
-
-			String s;
-			int option;
-			s=in.nextLine();
-
-			try{
-				option=Integer.parseInt(s);
-				int res;
-				switch(option) {
-				case 1:
-					res=chooseFile();
-					//TODO: backup
-					break;
-				case 2:
-					res=chooseFile();
-					//TODO: restore
-					break;
-				case 3:
-					res=chooseFile();
-					//TODO: delete
-					break;
-				case 4: 
-					res=getQuantity();
-					//TODO: free disk space
-					break;
-				case 5:
-					menu=false;
-					break;
-				}
-			} catch (NumberFormatException e){
-
-			}
-		}
-		in.close();
-	}
-
-	private int getQuantity() {
-
-		Scanner in = new Scanner(System.in);
-		while(true) {
-			System.out.println("Choose a size between 1 and "+diskSpace+":");
-
-			String s;
-			int size;
-			s=in.nextLine();
-
-			try{
-				size=Integer.parseInt(s);
-				if(size>0 && size<=diskSpace)
-					return size;
-			} catch (NumberFormatException e){
-
-			}
-		}
-	}
-
-	private int chooseFile() {
-
-		Scanner in = new Scanner(System.in);
-		while(true) {
-			System.out.println("Choose a file (1-"+localFiles.size()+"):");
-
-			int i=0; int j=1;
-			while(i<localFiles.size()) {
-				System.out.println(j+". "+localFiles.get(i).getName());
-				j++;
-				i++;
-			}
-
-			String s;
-			int option;
-			s=in.nextLine();
-
-			try{
-				option=Integer.parseInt(s);
-				if(option>0 && option<=localFiles.size())
-					return option;
-			} catch (NumberFormatException e){
-
-			}
-		}
 	}
 
 	public static MDB getMdb() {
