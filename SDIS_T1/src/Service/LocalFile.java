@@ -90,6 +90,10 @@ public class LocalFile extends MyFile{
 	public String getName() {
 		return name;
 	}
+	
+	public String getFileName() {
+		return path.getFileName().toString();
+	}
 
 	public void setName(String name) {
 		this.name = name;

@@ -456,19 +456,23 @@ public class BackupService {
 
 		while(i<localFiles.size()) {
 			LocalFile temp = localFiles.get(i);
-			if(temp.getName().equals(name))
+			System.out.println(temp.getName());
+			if(temp.getFileName().equals(name))
 				return temp;
 			i++;
 		}
 		return null;
 	}
 
-	public static void addLocalFile(String text, String text2) {
+	public static LocalFile addLocalFile(String text, String text2) {
 		try {
 			LocalFile newFile = new LocalFile(text, text2);
 			localFiles.add(newFile);
+			return newFile;
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
+		
+		return null;
 	}
 }

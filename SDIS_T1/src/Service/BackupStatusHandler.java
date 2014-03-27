@@ -3,6 +3,7 @@ package Service;
 import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
+import GUI.Window;
 import Multicast.MDB;
 
 public class BackupStatusHandler extends Thread {
@@ -33,8 +34,9 @@ public class BackupStatusHandler extends Thread {
 						WAIT_TIME_HIGHER + deviationCounter * WAIT_TIME_DEVIATION));
 
 				for (int i = 0; i < localFiles.size(); i++) {
+				
 					ArrayList<Integer> chunks = localFiles.get(i).getChunksLowReplication();
-					
+					Window.log(localFiles.get(i).getName() +"  " + chunks.size());
 					for(int j = 0; j < chunks.size(); j++) {
 						mdb.backupChunk(localFiles.get(i), chunks.get(j));
 					}
