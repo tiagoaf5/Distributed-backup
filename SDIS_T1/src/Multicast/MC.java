@@ -9,7 +9,7 @@ import Service.*;
 
 public class MC extends Thread {
 
-	private static final String MESSAGE="Multicast data channel CONTROL: ";
+	private static final String MESSAGE="CONTROL: ";
 	private Multicast channel;
 
 	public MC(InetAddress address, int port) throws IOException {
@@ -147,11 +147,8 @@ public class MC extends Thread {
 					/*else*/ if (local != null) { //TODO: uncomment else 
 						local.decreaseCurReplicationDeg(msg.getChunkNo(), pkt.getIp());
 
-						//TODO: Thread to periodically check if the files have the desired replication degree
 					}
 
-
-					//TODO:
 					msg=null;
 				} else {
 					System.out.println(MESSAGE + " - Invalid message!");
@@ -207,10 +204,13 @@ public class MC extends Thread {
 		try {
 			MessageDelete msg = new MessageDelete(f.getId());
 	
+			sendMessage(msg); 
+			
+			//TODO:
+			/*while(count < 3) { 
+			 
 			int deltaT = 400;
 			int count = 0;
-			sendMessage(msg); 
-			/*while(count < 3) { 
 				sendMessage(msg); 
 				Thread.sleep(deltaT); 
 			

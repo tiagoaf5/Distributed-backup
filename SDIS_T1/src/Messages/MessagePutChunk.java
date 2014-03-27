@@ -52,22 +52,9 @@ public class MessagePutChunk extends Message {
 
 	@Override
 	public byte[] getMessage() {
-		/*byte b[] = {CRLF,CRLF};
-		
-		String m1 = MESSAGE_TYPE + " " + getVersion() + " ";
-		String m2 = " " + chunkNo + " " + replicationDeg;
-		
-		//m1 + fileId + m2 + b + chunk
-		byte p1[] = concatenate(stringToByteArray(m1), hexStringToByteArray(fileId));
-		byte p2[] = concatenate(p1,stringToByteArray(m2));
-		p1 = null;
-
-		return concatenate(concatenate(p2,b), chunk);*/
 		
 		String m1 = MESSAGE_TYPE + " " + getVersion() + " " + fileId + 
 				" " + chunkNo + " " + replicationDeg + "\r\n\r\n";
-		
-		
 		
 		return concatenate(stringToByteArray(m1), chunk);
 	}
@@ -85,7 +72,6 @@ public class MessagePutChunk extends Message {
 		byte[] b = new byte[2];
 		int x = 0;
 
-		System.out.println("nabooo-> " + CRLF + " --- " + data[i+1]);
 		while(data[i] != (byte)0x0D && data[i+1] != (byte)0x0A) {	
 			if(x >= 1)
 				return -1;

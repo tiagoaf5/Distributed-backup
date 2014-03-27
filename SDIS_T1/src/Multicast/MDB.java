@@ -15,7 +15,7 @@ import Service.RemoteFile;
 
 public class MDB extends Thread {
 
-	private static final String MESSAGE="Multicast data channel BACKUP: ";
+	private static final String MESSAGE="BACKUP: ";
 	private Multicast channel;
 
 	public MDB(InetAddress address, int port) throws IOException {
@@ -39,7 +39,7 @@ public class MDB extends Thread {
 
 
 					MessagePutChunk msg=new MessagePutChunk();
-					if(msg.parseMessage(rcv) == -1 || !(msg.getVersion().equals(BackupService.getVersion()))) { //TODO: Fazer isto nas outras && ignorar as que nao forem da mesma versao
+					if(msg.parseMessage(rcv) == -1 || !(msg.getVersion().equals(BackupService.getVersion()))) { 
 						System.out.println(MESSAGE + "Wrong format! Ignoring..");
 						continue;
 					}
@@ -172,7 +172,7 @@ public class MDB extends Thread {
 			int count = 0;
 
 			MessagePutChunk msg = new MessagePutChunk(f.getId(), chunkNo, f.getReplicationDeg());
-			byte[] z = f.getChunkData(chunkNo); //TODO: change all chunks structure in order to know if it's a local or remote chunk
+			byte[] z = f.getChunkData(chunkNo);
 			msg.setChunk(z);
 
 			while(count < 5) {
