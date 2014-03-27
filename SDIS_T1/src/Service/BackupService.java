@@ -68,13 +68,13 @@ public class BackupService {
 		backupHandler.start();
 
 
-		try {
+		/*try {
 			Thread.sleep(5000);
 			diskSpace = 500000;
 			handleChangedDiskSpace();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
-		}
+		}*/
 
 		/*try {
 			Thread.sleep(10000);
@@ -442,6 +442,21 @@ public class BackupService {
 		while(i<localFiles.size()) {
 			LocalFile temp = localFiles.get(i);
 			if(temp.getId().equals(fileId))
+				return temp;
+			i++;
+		}
+		return null;
+	}
+	
+	
+	public static LocalFile getLocalByName(String name) {
+
+		List<LocalFile> localFiles = BackupService.getLocalFiles();
+		int i=0;
+
+		while(i<localFiles.size()) {
+			LocalFile temp = localFiles.get(i);
+			if(temp.getName().equals(name))
 				return temp;
 			i++;
 		}

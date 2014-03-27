@@ -65,9 +65,11 @@ public class MessagePutChunk extends Message {
 		return concatenate(concatenate(p2,b), chunk);*/
 		
 		String m1 = MESSAGE_TYPE + " " + getVersion() + " " + fileId + 
-				" " + chunkNo + " " + replicationDeg + "\r\n\r\n" + byteArrayToString(chunk);
+				" " + chunkNo + " " + replicationDeg + "\r\n\r\n";
 		
-		return stringToByteArray(m1);
+		
+		
+		return concatenate(stringToByteArray(m1), chunk);
 	}
 
 	@Override

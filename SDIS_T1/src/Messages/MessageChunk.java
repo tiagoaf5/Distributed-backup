@@ -35,9 +35,9 @@ public class MessageChunk extends Message {
 
 		return concatenate(concatenate(p2,b), chunk);*/
 		String m1 = MESSAGE_TYPE + " " + getVersion() + " " + fileId + 
-				" " + chunkNo + "\r\n\r\n" + byteArrayToString(chunk);
+				" " + chunkNo + "\r\n\r\n";
 		
-		return stringToByteArray(m1);
+		return concatenate(stringToByteArray(m1), chunk);
 	}
 
 	@Override

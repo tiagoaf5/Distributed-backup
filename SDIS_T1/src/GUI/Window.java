@@ -291,6 +291,11 @@ public class Window {
 		frame.getContentPane().add(btnStartService);
 
 		JButton btnRestore = new JButton("Restore");
+		btnRestore.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				BackupService.getMc().askRestoreFile(BackupService.getLocalByName((String) comboBox.getSelectedItem()));
+			}
+		});
 		btnRestore.setBounds(388, 138, 89, 23);
 		frame.getContentPane().add(btnRestore);
 

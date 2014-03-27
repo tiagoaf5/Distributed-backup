@@ -52,7 +52,7 @@ public class MDR extends Thread {
 						c.setPath("tmp/");
 						c.setRestored(true);
 						int length = c.storeData(msg.getChunk());
-						System.out.println(MESSAGE + " I received my Chunk :) " );
+						System.out.println(MESSAGE + " I received my Chunk :) " + length );
 
 						
 						if(length<64000) //last Chunk
