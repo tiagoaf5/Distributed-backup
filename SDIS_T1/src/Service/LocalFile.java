@@ -150,7 +150,7 @@ public class LocalFile extends MyFile{
 
 		int read = fileStream.read(b,0, chunkSize);
 
-		System.out.println("-> " + b.length + "/" + size);
+		System.out.println("Getting chunk " + b.length + " of " + size);
 
 		if(read < CHUNK_SIZE)
 			System.out.println("last chunk with size = " + read);

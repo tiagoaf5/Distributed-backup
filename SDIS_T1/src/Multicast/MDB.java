@@ -92,7 +92,12 @@ public class MDB extends Thread {
 										return;
 									}
 									//if(chunkNo % 2 == 0)
-									BackupService.getMc().sendMessage(new MessageStored(fileId, chunkNo));
+									MessageStored answer=new MessageStored(fileId, chunkNo);
+									BackupService.getMc().sendMessage(answer);
+									
+									System.out.println("MC sended: STORED FileId: " + answer.getFileId() + " ChunkNo: " + answer.getChunkNo());
+									Window.log("MC sended: STORED FileId: " + answer.getFileId() + " ChunkNo: " + answer.getChunkNo());
+									
 								} catch (IOException e) {
 									e.printStackTrace();
 								} catch (InterruptedException e) {
@@ -148,6 +153,8 @@ public class MDB extends Thread {
 
 	public void backupFile(LocalFile f) {
 
+		System.out.println(MESSAGE + "backup file " + f.getFileName());
+		
 		int previousLenght = 64000;
 		while(true) {
 			try {
@@ -162,6 +169,9 @@ public class MDB extends Thread {
 				MessagePutChunk msg = new MessagePutChunk(f.getId(), f.getOffset(), f.getReplicationDeg());
 				msg.setChunk(z);
 
+				System.out.println(MESSAGE + "sended: PUTCHUNK FileId: " + f.getId() + " ChunkNo: " + f.getOffset());
+				Window.log(MESSAGE + "sended: PUTCHUNK FileId: " + f.getId() + " ChunkNo: " + f.getOffset());
+				
 				while(count < 5) {
 					sendMessage(msg); //send Message
 					Thread.sleep(deltaT); //wait for stored messages

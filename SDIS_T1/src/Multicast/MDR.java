@@ -21,7 +21,7 @@ public class MDR extends Thread {
 	@Override
 	public void run() {
 
-		System.out.println("Running multicast data channel for RESTORE...");
+		System.out.println("Running multicast data channel for RESTORE...\n");
 
 		while(true) {
 			//Can receive:

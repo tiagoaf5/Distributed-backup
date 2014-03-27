@@ -80,7 +80,7 @@ public class BackupService {
 			e.printStackTrace();
 		}*/
 
-		System.out.println(getAvailableDiskSpace());
+		System.out.println("Availabe disk space: " + getAvailableDiskSpace() + "\n");
 
 	}
 

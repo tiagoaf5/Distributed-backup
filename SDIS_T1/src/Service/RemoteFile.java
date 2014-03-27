@@ -10,7 +10,8 @@ public class RemoteFile extends MyFile{
 	}
 
 	public boolean addChunk(MessagePutChunk msg) {
-		System.out.println("---->" + msg.getChunkNo());
+		//System.out.println("---->" + msg.getChunkNo());
+		
 		if(chunks.containsKey(msg.getChunkNo()) || !fileId.equals(msg.getFileId()))
 			return false;
 

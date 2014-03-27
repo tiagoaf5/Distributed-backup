@@ -90,6 +90,10 @@ public class MC extends Thread {
 										//if no other peer was faster than me
 										MessageChunk answer = msg.getAnswer(data);
 										BackupService.getMdr().sendMessage(answer);
+										
+										System.out.println("MDR sended: CHUNK FileId: " + answer.getFileId() + " ChunkNo: " + answer.getChunkNo());
+										Window.log("MDR sended: CHUNK FileId: " + answer.getFileId() + " ChunkNo: " + answer.getChunkNo());
+										
 									}
 
 									data = null;	
@@ -186,13 +190,19 @@ public class MC extends Thread {
 	public void askRestoreFile(LocalFile f) {
 
 		try {
+			System.out.println(MESSAGE + "Restoring file " + f.getFileName());
+			
 			for(int i=0; i<f.getNumberChunks(); i++) {
-
+				
 				int deltaT = 500;
 				int count = 0;
 				MessageGetChunk msg = new MessageGetChunk(f.getId(), i);
 
+				System.out.println(MESSAGE + "sended: GETCHUNK FileId: " + f.getId() + " ChunkNo: " + i);
+				Window.log(MESSAGE + "sended: GETCHUNK FileId: " + f.getId() + " ChunkNo: " + i);
+				
 				while(count<5) {
+					
 					sendMessage(msg); //send Message
 					Thread.sleep(deltaT); //wait for chunk messages
 
@@ -202,13 +212,12 @@ public class MC extends Thread {
 					if(x.getRestored())
 						break;
 
-					//System.out.println("------- A MANDAR PELA " + count + " VEZ");
 					count++;
 					deltaT+=500;
 					
 					if(count == 5) {
-						//TODO: ANA mete aqui uma mensagem bonita a dizer que abortou
-						System.out.println("Aborting restore..");
+						System.out.println("Restore didn't work, aborting..");
+						Window.log(MESSAGE + "Restore " + f.getFileName() + " didn't work");
 						return;
 					}
 				}
@@ -223,8 +232,11 @@ public class MC extends Thread {
 	public void askDeleteFile(LocalFile f)  {
 
 		try {
+			System.out.println(MESSAGE + "Deleting file " + f.getFileName());
+			System.out.println(MESSAGE + "sended: DELETE FileId: " + f.getId());
+			Window.log(MESSAGE + "sended: DELETE FileId: " + f.getId());
+			
 			MessageDelete msg = new MessageDelete(f.getId());
-	
 			sendMessage(msg); 
 			
 			//TODO: enhacment
@@ -237,7 +249,12 @@ public class MC extends Thread {
 	}
 	
 	public void sayRemovedFile (Chunk c) {
+		
 		try {
+			System.out.println(MESSAGE + "removing fileId " + c.getFileId() + " chunkNo: " + c.getChunkNo());
+			System.out.println(MESSAGE + "sended: REMOVED FileId: " + c.getFileId() + " chunkNo: " + c.getChunkNo());
+			Window.log(MESSAGE + "sended: REMOVED FileId: " + c.getFileId() + " chunkNo: " + c.getChunkNo());
+			
 			MessageRemoved msg = new MessageRemoved(c.getFileId(),c.getChunkNo());
 			sendMessage(msg); //send Message
 			//TODO: find a better way
