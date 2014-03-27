@@ -51,6 +51,8 @@ public class MDR extends Thread {
 						Chunk c = file.getChunk(chunkNo);
 						c.setPath("tmp/");
 						c.setRestored(true);
+						
+						System.out.println(MESSAGE + c.getRestored());
 						int length = c.storeData(msg.getChunk());
 						System.out.println(MESSAGE + " I received my Chunk :) " + length );
 

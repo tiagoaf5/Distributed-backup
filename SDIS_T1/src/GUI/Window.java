@@ -13,6 +13,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.concurrent.ThreadLocalRandom;
 
 import javax.swing.Box;
 import javax.swing.JButton;
@@ -36,7 +37,7 @@ import Service.LocalFile;
 
 public class Window {
 
-	static private JFrame frame;
+	static private JFrame frmBackupservice;
 	static private JTextField textReplicationDeg;
 	static private JTextField textPath;
 	static private JSlider slider;
@@ -53,6 +54,10 @@ public class Window {
 	private static BackupService backupService;
 	private JComboBox<String> comboBox;
 	private JButton btnStartService;
+	private static JTextField textVersion;
+	private JButton btnDelete;
+	private JButton btnUpdate;
+	private JButton btnRestore;
 
 
 	static public void log(String msg) {
@@ -72,7 +77,7 @@ public class Window {
 
 				try {
 					Window window = new Window();
-					window.frame.setVisible(true);
+					window.frmBackupservice.setVisible(true);
 
 					backupService = new BackupService();
 
@@ -93,6 +98,26 @@ public class Window {
 						window.comboBox.addItem(files.get(i).getName());
 
 					slider.setValue(BackupService.getDiskSpace()/1000000);
+
+					JLabel lblVersion = new JLabel("Version");
+					lblVersion.setBounds(515, 108, 56, 14);
+					frmBackupservice.getContentPane().add(lblVersion);
+
+					textVersion = new JTextField();
+					textVersion.addKeyListener(new KeyAdapter() {
+						@Override
+						public void keyTyped(KeyEvent arg0) {
+							char c = arg0.getKeyChar();
+							if (!((c >= '0') && (c <= '9') || (c == '.') ||(c == KeyEvent.VK_BACK_SPACE) || (c == KeyEvent.VK_DELETE))) {
+								arg0.consume();
+							}
+						}
+					});
+					textVersion.setHorizontalAlignment(SwingConstants.CENTER);
+					textVersion.setText("1.0");
+					textVersion.setBounds(564, 105, 46, 20);
+					frmBackupservice.getContentPane().add(textVersion);
+					textVersion.setColumns(10);
 
 
 
@@ -119,17 +144,19 @@ public class Window {
 
 	private void initialize() {
 
-		frame = new JFrame();
-		frame.setBounds(100, 100, 1000, 500);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.getContentPane().setLayout(null);
+		frmBackupservice = new JFrame();
+		frmBackupservice.setResizable(false);
+		frmBackupservice.setTitle("BackupService");
+		frmBackupservice.setBounds(100, 100, 1000, 500);
+		frmBackupservice.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frmBackupservice.getContentPane().setLayout(null);
 
 		// My code
 		/*JFrame frame = new JFrame ();
 
 		frame.pack ();
 		frame.setLocationRelativeTo ( null );*/
-		frame.setVisible ( true );
+		frmBackupservice.setVisible ( true );
 
 		// create the middle panel components
 
@@ -138,18 +165,18 @@ public class Window {
 		display.setEditable ( false ); // set textArea non-editable
 		JScrollPane scroll = new JScrollPane ( display );
 		scroll.setBounds(10, 199, 964, 252);
-		frame.getContentPane().add(scroll);
+		frmBackupservice.getContentPane().add(scroll);
 		scroll.setVerticalScrollBarPolicy ( ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS );
 		scroll.setAutoscrolls(true);
 
 
 		JLabel lblSpaceOnDisk = new JLabel("Space on disk:");
 		lblSpaceOnDisk.setBounds(140, 111, 111, 14);
-		frame.getContentPane().add(lblSpaceOnDisk);
+		frmBackupservice.getContentPane().add(lblSpaceOnDisk);
 
 		lblDiskSpace = new JLabel("50 MB");
 		lblDiskSpace.setBounds(449, 111, 56, 14);
-		frame.getContentPane().add(lblDiskSpace);
+		frmBackupservice.getContentPane().add(lblDiskSpace);
 
 		slider = new JSlider();
 		slider.addChangeListener(new ChangeListener() {
@@ -160,21 +187,23 @@ public class Window {
 		slider.setBounds(239, 107, 200, 23);
 		slider.setMinimum(1);
 		slider.setMaximum(200);
-		frame.getContentPane().add(slider);
+		frmBackupservice.getContentPane().add(slider);
 
 
 
-		JButton btnDelete = new JButton("Delete");
+		btnDelete = new JButton("Delete");
+		btnDelete.setEnabled(false);
 		btnDelete.setBounds(294, 138, 89, 23);
-		frame.getContentPane().add(btnDelete);
+		frmBackupservice.getContentPane().add(btnDelete);
 
-		JButton btnUpdate = new JButton("Update");
+		btnUpdate = new JButton("Update");
+		btnUpdate.setEnabled(false);
 		btnUpdate.setBounds(201, 138, 89, 23);
-		frame.getContentPane().add(btnUpdate);
+		frmBackupservice.getContentPane().add(btnUpdate);
 
 		Box horizontalBox = Box.createHorizontalBox();
 		horizontalBox.setBounds(623, 15, 325, 150);
-		frame.getContentPane().add(horizontalBox);
+		frmBackupservice.getContentPane().add(horizontalBox);
 		horizontalBox.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Add File", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 
 		Panel panel = new Panel();
@@ -205,7 +234,23 @@ public class Window {
 				File f = new File(textPath.getText());
 				if (f.exists() && f.isFile()) {
 					comboBox.addItem(f.getName());
-					BackupService.addLocalFile(textPath.getText(), textReplicationDeg.getText());
+
+					if (!btnStartService.isEnabled()) {
+						final LocalFile lf = BackupService.addLocalFile(textPath.getText(), textReplicationDeg.getText());
+						new Thread(new Runnable() {
+
+							@Override
+							public void run() {
+								try {
+									Thread.sleep(ThreadLocalRandom.current().nextInt(1500,5000));
+								} catch (InterruptedException e) {
+									e.printStackTrace();
+								}
+								BackupService.getMdb().backupFile(lf);
+
+							}
+						}).start();
+					}
 				}
 			}
 		});
@@ -244,16 +289,16 @@ public class Window {
 		JLabel lblManageFiles = new JLabel("Manage Files");
 		lblManageFiles.setFont(new Font("Tahoma", Font.BOLD, 15));
 		lblManageFiles.setBounds(23, 107, 124, 21);
-		frame.getContentPane().add(lblManageFiles);
+		frmBackupservice.getContentPane().add(lblManageFiles);
 
 		comboBox = new JComboBox<String>();
 		comboBox.setBounds(24, 139, 167, 20);
-		frame.getContentPane().add(comboBox);
+		frmBackupservice.getContentPane().add(comboBox);
 
 		JLabel lblLog = new JLabel("Log");
 		lblLog.setFont(new Font("Tahoma", Font.BOLD, 15));
 		lblLog.setBounds(23, 173, 56, 17);
-		frame.getContentPane().add(lblLog);
+		frmBackupservice.getContentPane().add(lblLog);
 
 		btnStartService = new JButton("Start Service");
 		btnStartService.addActionListener(new ActionListener() {
@@ -270,8 +315,12 @@ public class Window {
 					textMdbP.setEditable(false);
 					textMdrIp.setEditable(false);
 					textMdrP.setEditable(false);
-					
+					textVersion.setEditable(false);
+
 					btnStartService.setEnabled(false);
+					btnUpdate.setEnabled(true);
+					btnDelete.setEnabled(true);
+					btnRestore.setEnabled(true);
 
 					new Thread(new Runnable() {
 						@Override
@@ -288,21 +337,22 @@ public class Window {
 			}
 		});
 		btnStartService.setBounds(789, 172, 124, 23);
-		frame.getContentPane().add(btnStartService);
+		frmBackupservice.getContentPane().add(btnStartService);
 
-		JButton btnRestore = new JButton("Restore");
+		btnRestore = new JButton("Restore");
+		btnRestore.setEnabled(false);
 		btnRestore.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				BackupService.getMc().askRestoreFile(BackupService.getLocalByName((String) comboBox.getSelectedItem()));
 			}
 		});
 		btnRestore.setBounds(388, 138, 89, 23);
-		frame.getContentPane().add(btnRestore);
+		frmBackupservice.getContentPane().add(btnRestore);
 
 		Box horizontalBox_1 = Box.createHorizontalBox();
 		horizontalBox_1.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "IPs/Ports", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		horizontalBox_1.setBounds(23, 15, 470, 85);
-		frame.getContentPane().add(horizontalBox_1);
+		frmBackupservice.getContentPane().add(horizontalBox_1);
 
 		Panel panel_1 = new Panel();
 		horizontalBox_1.add(panel_1);

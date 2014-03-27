@@ -196,7 +196,9 @@ public class MC extends Thread {
 					sendMessage(msg); //send Message
 					Thread.sleep(deltaT); //wait for chunk messages
 
-					if(f.getChunk(i).getRestored())
+					Chunk x = f.getChunk(i);
+					System.out.println(x.getRestored());
+					if(x.getRestored())
 						break;
 
 					//System.out.println("------- A MANDAR PELA " + count + " VEZ");
