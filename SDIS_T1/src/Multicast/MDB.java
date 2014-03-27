@@ -15,7 +15,7 @@ import Service.RemoteFile;
 
 public class MDB extends Thread {
 
-	private static final String MESSAGE="BACKUP: ";
+	private static final String MESSAGE="MDB ";
 	private Multicast channel;
 
 	public MDB(InetAddress address, int port) throws IOException {
@@ -41,6 +41,7 @@ public class MDB extends Thread {
 					MessagePutChunk msg=new MessagePutChunk();
 					if(msg.parseMessage(rcv) == -1 || !(msg.getVersion().equals(BackupService.getVersion()))) { 
 						System.out.println(MESSAGE + "Wrong format! Ignoring..");
+						Window.log(MESSAGE + "Wrong format! Ignoring..");
 						continue;
 					}
 
@@ -60,6 +61,7 @@ public class MDB extends Thread {
 							file.addChunk(msg); //creates file with chunk data
 							BackupService.addRemoteFile(msg.getFileId(), file);
 							System.out.println(MESSAGE + " added new remote file");
+							Window.log(MESSAGE + " added new remote file");
 
 						} else {
 							alreadyStored = !file.addChunk(msg);
@@ -82,8 +84,10 @@ public class MDB extends Thread {
 									//Enhancement 1 - if the current replication degree is greater or equal than the wanted discard chunk
 									if(f.getChunk(chunkNo).getCurReplicationDeg() - 1 >= f.getReplicationDeg()) {
 										f.removeChunk(chunkNo);
-
-										//TODO: IF has no chunks delete file
+										
+										if(f.getNumberChunks()==0) //if has no chunks left delete file
+											BackupService.deleteRemoteFile(f.getId());
+										
 										return;
 									}
 									//if(chunkNo % 2 == 0)
@@ -104,6 +108,7 @@ public class MDB extends Thread {
 					msg=null;
 				} else {
 					System.out.println(MESSAGE + " - Invalid message!");
+					Window.log(MESSAGE + " - Invalid message!");
 				}
 			} catch (IOException e) {
 				e.printStackTrace();

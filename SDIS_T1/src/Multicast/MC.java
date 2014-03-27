@@ -4,12 +4,13 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.util.concurrent.ThreadLocalRandom;
 
+import GUI.Window;
 import Messages.*;
 import Service.*;
 
 public class MC extends Thread {
 
-	private static final String MESSAGE="CONTROL: ";
+	private static final String MESSAGE="MC ";
 	private Multicast channel;
 
 	public MC(InetAddress address, int port) throws IOException {
@@ -38,11 +39,13 @@ public class MC extends Thread {
 					
 					if(msg.parseMessage(rcv) == -1 || !(msg.getVersion().equals(BackupService.getVersion()))) {
 						System.out.println(MESSAGE + "Wrong format! Ignoring..");
+						Window.log(MESSAGE + "Wrong format! Ignoring..");
 						continue;
 					}
 					
-					System.out.println(MESSAGE + "received - STORED FileId: " + msg.getFileId() + " ChunkNo: " + msg.getChunkNo());
-
+					System.out.println(MESSAGE + "received: STORED FileId: " + msg.getFileId() + " ChunkNo: " + msg.getChunkNo());
+					Window.log(MESSAGE + "received: STORED FileId: " + msg.getFileId() + " ChunkNo: " + msg.getChunkNo());
+					
 					LocalFile local = BackupService.getLocal(msg.getFileId());
 					if(!(local == null)) {
 						local.increaseCurReplicationDeg(msg.getChunkNo(), pkt.getIp());
@@ -62,11 +65,13 @@ public class MC extends Thread {
 					
 					if(msg.parseMessage(rcv) == -1 || !(msg.getVersion().equals(BackupService.getVersion()))) {
 						System.out.println(MESSAGE + "Wrong format! Ignoring..");
+						Window.log(MESSAGE + "Wrong format! Ignoring..");
 						continue;
 					}
 					
-					System.out.println(MESSAGE + "received - GETCHUNK FileId: " + msg.getFileId() + " ChunkNo: " + msg.getChunkNo());
-
+					System.out.println(MESSAGE + "received: GETCHUNK FileId: " + msg.getFileId() + " ChunkNo: " + msg.getChunkNo());
+					Window.log(MESSAGE + "received: GETCHUNK FileId: " + msg.getFileId() + " ChunkNo: " + msg.getChunkNo());
+					
 					if(BackupService.isRemote(msg.getFileId(), msg.getChunkNo())) {
 
 						new Thread(new Runnable() {
@@ -107,6 +112,7 @@ public class MC extends Thread {
 					
 					if(msg.parseMessage(rcv) == -1 || !(msg.getVersion().equals(BackupService.getVersion()))) {
 						System.out.println(MESSAGE + "Wrong format! Ignoring..");
+						Window.log(MESSAGE + "Wrong format! Ignoring..");
 						continue;
 					}
 
@@ -116,6 +122,7 @@ public class MC extends Thread {
 					} else {
 						BackupService.deleteRemoteFile(msg.getFileId()); 
 						System.out.println(MESSAGE + " deleting file");
+						Window.log(MESSAGE + " deleting file");
 					}
 
 					LocalFile local = BackupService.getLocal(msg.getFileId());
@@ -132,12 +139,15 @@ public class MC extends Thread {
 					
 					if(msg.parseMessage(rcv) == -1 || !(msg.getVersion().equals(BackupService.getVersion()))) {
 						System.out.println(MESSAGE + "Wrong format! Ignoring..");
+						Window.log(MESSAGE + "Wrong format! Ignoring..");
 						continue;
 					}
 
-					System.out.println(MESSAGE + "received - REMOVED FileId: " 
+					System.out.println(MESSAGE + "received: REMOVED FileId: " 
 							+ msg.getFileId() + " ChunkNo: " + msg.getChunkNo());
-
+					Window.log(MESSAGE + "received: REMOVED FileId: " 
+							+ msg.getFileId() + " ChunkNo: " + msg.getChunkNo());
+					
 					RemoteFile remote=BackupService.getRemote(msg.getFileId());
 					LocalFile local=BackupService.getLocal(msg.getFileId());
 
@@ -152,6 +162,8 @@ public class MC extends Thread {
 					msg=null;
 				} else {
 					System.out.println(MESSAGE + " - Invalid message!");
+					Window.log(MESSAGE + " - Invalid message type!");
+					
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -161,7 +173,7 @@ public class MC extends Thread {
 
 
 	public void sendMessage(Message x) throws IOException {
-		System.out.println(MESSAGE + "Sending Message..");
+		System.out.println(MESSAGE + "Sending Message..");		
 		channel.send(x.getMessage());
 	}
 	

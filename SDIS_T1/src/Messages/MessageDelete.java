@@ -28,9 +28,9 @@ public class MessageDelete extends Message {
 
 		i++;
 
-		byte[] b = new byte[32];
+		byte[] b = new byte[64];
 		int x = 0;
-		int k = i + 32;
+		int k = i + 64;
 
 		if(k > data.length)
 			return -1;
@@ -38,7 +38,7 @@ public class MessageDelete extends Message {
 		for(; i < k; i++,x++)
 			b[x] = data[i];
 
-		fileId = byteArrayToHexString(b);
+		fileId = byteArrayToString(b);
 
 		System.out.println(version + "\n" + fileId + "\n");
 

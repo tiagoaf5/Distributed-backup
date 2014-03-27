@@ -72,13 +72,13 @@ public class BackupService {
 			e.printStackTrace();
 		}*/
 
-		/*try {
+		try {
 			Thread.sleep(10000);
 
-			mc.askRestoreFile(localFiles.get(0));
+			mc.askDeleteFile(localFiles.get(0));
 		} catch (InterruptedException e) {
 			e.printStackTrace();
-		}*/
+		}
 
 		System.out.println(getAvailableDiskSpace());
 
@@ -105,7 +105,7 @@ public class BackupService {
 			while (getAvailableDiskSpace() < 0) {
 				if (i >= list.size())
 					break;
-				System.out.println(i);
+				System.out.println("Disk space: " + i);
 				getRemote(list.get(i).getFileId()).delete(list.get(i).getChunkNo());
 				mc.sayRemovedFile(list.get(i));
 				i++;
@@ -210,7 +210,7 @@ public class BackupService {
 					diskSpace = Integer.parseInt(line);
 					System.out.println("Total disk space: " + diskSpace);
 				} catch(Exception e) {
-					System.out.println("ERRO files.txt mal definido: falta espa�o m�ximo de disco.");
+					System.out.println("ERRO files.txt mal definido: falta espaco maximo de disco.");
 					reader.close();
 					return;
 				}
@@ -241,7 +241,7 @@ public class BackupService {
 			input.close();
 
 		} catch (FileNotFoundException e) {
-			System.out.println("ERROR: files.txt n�o encontrado");
+			System.out.println("ERROR: files.txt nao encontrado");
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
