@@ -78,7 +78,7 @@ public class BackupService {
 			mc.askDeleteFile(localFiles.get(0));
 		} catch (InterruptedException e) {
 			e.printStackTrace();
-		}
+		}//
 
 		System.out.println(getAvailableDiskSpace());
 
