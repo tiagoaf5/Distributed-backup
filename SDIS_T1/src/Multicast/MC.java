@@ -233,6 +233,7 @@ public class MC extends Thread {
 				count++;
 				deltaT *= 2;
 			}*/
+			//TODO: apagar ficheiro local
 			
 		} catch (IOException e) {
 			e.printStackTrace();
