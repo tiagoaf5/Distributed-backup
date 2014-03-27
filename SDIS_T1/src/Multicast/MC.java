@@ -227,21 +227,9 @@ public class MC extends Thread {
 	
 			sendMessage(msg); 
 			
-			//TODO:
-			/*while(count < 3) { 
-			 
-			int deltaT = 400;
-			int count = 0;
-				sendMessage(msg); 
-				Thread.sleep(deltaT); 
+			//TODO: enhacment
 			
-		
-				if(f.getCountDeleted()>=f.getReplicationDeg())
-					break;
-
-				count++;
-				deltaT *= 2;
-			}*/
+			BackupService.deleteLocalFile(f); //delete local file
 			
 		} catch (IOException e) {
 			e.printStackTrace();
