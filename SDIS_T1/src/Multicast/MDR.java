@@ -57,19 +57,21 @@ public class MDR extends Thread {
 						System.out.println(MESSAGE + " I received my Chunk :) " + length );
 
 						
-						if(length<64000) //last Chunk
+						if(length<64000 || file.hasReceivedAll()) //last Chunk
 						{
-
-							if(file.hasReceivedAll()) {
 								new Thread (new Runnable() {
 
 									@Override
 									public void run() {
 										file.selfRestore();
+										try {
+											Thread.sleep(1000);
+										} catch (InterruptedException e) {
+											e.printStackTrace();
+										}
 										file.unCheckReceivedAll();
 									}
 								}).start();
-							}
 						}
 					} 
 					else if(BackupService.isRemote(fileId, chunkNo)) {

@@ -192,6 +192,12 @@ public class Window {
 
 
 		btnDelete = new JButton("Delete");
+		btnDelete.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				BackupService.getMc().askDeleteFile(BackupService.getLocalByName((String) comboBox.getSelectedItem()));
+				comboBox.removeItem(comboBox.getSelectedItem());
+			}
+		});
 		btnDelete.setEnabled(false);
 		btnDelete.setBounds(294, 138, 89, 23);
 		frmBackupservice.getContentPane().add(btnDelete);
@@ -235,8 +241,8 @@ public class Window {
 				if (f.exists() && f.isFile()) {
 					comboBox.addItem(f.getName());
 
+					final LocalFile lf = BackupService.addLocalFile(textPath.getText(), textReplicationDeg.getText());
 					if (!btnStartService.isEnabled()) {
-						final LocalFile lf = BackupService.addLocalFile(textPath.getText(), textReplicationDeg.getText());
 						new Thread(new Runnable() {
 
 							@Override

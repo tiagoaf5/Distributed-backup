@@ -198,12 +198,19 @@ public class MC extends Thread {
 
 					Chunk x = f.getChunk(i);
 					System.out.println(x.getRestored());
+					
 					if(x.getRestored())
 						break;
 
 					//System.out.println("------- A MANDAR PELA " + count + " VEZ");
 					count++;
 					deltaT+=500;
+					
+					if(count == 5) {
+						//TODO: ANA mete aqui uma mensagem bonita a dizer que abortou
+						System.out.println("Aborting restore..");
+						return;
+					}
 				}
 			}
 		} catch (IOException e) {

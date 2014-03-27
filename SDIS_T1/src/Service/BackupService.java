@@ -59,7 +59,7 @@ public class BackupService {
 		mdr.start();
 
 
-		mdb.backupFile(localFiles.get(0));
+		mdb.backupFiles();
 
 		backupHandler.start();
 
@@ -72,13 +72,13 @@ public class BackupService {
 			e.printStackTrace();
 		}*/
 
-		try {
+		/*try {
 			Thread.sleep(10000);
 
 			mc.askDeleteFile(localFiles.get(0));
 		} catch (InterruptedException e) {
 			e.printStackTrace();
-		}//
+		}*/
 
 		System.out.println(getAvailableDiskSpace());
 

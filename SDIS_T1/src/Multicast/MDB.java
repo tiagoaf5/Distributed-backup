@@ -2,6 +2,7 @@ package Multicast;
 
 import java.io.IOException;
 import java.net.InetAddress;
+import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
 import GUI.Window;
@@ -84,10 +85,10 @@ public class MDB extends Thread {
 									//Enhancement 1 - if the current replication degree is greater or equal than the wanted discard chunk
 									if(f.getChunk(chunkNo).getCurReplicationDeg() - 1 >= f.getReplicationDeg()) {
 										f.removeChunk(chunkNo);
-										
+
 										if(f.getNumberChunks()==0) //if has no chunks left delete file
 											BackupService.deleteRemoteFile(f.getId());
-										
+
 										return;
 									}
 									//if(chunkNo % 2 == 0)
@@ -126,6 +127,24 @@ public class MDB extends Thread {
 		}
 	}
 
+	public void backupFiles() {
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				ArrayList<LocalFile> localFiles = BackupService.getLocalFiles();
+
+				for (int i = 0; i < localFiles.size(); i++){
+					backupFile(localFiles.get(i));
+					try {
+						sleep(ThreadLocalRandom.current().nextInt(200, 2000));
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		}).start();
+
+	}
 
 	public void backupFile(LocalFile f) {
 
