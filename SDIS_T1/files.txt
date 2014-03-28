@@ -13,3 +13,4 @@ Example:
 
 100000000
 1 - oi.txt
+1 - 1.pdf
