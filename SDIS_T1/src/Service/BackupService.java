@@ -45,7 +45,7 @@ public class BackupService {
 
 	private static String version="1.0";
 
-	private BackupStatusHandler backupHandler;
+	private static BackupStatusHandler backupHandler;
 
 	public static void main(String[] args) throws IOException {
 		BackupService a = new BackupService(args);
@@ -62,7 +62,7 @@ public class BackupService {
 
 		mdb.backupFiles();
 
-		backupHandler.start();
+		//backupHandler.start();
 
 
 		/*try {
@@ -405,5 +405,9 @@ public class BackupService {
 	
 	public static void setDiskSpace(int diskSpace) {
 		BackupService.diskSpace = diskSpace;
+	}
+
+	public static BackupStatusHandler getBackupHandler() {
+		return backupHandler;
 	}
 }

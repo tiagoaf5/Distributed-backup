@@ -121,7 +121,7 @@ public class LocalFile extends MyFile{
 		UserPrincipal owner=Files.getOwner(path);
 		int random=getRandom();
 
-		res+=this.path + " " + Long.toString(last) + " " + owner.getName() + " " + readChars()
+		res+=this.path + " " + Long.toString(last) + " " + owner.getName() + " " /*+ readChars()*/
 				+ " " + Integer.toString(random);
 
 		//System.out.println(res);
@@ -152,11 +152,13 @@ public class LocalFile extends MyFile{
 			
 			finalText=new String(text);
 			//System.out.println("c -- " + finalText);
+			input.close();
 			
 		} catch (IOException e) {
-			System.out.println("ERRO: file " + name + " nao encontrado");
+			System.out.println("ERRO: file " + name + " not found");
 			e.printStackTrace();
 		}
+		
 		return finalText;
 	}
 
@@ -165,7 +167,7 @@ public class LocalFile extends MyFile{
 		return randomGenerator.nextInt();
 	}
 
-	public byte[] nextChunk() throws IOException {
+	public synchronized  byte[] nextChunk() throws IOException {
 		long size = systemFile.length();
 		int chunkSize;
 		byte[] b;
@@ -199,7 +201,7 @@ public class LocalFile extends MyFile{
 		return b;
 	}
 
-	public byte[] getChunkData(int chunkNo) {
+	public synchronized byte[] getChunkData(int chunkNo) {
 		byte[] b2 = super.getChunkData(chunkNo);
 
 
