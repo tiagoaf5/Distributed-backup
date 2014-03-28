@@ -194,7 +194,7 @@ public class LocalFile extends MyFile{
 
 		chunks.put(offset, new Chunk(fileId, offset, replicationDeg));
 
-		//System.out.println("<" + Message.byteArrayToHexString(b).trim()+">");
+		System.out.println("<" + Message.byteArrayToString(b).trim()+">");
 
 		return b;
 	}

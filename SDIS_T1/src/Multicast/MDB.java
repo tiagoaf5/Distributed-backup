@@ -47,7 +47,7 @@ public class MDB extends Thread {
 					}
 
 					System.out.println(MESSAGE + " received - PUTCHUNK FileId: " + msg.getFileId() + " ChunkNo: " + msg.getChunkNo());
-					System.out.println(" received - PUTCHUNK " + Message.byteArrayToHexString(msg.getChunk()));
+					System.out.println(" RECEBI!!! " + Message.byteArrayToHexString(msg.getChunk()));
 					Window.log(MESSAGE + " received - PUTCHUNK FileId: " + msg.getFileId() + " ChunkNo: " + msg.getChunkNo());
 
 					if(BackupService.getAvailableDiskSpace()-msg.getChunkSize()<0) { //TODO: ver estes cálculos
@@ -134,9 +134,9 @@ public class MDB extends Thread {
 
 		System.out.println(MESSAGE + "sended " + msg.getType() + " FileID: " + msg.getFileId() +
 				" ChunkNo: " + msg.getChunkNo());
+		System.out.println("ENVIEI!!! " +  Message.byteArrayToHexString(msg.getChunk()));
 		Window.log(MESSAGE + "sended " + msg.getType() + " FileID: " + msg.getFileId() +
 				" ChunkNo: " + msg.getChunkNo());
-		System.out.println(" sended - PUTCHUNK " +  Message.byteArrayToHexString(msg.getChunk()));
 		
 		try {
 			channel.send(msg.getMessage());
@@ -172,7 +172,9 @@ public class MDB extends Thread {
 		while(true) {
 			try {
 				byte[] z = f.nextChunk();
-
+				if(z != null) 
+				System.out.println("ENVIEI na funçao!!! " +  Message.byteArrayToHexString(z));
+				
 				if(z == null && previousLenght < 64000) //The previous loop was the last chunk
 					break;
 
