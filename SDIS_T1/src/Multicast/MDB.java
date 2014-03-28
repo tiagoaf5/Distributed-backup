@@ -106,6 +106,7 @@ public class MDB extends Thread {
 									//if(chunkNo % 2 == 0)
 									MessageStored answer=new MessageStored(fileId, chunkNo);
 									BackupService.getMc().sendMessage(answer);
+									BackupService.saveRemoteOnDisk();
 									
 								} catch (IOException e) {
 									e.printStackTrace();
