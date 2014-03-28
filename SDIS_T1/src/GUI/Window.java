@@ -474,7 +474,7 @@ public class Window {
 			@Override
 			public void keyTyped(KeyEvent e) {
 				char c = e.getKeyChar();
-				if (!((c >= '0') && (c <= '9') || (c == KeyEvent.VK_BACK_SPACE) || (c == KeyEvent.VK_DELETE))) {
+				if (!((c >= '0') && (c <= '9') || (c <= '.') || (c == KeyEvent.VK_BACK_SPACE) || (c == KeyEvent.VK_DELETE))) {
 					e.consume();
 				}
 			}
@@ -486,14 +486,18 @@ public class Window {
 		JButton btnChange = new JButton("Change");
 		btnChange.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				System.out.println(BackupService.getDiskSpace());
+				float space = Float.parseFloat(textSpaceOnDisk.getText());
+				space *= 1000000;
+				BackupService.setDiskSpace((int)space);
 				
-				int space = Integer.parseInt(textSpaceOnDisk.getText());
-				space *= 1000;
-				BackupService.setDiskSpace(space);
+				System.out.println(BackupService.getCurrentDiskSpace());
+				System.out.println(BackupService.getDiskSpace());
 				
 				if(!btnStartService.isEnabled()) {
 					BackupService.handleChangedDiskSpace();
 				}
+				System.out.println(BackupService.getCurrentDiskSpace());
 			}
 		});
 		btnChange.setBounds(388, 106, 89, 25);

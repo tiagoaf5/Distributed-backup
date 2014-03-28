@@ -38,7 +38,9 @@ public class BackupService {
 	private static final String FOLDER_RESTORED_FILES = "RestoredFiles";
 	private static final String FOLDER_TMP = "tmp";
 
-	static private int diskSpace; //em kBytes
+	static private int diskSpace; //em Bytes
+	static private int currentDiskSpace; //em Bytes
+	
 
 	static private ArrayList<LocalFile> localFiles; 
 	static private HashMap<String, RemoteFile> remoteFiles;
@@ -47,45 +49,15 @@ public class BackupService {
 
 	private static BackupStatusHandler backupHandler;
 
-	public static void main(String[] args) throws IOException {
-		BackupService a = new BackupService(args);
-		a.initReceivingThreads();
-
-		//a.showInterface();
-	}
-
 	public void initReceivingThreads() {
 		mc.start();
 		mdb.start();
 		mdr.start();
 
-
-		mdb.backupFiles();
-
-		//backupHandler.start();
-
-
-		/*try {
-			Thread.sleep(5000);
-			diskSpace = 500000;
-			handleChangedDiskSpace();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}*/
-
-		/*try {
-			Thread.sleep(10000);
-
-			mc.askDeleteFile(localFiles.get(0));
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}*/
-
-		System.out.println("Availabe disk space: " + getAvailableDiskSpace() + "\n");
-
+		mdb.backupFiles(); 
 	}
 
-	public static long folderSize(File directory) {
+	/*public static long folderSize(File directory) {
 		long length = 0;
 		for (File file : directory.listFiles()) {
 			if (file.isFile())
@@ -94,7 +66,7 @@ public class BackupService {
 				length += folderSize(file);
 		}
 		return length;
-	}
+	}*/
 
 	static public void handleChangedDiskSpace () {
 		if(getAvailableDiskSpace() < 0) {
@@ -163,10 +135,23 @@ public class BackupService {
 		localFiles = new ArrayList<LocalFile>();
 		readFile();
 		createFolders();
+		currentDiskSpace = 0;
 
 		backupHandler = new BackupStatusHandler();
 
 		//openMulticastSessions();
+	}
+	
+	public static void incrementDiskUsage(int bytes) {
+		currentDiskSpace += bytes;
+	}
+	
+	public static void decrementDiskUsage(int bytes) {
+		currentDiskSpace -= bytes;
+	}
+	
+	public static int getCurrentDiskSpace() {
+		return currentDiskSpace;
 	}
 
 
@@ -254,7 +239,9 @@ public class BackupService {
 	}
 
 	public static int getAvailableDiskSpace() {
-		return (int) (diskSpace - folderSize(new File(FOLDER_REMOTE_FILES)));
+		//return (int) (diskSpace - folderSize(new File(FOLDER_REMOTE_FILES)));
+		
+		return diskSpace - currentDiskSpace;
 	}
 
 	public static ArrayList<LocalFile> getLocalFiles() {

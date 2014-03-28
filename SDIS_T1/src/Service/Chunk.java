@@ -9,7 +9,7 @@ public class Chunk implements Comparable<Chunk> {
 	private String path = "RemoteFiles/";
 	String fileId;
 	int chunkNo;
-
+	int size;
 	int replicationDeg;
 
 	/*Used as a flag to:
@@ -40,6 +40,7 @@ public class Chunk implements Comparable<Chunk> {
 
 		try {
 			storeData(data);
+			size = data.length;
 			data = null;
 		} catch (IOException e) {
 			System.out.println("Problem storing fileId: " + fileId + " Chunkno: " + chunkNo);
@@ -51,10 +52,12 @@ public class Chunk implements Comparable<Chunk> {
 	public Chunk (String fileId, int chunkNo, int replicationDeg) {
 		this.fileId = fileId;
 		this.chunkNo = chunkNo;
-
+		
 		this.replicationDeg = replicationDeg;
 		//this.currentReplicationDeg = 0;
 		addresses = new ArrayList<String>();
+		
+		size = 0;
 	}
 
 	public int storeData(byte[] data) throws IOException {
@@ -137,6 +140,8 @@ public class Chunk implements Comparable<Chunk> {
 	public boolean delete() {
 		File f = new File(getNameOnDisk());
 
+		BackupService.decrementDiskUsage(size);
+		
 		if (!f.exists())
 			return true;
 
@@ -197,6 +202,10 @@ public class Chunk implements Comparable<Chunk> {
 		Float ratio2 = new Float((x2.getCurReplicationDeg() - 1) / x2.getReplicationDeg());
 			
 		return ratio1 == ratio2;
+	}
+
+	public int getSize() {
+		return size;
 	}
 
 	

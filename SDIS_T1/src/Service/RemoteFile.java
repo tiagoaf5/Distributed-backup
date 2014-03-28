@@ -3,7 +3,7 @@ package Service;
 import Messages.MessagePutChunk;
 
 
-public class RemoteFile extends MyFile{
+public class RemoteFile extends MyFile {
 	
 	public RemoteFile(String fileId, int replicationDeg) {
 		super(fileId, replicationDeg);
@@ -16,6 +16,8 @@ public class RemoteFile extends MyFile{
 			return false;
 
 		Chunk chunk = new Chunk(msg.getFileId(), msg.getChunkNo(), msg.getReplicationDeg(), msg.getChunk());
+		
+		BackupService.incrementDiskUsage(msg.getChunkSize());
 		
 		chunks.put(msg.getChunkNo(), chunk);
 		return true;
