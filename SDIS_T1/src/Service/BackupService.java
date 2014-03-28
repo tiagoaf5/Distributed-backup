@@ -369,6 +369,24 @@ public class BackupService {
 		return null;
 	}
 
+	public static void updateLocalFile(String name) {
+
+		LocalFile f=getLocalByName(name);
+		String path=f.getFileName();
+		int replication=f.getReplicationDeg();
+		mc.askDeleteFile(f);
+		
+		try {
+			LocalFile updated=new LocalFile(path, replication);
+			localFiles.add(updated);
+			mdb.backupFile(updated);
+			
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
 	public static LocalFile addLocalFile(String text, String text2) {
 		try {
 			LocalFile newFile = new LocalFile(text, text2);
