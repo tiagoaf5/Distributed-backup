@@ -151,7 +151,7 @@ public class LocalFile extends MyFile{
 			}
 			
 			finalText=new String(text);
-			System.out.println("c -- " + finalText);
+			//System.out.println("c -- " + finalText);
 			
 		} catch (IOException e) {
 			System.out.println("ERRO: file " + name + " nao encontrado");

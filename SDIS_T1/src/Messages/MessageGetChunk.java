@@ -39,4 +39,8 @@ public class MessageGetChunk extends Message {
 		return 0;
 	}
 
+	@Override
+	public String getType() {
+		return MESSAGE_TYPE;
+	}
 }

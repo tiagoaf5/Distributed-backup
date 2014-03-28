@@ -29,6 +29,7 @@ public class BackupStatusHandler extends Thread {
 			while (true) {
 				
 				System.out.println(MESSAGE + "checking chunks replication degree");
+				Window.log(MESSAGE + "checking chunks replication degree");
 
 				sleep(ThreadLocalRandom.current().nextInt(WAIT_TIME_LOWER,
 						WAIT_TIME_HIGHER + deviationCounter * WAIT_TIME_DEVIATION));

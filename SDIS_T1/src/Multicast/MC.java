@@ -89,11 +89,7 @@ public class MC extends Thread {
 									if(!BackupService.getRemote(msg.getFileId()).getChunk(msg.getChunkNo()).isChecked()) {
 										//if no other peer was faster than me
 										MessageChunk answer = msg.getAnswer(data);
-										BackupService.getMdr().sendMessage(answer);
-										
-										System.out.println("MDR sended: CHUNK FileId: " + answer.getFileId() + " ChunkNo: " + answer.getChunkNo());
-										Window.log("MDR sended: CHUNK FileId: " + answer.getFileId() + " ChunkNo: " + answer.getChunkNo());
-										
+										BackupService.getMdr().sendMessage(answer);		
 									}
 
 									data = null;	
@@ -119,23 +115,29 @@ public class MC extends Thread {
 						Window.log(MESSAGE + "Wrong format! Ignoring..");
 						continue;
 					}
+					
+					System.out.println(MESSAGE + "received: DELETE FileId: " + msg.getFileId());
+					Window.log(MESSAGE + "received: GETCHUNK FileId: " + msg.getFileId());
+					
 
 					RemoteFile remote=BackupService.getRemote(msg.getFileId());
 					if(remote==null) {
 						System.out.println(MESSAGE + " file not found");
 					} else {
 						BackupService.deleteRemoteFile(msg.getFileId()); 
-						System.out.println(MESSAGE + " deleting file");
-						Window.log(MESSAGE + " deleting file");
+						System.out.println(MESSAGE + " deleting file with FileId: " + msg.getFileId());
+						Window.log(MESSAGE + " deleting file with FileId: " + msg.getFileId());
 					}
 
+					//TODO: condi�ao para poder nao utilizar isto
+					//sendMessage(msg); //enviar DELETE para os outros
+					
 					LocalFile local = BackupService.getLocal(msg.getFileId());
 					if(local != null) {
 						local.increaseCountDeleted();
 					}
 					
-					//TODO: condi�ao para poder nao utilizar isto
-					//sendMessage(msg); //enviar DELETE para os outros
+					
 					msg=null;
 					
 				} else if(type.equals("REMOVED")) {
@@ -177,7 +179,12 @@ public class MC extends Thread {
 
 
 	public void sendMessage(Message x) throws IOException {
-		System.out.println(MESSAGE + "Sending Message..");		
+		
+		System.out.println(MESSAGE + "sended " + x.getType() + " FileID: " + x.getFileId() +
+				" ChunkNo: " + x.getChunkNo());
+		Window.log(MESSAGE + "sended " + x.getType() + " FileID: " + x.getFileId() +
+				" ChunkNo: " + x.getChunkNo());
+		
 		channel.send(x.getMessage());
 	}
 	
@@ -197,17 +204,14 @@ public class MC extends Thread {
 				int deltaT = 500;
 				int count = 0;
 				MessageGetChunk msg = new MessageGetChunk(f.getId(), i);
-
-				System.out.println(MESSAGE + "sended: GETCHUNK FileId: " + f.getId() + " ChunkNo: " + i);
-				Window.log(MESSAGE + "sended: GETCHUNK FileId: " + f.getId() + " ChunkNo: " + i);
-				
+	
 				while(count<5) {
 					
 					sendMessage(msg); //send Message
 					Thread.sleep(deltaT); //wait for chunk messages
 
 					Chunk x = f.getChunk(i);
-					System.out.println(x.getRestored());
+					//System.out.println(x.getRestored());
 					
 					if(x.getRestored())
 						break;
@@ -233,8 +237,6 @@ public class MC extends Thread {
 
 		try {
 			System.out.println(MESSAGE + "Deleting file " + f.getFileName());
-			System.out.println(MESSAGE + "sended: DELETE FileId: " + f.getId());
-			Window.log(MESSAGE + "sended: DELETE FileId: " + f.getId());
 			
 			MessageDelete msg = new MessageDelete(f.getId());
 			sendMessage(msg); 
@@ -252,9 +254,7 @@ public class MC extends Thread {
 		
 		try {
 			System.out.println(MESSAGE + "removing fileId " + c.getFileId() + " chunkNo: " + c.getChunkNo());
-			System.out.println(MESSAGE + "sended: REMOVED FileId: " + c.getFileId() + " chunkNo: " + c.getChunkNo());
-			Window.log(MESSAGE + "sended: REMOVED FileId: " + c.getFileId() + " chunkNo: " + c.getChunkNo());
-			
+				
 			MessageRemoved msg = new MessageRemoved(c.getFileId(),c.getChunkNo());
 			sendMessage(msg); //send Message
 			//TODO: find a better way

@@ -33,4 +33,10 @@ public class MessageStored extends Message {
 		//System.out.println(version + "\n" + fileId + "\n" + chunkNo + "\n");
 		return 0;
 	}
+	
+
+	@Override
+	public String getType() {
+		return MESSAGE_TYPE;
+	}
 }

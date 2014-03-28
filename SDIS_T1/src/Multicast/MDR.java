@@ -3,6 +3,7 @@ package Multicast;
 import java.io.IOException;
 import java.net.InetAddress;
 
+import GUI.Window;
 import Messages.Message;
 import Messages.MessageChunk;
 import Service.BackupService;
@@ -30,17 +31,19 @@ public class MDR extends Thread {
 				byte[] rcv=channel.receive();
 				String type=Message.getMessageType(rcv);
 
-
 				if(type.equals("CHUNK")) {
 
 					MessageChunk msg=new MessageChunk();
 					
 					if(msg.parseMessage(rcv) == -1 || !(msg.getVersion().equals(BackupService.getVersion()))) {
 						System.out.println(MESSAGE + "Wrong format! Ignoring..");
+						Window.log(MESSAGE + "Wrong format! Ignoring..");
 						continue;
 					}
+					
 					System.out.println(MESSAGE + " received - CHUNK FileId: " + msg.getFileId() + " ChunkNo: " + msg.getChunkNo());
-
+					Window.log(MESSAGE + " received - CHUNK FileId: " + msg.getFileId() + " ChunkNo: " + msg.getChunkNo());
+					
 					final LocalFile file = BackupService.getLocal(msg.getFileId());
 					String fileId = msg.getFileId();
 					int chunkNo = msg.getChunkNo();
@@ -54,9 +57,8 @@ public class MDR extends Thread {
 						
 						System.out.println(MESSAGE + c.getRestored());
 						int length = c.storeData(msg.getChunk());
-						System.out.println(MESSAGE + " I received my Chunk :) " + length );
+						System.out.println(MESSAGE + " received my Chunk no. " + length );
 
-						
 						if(length<64000 || file.hasReceivedAll()) //last Chunk
 						{
 								new Thread (new Runnable() {
@@ -85,6 +87,7 @@ public class MDR extends Thread {
 				} 
 				else {
 					System.out.println(MESSAGE + " - Invalid message!");
+					Window.log(MESSAGE + " - Invalid message!");
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -93,7 +96,12 @@ public class MDR extends Thread {
 	}
 
 	public void sendMessage(Message x) throws IOException {
-		System.out.println(MESSAGE + "Sending Message..");
+		
+		System.out.println(MESSAGE + " sended " + x.getType() + " FileId: " + x.getFileId() +
+				" ChunkNo: " + x.getChunkNo());
+		Window.log(MESSAGE + " sended " + x.getType() + " FileId: " + x.getFileId() +
+				" ChunkNo: " + x.getChunkNo());
+
 		channel.send(x.getMessage());
 	}
 }

@@ -7,6 +7,7 @@ public abstract class Message {
 	static final public Charset charset = Charset.forName("US-ASCII");
 	static final protected byte CRLF = (byte) 0x23;
 	static final protected byte SPACE = 0x20;
+	
 
 	protected String version;
 	protected String fileId;
@@ -29,6 +30,8 @@ public abstract class Message {
 
 	abstract public byte [] getMessage();
 
+	abstract public String  getType();
+	
 	public int getChunkNo() {
 		return chunkNo;
 	}

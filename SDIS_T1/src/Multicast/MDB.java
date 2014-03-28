@@ -61,8 +61,8 @@ public class MDB extends Thread {
 							file = new RemoteFile(msg.getFileId(), msg.getReplicationDeg());
 							file.addChunk(msg); //creates file with chunk data
 							BackupService.addRemoteFile(msg.getFileId(), file);
-							System.out.println(MESSAGE + " added new remote file");
-							Window.log(MESSAGE + " added new remote file");
+							System.out.println(MESSAGE + " added new remote file - FileId: " + msg.getFileId() + " ChunkNo: " + msg.getChunkNo());
+							Window.log(MESSAGE + " added new remote file - FileId: " + msg.getFileId() + " ChunkNo: " + msg.getChunkNo());
 
 						} else {
 							alreadyStored = !file.addChunk(msg);
@@ -95,9 +95,6 @@ public class MDB extends Thread {
 									MessageStored answer=new MessageStored(fileId, chunkNo);
 									BackupService.getMc().sendMessage(answer);
 									
-									System.out.println("MC sended: STORED FileId: " + answer.getFileId() + " ChunkNo: " + answer.getChunkNo());
-									Window.log("MC sended: STORED FileId: " + answer.getFileId() + " ChunkNo: " + answer.getChunkNo());
-									
 								} catch (IOException e) {
 									e.printStackTrace();
 								} catch (InterruptedException e) {
@@ -124,7 +121,11 @@ public class MDB extends Thread {
 
 	public void sendMessage(MessagePutChunk msg) {
 
-		System.out.println(MESSAGE + "Sending Message..");
+		System.out.println(MESSAGE + "sended " + msg.getType() + " FileID: " + msg.getFileId() +
+				" ChunkNo: " + msg.getChunkNo());
+		Window.log(MESSAGE + "sended " + msg.getType() + " FileID: " + msg.getFileId() +
+				" ChunkNo: " + msg.getChunkNo());
+		
 		try {
 			channel.send(msg.getMessage());
 		} catch (IOException e) {
@@ -153,7 +154,7 @@ public class MDB extends Thread {
 
 	public void backupFile(LocalFile f) {
 
-		System.out.println(MESSAGE + "backup file " + f.getFileName());
+		System.out.println(MESSAGE + "started backup file " + f.getFileName());
 		
 		int previousLenght = 64000;
 		while(true) {
@@ -168,9 +169,6 @@ public class MDB extends Thread {
 
 				MessagePutChunk msg = new MessagePutChunk(f.getId(), f.getOffset(), f.getReplicationDeg());
 				msg.setChunk(z);
-
-				System.out.println(MESSAGE + "sended: PUTCHUNK FileId: " + f.getId() + " ChunkNo: " + f.getOffset());
-				Window.log(MESSAGE + "sended: PUTCHUNK FileId: " + f.getId() + " ChunkNo: " + f.getOffset());
 				
 				while(count < 5) {
 					sendMessage(msg); //send Message

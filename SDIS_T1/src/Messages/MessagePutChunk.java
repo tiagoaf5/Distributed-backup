@@ -118,7 +118,7 @@ public class MessagePutChunk extends Message {
 		/*for(int i = 0; i < message.length; i++)
 			System.out.print(String.format("%x", message[i] & 0xFF));*/
 
-		System.out.println(byteArrayToString(message) + "\n");
+		System.out.println("Message: " + byteArrayToString(message) + "\n");
 
 		MessagePutChunk b = new MessagePutChunk();
 		b.parseMessage(message);
@@ -145,5 +145,9 @@ public class MessagePutChunk extends Message {
 		return replicationDeg;
 	}
 
-
+	@Override
+	public String getType() {
+		return MESSAGE_TYPE;
+	}
+	
 }

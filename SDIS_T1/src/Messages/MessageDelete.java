@@ -40,8 +40,13 @@ public class MessageDelete extends Message {
 
 		fileId = byteArrayToString(b);
 
-		System.out.println(version + "\n" + fileId + "\n");
+		//System.out.println(version + "\n" + fileId + "\n");
 
 		return 0;
+	}
+
+	@Override
+	public String getType() {
+		return MESSAGE_TYPE;
 	}
 }
