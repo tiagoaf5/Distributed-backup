@@ -8,7 +8,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
-import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -120,10 +119,10 @@ public class LocalFile extends MyFile{
 		String res="";
 		long last=systemFile.lastModified();
 		UserPrincipal owner=Files.getOwner(path);
-		//int random=getRandom();
+		int random=getRandom();
 
-		res+=this.path + " " + Long.toString(last) + " " + owner.getName() + " " + readChars();
-		//Integer.toString(random);
+		res+=this.path + " " + Long.toString(last) + " " + owner.getName() + " " + readChars()
+				+ " " + Integer.toString(random);
 
 		//System.out.println(res);
 
@@ -161,10 +160,10 @@ public class LocalFile extends MyFile{
 		return finalText;
 	}
 
-	/*private int getRandom() {
+	private int getRandom() {
 		Random randomGenerator = new Random();
 		return randomGenerator.nextInt();
-	}*/
+	}
 
 	public byte[] nextChunk() throws IOException {
 		long size = systemFile.length();
