@@ -39,6 +39,7 @@ public class BackupService {
 	private static final String FOLDER_TMP = "tmp";
 
 	static private int diskSpace; //em kBytes
+
 	static private ArrayList<LocalFile> localFiles; 
 	static private HashMap<String, RemoteFile> remoteFiles;
 
@@ -95,7 +96,7 @@ public class BackupService {
 		return length;
 	}
 
-	public void handleChangedDiskSpace () {
+	static public void handleChangedDiskSpace () {
 		if(getAvailableDiskSpace() < 0) {
 
 			ArrayList<Chunk> list = getChunksOrderedByRatio();
@@ -113,7 +114,7 @@ public class BackupService {
 		}
 	}
 
-	private ArrayList<Chunk> getChunksOrderedByRatio() {
+	private static ArrayList<Chunk> getChunksOrderedByRatio() {
 		ArrayList<Chunk> list = new ArrayList<Chunk>();
 
 
@@ -382,5 +383,9 @@ public class BackupService {
 	
 	public static void deleteLocalFile(LocalFile f) {
 		localFiles.remove(f);
+	}
+	
+	public static void setDiskSpace(int diskSpace) {
+		BackupService.diskSpace = diskSpace;
 	}
 }

@@ -40,7 +40,6 @@ public class Window {
 	static private JFrame frmBackupservice;
 	static private JTextField textReplicationDeg;
 	static private JTextField textPath;
-	static private JSlider slider;
 	static private JLabel lblDiskSpace;
 	static final JFileChooser fc = new JFileChooser();
 	static private JTextArea display;
@@ -58,6 +57,7 @@ public class Window {
 	private JButton btnDelete;
 	private JButton btnUpdate;
 	private JButton btnRestore;
+	private static JTextField textSpaceOnDisk;
 
 
 	static public synchronized void log(String msg) {
@@ -97,30 +97,9 @@ public class Window {
 					for (int i = 0; i < files.size(); i++)
 						window.comboBox.addItem(files.get(i).getName());
 
-					slider.setValue(BackupService.getDiskSpace()/1000000);
-
-					JLabel lblVersion = new JLabel("Version");
-					lblVersion.setBounds(515, 108, 56, 14);
-					frmBackupservice.getContentPane().add(lblVersion);
-
-					textVersion = new JTextField();
-					textVersion.addKeyListener(new KeyAdapter() {
-						@Override
-						public void keyTyped(KeyEvent arg0) {
-							char c = arg0.getKeyChar();
-							if (!((c >= '0') && (c <= '9') || (c == '.') ||(c == KeyEvent.VK_BACK_SPACE) || (c == KeyEvent.VK_DELETE))) {
-								arg0.consume();
-							}
-						}
-					});
-					textVersion.setHorizontalAlignment(SwingConstants.CENTER);
-					textVersion.setText("1.0");
-					textVersion.setBounds(564, 105, 46, 20);
-					frmBackupservice.getContentPane().add(textVersion);
-					textVersion.setColumns(10);
-
-
-
+					//slider.setValue(BackupService.getDiskSpace()/1000000);
+					String diskSpace = "" + BackupService.getDiskSpace()/1000000;
+					textSpaceOnDisk.setText(diskSpace);
 
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -174,20 +153,9 @@ public class Window {
 		lblSpaceOnDisk.setBounds(140, 111, 111, 14);
 		frmBackupservice.getContentPane().add(lblSpaceOnDisk);
 
-		lblDiskSpace = new JLabel("50 MB");
-		lblDiskSpace.setBounds(449, 111, 56, 14);
+		lblDiskSpace = new JLabel("MB");
+		lblDiskSpace.setBounds(340, 111, 56, 14);
 		frmBackupservice.getContentPane().add(lblDiskSpace);
-
-		slider = new JSlider();
-		slider.addChangeListener(new ChangeListener() {
-			public void stateChanged(ChangeEvent e) {
-				lblDiskSpace.setText(slider.getValue() + " MB");
-			}
-		});
-		slider.setBounds(239, 107, 200, 23);
-		slider.setMinimum(1);
-		slider.setMaximum(200);
-		frmBackupservice.getContentPane().add(slider);
 
 
 
@@ -471,5 +439,56 @@ public class Window {
 		textMdrP.setColumns(10);
 		textMdrP.setBounds(316, 17, 35, 20);
 		panel_1.add(textMdrP);
+		
+		JLabel lblVersion = new JLabel("Version");
+		lblVersion.setBounds(515, 108, 56, 14);
+		frmBackupservice.getContentPane().add(lblVersion);
+
+		textVersion = new JTextField();
+		textVersion.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent arg0) {
+				char c = arg0.getKeyChar();
+				if (!((c >= '0') && (c <= '9') || (c == '.') ||(c == KeyEvent.VK_BACK_SPACE) || (c == KeyEvent.VK_DELETE))) {
+					arg0.consume();
+				}
+			}
+		});
+		
+		textVersion.setHorizontalAlignment(SwingConstants.CENTER);
+		textVersion.setText("1.0");
+		textVersion.setBounds(564, 105, 46, 20);
+		frmBackupservice.getContentPane().add(textVersion);
+		textVersion.setColumns(10);
+		
+		textSpaceOnDisk = new JTextField();
+		textSpaceOnDisk.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+				char c = e.getKeyChar();
+				if (!((c >= '0') && (c <= '9') || (c == KeyEvent.VK_BACK_SPACE) || (c == KeyEvent.VK_DELETE))) {
+					e.consume();
+				}
+			}
+		});
+		textSpaceOnDisk.setBounds(254, 109, 67, 19);
+		frmBackupservice.getContentPane().add(textSpaceOnDisk);
+		textSpaceOnDisk.setColumns(10);
+		
+		JButton btnChange = new JButton("Change");
+		btnChange.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				int space = Integer.parseInt(textSpaceOnDisk.getText());
+				space *= 1000;
+				BackupService.setDiskSpace(space);
+				
+				if(!btnStartService.isEnabled()) {
+					BackupService.handleChangedDiskSpace();
+				}
+			}
+		});
+		btnChange.setBounds(388, 106, 89, 25);
+		frmBackupservice.getContentPane().add(btnChange);
 	}
 }
