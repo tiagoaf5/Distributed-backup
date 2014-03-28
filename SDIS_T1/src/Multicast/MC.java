@@ -55,6 +55,7 @@ public class MC extends Thread {
 					if(!(remote == null)) { 
 						//if file doesn't have chunkNo chunk doesn't do anything
 						remote.increaseCurReplicationDeg(msg.getChunkNo(), pkt.getIp());
+						BackupService.saveRemoteOnDisk();
 					}	
 
 					msg=null;
@@ -125,6 +126,7 @@ public class MC extends Thread {
 						System.out.println(MESSAGE + " file not found");
 					} else {
 						BackupService.deleteRemoteFile(msg.getFileId()); 
+						BackupService.saveRemoteOnDisk();
 						System.out.println(MESSAGE + " deleting file with FileId: " + msg.getFileId());
 						Window.log(MESSAGE + " deleting file with FileId: " + msg.getFileId());
 					}
@@ -158,6 +160,7 @@ public class MC extends Thread {
 					LocalFile local=BackupService.getLocal(msg.getFileId());
 
 					if(remote != null) {
+						BackupService.saveRemoteOnDisk();
 						remote.decreaseCurReplicationDeg(msg.getChunkNo(), pkt.getIp());
 					}
 					/*else*/ if (local != null) { //TODO: uncomment else 

@@ -1,9 +1,11 @@
 package Service;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.InetAddress;
@@ -38,6 +40,8 @@ public class BackupService {
 	private static final String FOLDER_RESTORED_FILES = "RestoredFiles";
 	private static final String FOLDER_TMP = "tmp";
 
+	private static final String REMOTE_ON_DISK = "remotes.txt";
+	
 	static private int diskSpace; //em kBytes
 
 	static private ArrayList<LocalFile> localFiles; 
@@ -55,15 +59,14 @@ public class BackupService {
 	}
 
 	public void initReceivingThreads() {
+		
 		mc.start();
 		mdb.start();
 		mdr.start();
 
-
 		mdb.backupFiles();
 
 		//backupHandler.start();
-
 
 		/*try {
 			Thread.sleep(5000);
@@ -82,7 +85,6 @@ public class BackupService {
 		}*/
 
 		System.out.println("Availabe disk space: " + getAvailableDiskSpace() + "\n");
-
 	}
 
 	public static long folderSize(File directory) {
@@ -274,6 +276,43 @@ public class BackupService {
 			return true;
 		}
 	}
+	
+	public static void saveRemoteOnDisk() {
+		
+		File file=new File(REMOTE_ON_DISK); 
+
+		try{ // if file doesnt exists, then create it
+			if (!file.exists()) {
+				file.createNewFile();
+			} else {
+				file.delete();
+				file.createNewFile();
+			}
+
+			FileWriter fw = new FileWriter(file.getAbsoluteFile());
+			BufferedWriter bw = new BufferedWriter(fw);
+
+			Iterator<Map.Entry<String,RemoteFile>> it = remoteFiles.entrySet().iterator();
+
+			while (it.hasNext()) {
+				Map.Entry<String,RemoteFile> pair = it.next();
+				RemoteFile f = pair.getValue();
+				ArrayList<Chunk> tmp = f.getChunks();
+
+				for(int j = 0; j < tmp.size(); j++) {
+					String toWrite=f.getId()+" "+tmp.get(j).getChunkNo()+" "+ tmp.get(j).getReplicationDeg()+"\n";
+					bw.write(toWrite);
+					//System.out.println("FileId: "+f.getId() + " ChunkNo: "+ tmp.get(j).getChunkNo() + " Grau:" + tmp.get(j).getReplicationDeg());
+				}
+			}
+			bw.close();
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	
 
 	public static void deleteRemoteFile(String fileId) {
 		getRemote(fileId).delete();
