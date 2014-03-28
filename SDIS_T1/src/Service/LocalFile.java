@@ -1,10 +1,14 @@
 package Service;
+import java.io.BufferedReader;
+import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -16,7 +20,7 @@ import java.util.Random;
 import Messages.*;
 
 /*
- * Classe que representa um ficheiro local que entrará 
+ * Classe que representa um ficheiro local que entrarï¿½ 
  * no sistema de backup
  */
 public class LocalFile extends MyFile{
@@ -32,7 +36,7 @@ public class LocalFile extends MyFile{
 
 		systemFile=new File(name);
 		if(!systemFile.exists()) {
-			System.out.println("ERRO: o ficheiro " + name + " não existe.");
+			System.out.println("ERRO: o ficheiro " + name + " nao existe.");
 			return;
 		}
 		setName(name);
@@ -46,7 +50,7 @@ public class LocalFile extends MyFile{
 
 		systemFile=new File(name);
 		if(!systemFile.exists()) {
-			System.out.println("ERRO: o ficheiro " + name + " não existe.");
+			System.out.println("ERRO: o ficheiro " + name + " nao existe.");
 			return;
 		}
 		setName(name);
@@ -116,19 +120,51 @@ public class LocalFile extends MyFile{
 		String res="";
 		long last=systemFile.lastModified();
 		UserPrincipal owner=Files.getOwner(path);
-		int random=getRandom();
+		//int random=getRandom();
 
-		res+=this.path + " " + Long.toString(last) + " " + owner.getName() + " " + Integer.toString(random);
+		res+=this.path + " " + Long.toString(last) + " " + owner.getName() + " " + readChars();
+		//Integer.toString(random);
 
 		//System.out.println(res);
 
 		return res;
 	}
 
-	private int getRandom() {
+	private String readChars() {
+
+		try {
+			fileStream = new FileInputStream(name);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		DataInputStream input = new DataInputStream(fileStream);
+		BufferedReader reader = new BufferedReader(new InputStreamReader(input));
+		
+		int c, count=0;
+		char[] text = new char[5];
+		String finalText = null;
+		
+		try {
+			while((c = reader.read()) !=-1 && count<5) {
+				char character = (char) c;
+				text[count]=character;
+				count++;
+			}
+			
+			finalText=new String(text);
+			System.out.println("c -- " + finalText);
+			
+		} catch (IOException e) {
+			System.out.println("ERRO: file " + name + " nao encontrado");
+			e.printStackTrace();
+		}
+		return finalText;
+	}
+
+	/*private int getRandom() {
 		Random randomGenerator = new Random();
 		return randomGenerator.nextInt();
-	}
+	}*/
 
 	public byte[] nextChunk() throws IOException {
 		long size = systemFile.length();

@@ -49,7 +49,7 @@ public class MDB extends Thread {
 					System.out.println(MESSAGE + " received - PUTCHUNK FileId: " + msg.getFileId() + " ChunkNo: " + msg.getChunkNo());
 					Window.log(MESSAGE + " received - PUTCHUNK FileId: " + msg.getFileId() + " ChunkNo: " + msg.getChunkNo());
 
-					if(!BackupService.isLocal(msg.getFileId()) || true) { //TODO: Remove this true
+					if(!BackupService.isLocal(msg.getFileId()) /*|| true*/) { //TODO: Remove this true
 						RemoteFile file = BackupService.getRemote(msg.getFileId());
 
 						final String fileId = msg.getFileId();
