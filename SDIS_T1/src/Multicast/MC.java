@@ -162,7 +162,6 @@ public class MC extends Thread {
 					}
 					/*else*/ if (local != null) { //TODO: uncomment else 
 						local.decreaseCurReplicationDeg(msg.getChunkNo(), pkt.getIp());
-
 					}
 
 					msg=null;

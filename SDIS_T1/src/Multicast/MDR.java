@@ -42,6 +42,7 @@ public class MDR extends Thread {
 					}
 					
 					System.out.println(MESSAGE + " received - CHUNK FileId: " + msg.getFileId() + " ChunkNo: " + msg.getChunkNo());
+					//System.out.println(" received - CHUNK " + msg.getChunk().toString());
 					Window.log(MESSAGE + " received - CHUNK FileId: " + msg.getFileId() + " ChunkNo: " + msg.getChunkNo());
 					
 					final LocalFile file = BackupService.getLocal(msg.getFileId());
@@ -57,15 +58,20 @@ public class MDR extends Thread {
 						
 						System.out.println(MESSAGE + c.getRestored());
 						int length = c.storeData(msg.getChunk());
-						System.out.println(MESSAGE + " received my Chunk no. " + length );
+						System.out.println(MESSAGE + " received chunk with length " + length );
 
-						if(length<64000 || file.hasReceivedAll()) //last Chunk
+						if(length<64000 || file.hasReceivedAll()) //last Chunk //TODO: && ou || ??
 						{
 								new Thread (new Runnable() {
 
 									@Override
 									public void run() {
+										
+										System.out.println(MESSAGE + " restoring file " + file.getFileName());
+										Window.log(MESSAGE + " restoring file " + file.getFileName());
+
 										file.selfRestore();
+										
 										try {
 											Thread.sleep(1000);
 										} catch (InterruptedException e) {
