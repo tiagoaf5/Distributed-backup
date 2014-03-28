@@ -47,10 +47,11 @@ public class MDB extends Thread {
 					}
 
 					System.out.println(MESSAGE + " received - PUTCHUNK FileId: " + msg.getFileId() + " ChunkNo: " + msg.getChunkNo());
+					System.out.println(" received - PUTCHUNK " + Message.byteArrayToHexString(msg.getChunk()));
 					Window.log(MESSAGE + " received - PUTCHUNK FileId: " + msg.getFileId() + " ChunkNo: " + msg.getChunkNo());
 
 					if(BackupService.getAvailableDiskSpace()-msg.getChunkSize()<0) { //TODO: ver estes cálculos
-						/*System.out.println("avaiable: " + BackupService.getAvailableDiskSpace());
+						/*System.out.println("available: " + BackupService.getAvailableDiskSpace());
 						System.out.println("chunk: " + msg.getChunkSize());
 						System.out.println("disk: " + BackupService.getDiskSpace());*/
 						
@@ -135,6 +136,7 @@ public class MDB extends Thread {
 				" ChunkNo: " + msg.getChunkNo());
 		Window.log(MESSAGE + "sended " + msg.getType() + " FileID: " + msg.getFileId() +
 				" ChunkNo: " + msg.getChunkNo());
+		System.out.println(" sended - PUTCHUNK " +  Message.byteArrayToHexString(msg.getChunk()));
 		
 		try {
 			channel.send(msg.getMessage());
