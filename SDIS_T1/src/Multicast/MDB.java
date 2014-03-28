@@ -49,7 +49,17 @@ public class MDB extends Thread {
 					System.out.println(MESSAGE + " received - PUTCHUNK FileId: " + msg.getFileId() + " ChunkNo: " + msg.getChunkNo());
 					Window.log(MESSAGE + " received - PUTCHUNK FileId: " + msg.getFileId() + " ChunkNo: " + msg.getChunkNo());
 
-					if(!BackupService.isLocal(msg.getFileId())/* || true*/) { //TODO: Remove this true
+					if(BackupService.getAvailableDiskSpace()-msg.getChunkSize()<0) { //TODO: ver estes cálculos
+						/*System.out.println("avaiable: " + BackupService.getAvailableDiskSpace());
+						System.out.println("chunk: " + msg.getChunkSize());
+						System.out.println("disk: " + BackupService.getDiskSpace());*/
+						
+						System.out.println(MESSAGE + "Maximum disk space reached! Ignoring chunk");
+						Window.log(MESSAGE + "Maximum disk space reached! Ignoring chunk");
+						continue;
+					}
+					
+					if(!BackupService.isLocal(msg.getFileId()) || true) { //TODO: Remove this true
 						RemoteFile file = BackupService.getRemote(msg.getFileId());
 
 						final String fileId = msg.getFileId();
@@ -57,7 +67,7 @@ public class MDB extends Thread {
 						boolean alreadyStored = false;
 
 						if(file == null) { //fileId not found
-
+							
 							file = new RemoteFile(msg.getFileId(), msg.getReplicationDeg());
 							file.addChunk(msg); //creates file with chunk data
 							BackupService.addRemoteFile(msg.getFileId(), file);

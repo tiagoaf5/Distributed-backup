@@ -41,6 +41,14 @@ public class MessagePutChunk extends Message {
 		return chunk;
 	}
 	
+	public int getChunkSize() {
+		return chunk.length;
+	}
+	
+	public int getChunkSizeInKB() {
+		return chunk.length/1000;
+	}
+	
 	public byte[] getAnswer() {
 		MessageStored res = getAnswerMessage(); 
 		return res.getMessage();
@@ -99,7 +107,7 @@ public class MessagePutChunk extends Message {
 	}
 
 
-
+/*
 	public static void main(String[] args) throws NoSuchAlgorithmException {
 		MessageDigest md = MessageDigest.getInstance("SHA-256");
 		String text = "nabo";
@@ -110,7 +118,7 @@ public class MessagePutChunk extends Message {
 		/*MessagePutChunk a = new MessagePutChunk(new String(digest),2,5);
 		byte[] message = a.getMessage();*/
 		
-		MessagePutChunk a = new MessagePutChunk("41681c7cf03673502976034bfd68260d5663b8075192a89495265e3057ab8b7d", 5, 2);
+	/*	MessagePutChunk a = new MessagePutChunk("41681c7cf03673502976034bfd68260d5663b8075192a89495265e3057ab8b7d", 5, 2);
 		a.setChunk(Message.hexStringToByteArray("41681c7cf03673502976034bfd68260d5663b8075192a89495265e3057ab8b7d41681c7cf03673502976034bfd68260d5663b8075192a89495265e3057ab8b7d"));
 
 		byte[] message = a.getMessage();
@@ -118,7 +126,7 @@ public class MessagePutChunk extends Message {
 		/*for(int i = 0; i < message.length; i++)
 			System.out.print(String.format("%x", message[i] & 0xFF));*/
 
-		System.out.println("Message: " + byteArrayToString(message) + "\n");
+	/*	System.out.println("Message: " + byteArrayToString(message) + "\n");
 
 		MessagePutChunk b = new MessagePutChunk();
 		b.parseMessage(message);
@@ -138,8 +146,8 @@ public class MessagePutChunk extends Message {
 
 		MessageRemoved d = new MessageRemoved();
 		d.parseMessage(message1);*/
-
-	}
+/*
+	}*/
 	
 	public int getReplicationDeg() {
 		return replicationDeg;
