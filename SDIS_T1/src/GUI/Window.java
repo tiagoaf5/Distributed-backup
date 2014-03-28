@@ -168,6 +168,17 @@ public class Window {
 		frmBackupservice.getContentPane().add(btnDelete);
 
 		btnUpdate = new JButton("Update");
+		btnUpdate.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				new Thread( new Runnable() {
+					
+					@Override
+					public void run() {
+						BackupService.updateLocalFile((String) comboBox.getSelectedItem());
+					}
+				}).start();
+			}
+		});
 		btnUpdate.setEnabled(false);
 		btnUpdate.setBounds(201, 138, 89, 23);
 		frmBackupservice.getContentPane().add(btnUpdate);

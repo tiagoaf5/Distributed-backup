@@ -121,7 +121,7 @@ public class LocalFile extends MyFile{
 		UserPrincipal owner=Files.getOwner(path);
 		int random=getRandom();
 
-		res+=this.path + " " + Long.toString(last) + " " + owner.getName() + " " /*+ readChars()*/
+		res+=this.path + " " + Long.toString(last) + " " + owner.getName() /*+ " " + readChars()*/
 				+ " " + Integer.toString(random);
 
 		//System.out.println(res);
