@@ -16,6 +16,7 @@ import java.util.Calendar;
 import java.util.concurrent.ThreadLocalRandom;
 
 import javax.swing.Box;
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
@@ -32,9 +33,11 @@ import javax.swing.border.TitledBorder;
 import Service.BackupService;
 import Service.LocalFile;
 
+import javax.swing.JRadioButton;
+
 public class Window {
 
-	static private JFrame frmBackupservice;
+	private JFrame frmBackupservice;
 	static private JTextField textReplicationDeg;
 	static private JTextField textPath;
 	static private JLabel lblDiskSpace;
@@ -55,6 +58,8 @@ public class Window {
 	private JButton btnUpdate;
 	private JButton btnRestore;
 	private static JTextField textSpaceOnDisk;
+	private JRadioButton radioButtonV1;
+	private JRadioButton radioButtonV2;
 
 
 	static public synchronized void log(String msg) {
@@ -295,6 +300,9 @@ public class Window {
 					backupService.setAddresses(new String[]{textMcIp.getText(), textMcP.getText(),
 							textMdbIp.getText(), textMdbP.getText(),
 							textMdrIp.getText(), textMdrP.getText()});
+					
+					
+					BackupService.setVersion((radioButtonV1.isSelected()) ? "1.0" : "2.2");
 
 					textMcP.setEditable(false);
 					textMcIp.setEditable(false);
@@ -308,6 +316,8 @@ public class Window {
 					btnUpdate.setEnabled(true);
 					btnDelete.setEnabled(true);
 					btnRestore.setEnabled(true);
+					radioButtonV1.setEnabled(false);
+					radioButtonV2.setEnabled(false);
 
 					new Thread(new Runnable() {
 						@Override
@@ -454,7 +464,7 @@ public class Window {
 		panel_1.add(textMdrP);
 		
 		JLabel lblVersion = new JLabel("Version");
-		lblVersion.setBounds(515, 108, 56, 14);
+		lblVersion.setBounds(508, 117, 56, 14);
 		frmBackupservice.getContentPane().add(lblVersion);
 
 		textVersion = new JTextField();
@@ -470,7 +480,7 @@ public class Window {
 		
 		textVersion.setHorizontalAlignment(SwingConstants.CENTER);
 		textVersion.setText("1.0");
-		textVersion.setBounds(564, 105, 46, 20);
+		textVersion.setBounds(567, 60, 46, 20);
 		frmBackupservice.getContentPane().add(textVersion);
 		textVersion.setColumns(10);
 		
@@ -507,5 +517,20 @@ public class Window {
 		});
 		btnChange.setBounds(388, 106, 89, 25);
 		frmBackupservice.getContentPane().add(btnChange);
+		
+		 //Group the radio buttons.
+	    ButtonGroup group = new ButtonGroup();
+	    
+		radioButtonV1 = new JRadioButton("1.0");
+		radioButtonV1.setSelected(true);
+		radioButtonV1.setBounds(554, 104, 109, 23);
+		frmBackupservice.getContentPane().add(radioButtonV1);
+		
+		radioButtonV2 = new JRadioButton("2.2");
+		radioButtonV2.setBounds(554, 129, 109, 23);
+		frmBackupservice.getContentPane().add(radioButtonV2);
+		
+		group.add(radioButtonV1);
+		group.add(radioButtonV2);
 	}
 }
