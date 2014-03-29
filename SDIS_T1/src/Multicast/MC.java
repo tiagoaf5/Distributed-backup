@@ -1,5 +1,6 @@
 package Multicast;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.util.concurrent.ThreadLocalRandom;
@@ -36,16 +37,16 @@ public class MC extends Thread {
 
 				if(type.equals("STORED")) {
 					MessageStored msg=new MessageStored();
-					
+
 					if(msg.parseMessage(rcv) == -1 || !(msg.getVersion().equals(BackupService.getVersion()))) {
 						System.out.println(MESSAGE + "Wrong format! Ignoring..");
 						Window.log(MESSAGE + "Wrong format! Ignoring..");
 						continue;
 					}
-					
+
 					System.out.println(MESSAGE + "received: STORED FileId: " + msg.getFileId() + " ChunkNo: " + msg.getChunkNo());
 					Window.log(MESSAGE + "received: STORED FileId: " + msg.getFileId() + " ChunkNo: " + msg.getChunkNo());
-					
+
 					LocalFile local = BackupService.getLocal(msg.getFileId());
 					if(!(local == null)) {
 						local.increaseCurReplicationDeg(msg.getChunkNo(), pkt.getIp());
@@ -63,16 +64,16 @@ public class MC extends Thread {
 				else if(type.equals("GETCHUNK")) {
 
 					final MessageGetChunk msg = new MessageGetChunk();
-					
+
 					if(msg.parseMessage(rcv) == -1 || !(msg.getVersion().equals(BackupService.getVersion()))) {
 						System.out.println(MESSAGE + "Wrong format! Ignoring..");
 						Window.log(MESSAGE + "Wrong format! Ignoring..");
 						continue;
 					}
-					
+
 					System.out.println(MESSAGE + "received: GETCHUNK FileId: " + msg.getFileId() + " ChunkNo: " + msg.getChunkNo());
 					Window.log(MESSAGE + "received: GETCHUNK FileId: " + msg.getFileId() + " ChunkNo: " + msg.getChunkNo());
-					
+
 					if(BackupService.isRemote(msg.getFileId(), msg.getChunkNo())) {
 
 						new Thread(new Runnable() {
@@ -110,41 +111,42 @@ public class MC extends Thread {
 
 				} else if(type.equals("DELETE")) {
 					MessageDelete msg=new MessageDelete();
-					
+
 					if(msg.parseMessage(rcv) == -1 || !(msg.getVersion().equals(BackupService.getVersion()))) {
 						System.out.println(MESSAGE + "Wrong format! Ignoring..");
 						Window.log(MESSAGE + "Wrong format! Ignoring..");
 						continue;
 					}
-					
+
 					System.out.println(MESSAGE + "received: DELETE FileId: " + msg.getFileId());
-					Window.log(MESSAGE + "received: GETCHUNK FileId: " + msg.getFileId());
-					
+					Window.log(MESSAGE + "received: DELETE FileId: " + msg.getFileId());
+
 
 					RemoteFile remote=BackupService.getRemote(msg.getFileId());
-					if(remote==null) {
+					if(remote == null) {
 						System.out.println(MESSAGE + " file not found");
 					} else {
+						
 						BackupService.deleteRemoteFile(msg.getFileId()); 
 						BackupService.saveRemoteOnDisk();
+						
+						sendMessage(msg); //Enhancement 3
+						
 						System.out.println(MESSAGE + " deleting file with FileId: " + msg.getFileId());
 						Window.log(MESSAGE + " deleting file with FileId: " + msg.getFileId());
 					}
 
-					//TODO: condi�ao para poder nao utilizar isto
-					//sendMessage(msg); //enviar DELETE para os outros
-					
 					LocalFile local = BackupService.getLocal(msg.getFileId());
 					if(local != null) {
-						local.increaseCountDeleted();
+						local.increaseCountDeleted(); //Enhancement 3
 					}
-					
-					
+
+
 					msg=null;
-					
+
 				} else if(type.equals("REMOVED")) {
-					MessageRemoved msg = new MessageRemoved();
-					
+					final MessageRemoved msg = new MessageRemoved();
+
 					if(msg.parseMessage(rcv) == -1 || !(msg.getVersion().equals(BackupService.getVersion()))) {
 						System.out.println(MESSAGE + "Wrong format! Ignoring..");
 						Window.log(MESSAGE + "Wrong format! Ignoring..");
@@ -155,9 +157,9 @@ public class MC extends Thread {
 							+ msg.getFileId() + " ChunkNo: " + msg.getChunkNo());
 					Window.log(MESSAGE + "received: REMOVED FileId: " 
 							+ msg.getFileId() + " ChunkNo: " + msg.getChunkNo());
-					
+
 					RemoteFile remote=BackupService.getRemote(msg.getFileId());
-					LocalFile local=BackupService.getLocal(msg.getFileId());
+					final LocalFile local=BackupService.getLocal(msg.getFileId());
 
 					if(remote != null) {
 						BackupService.saveRemoteOnDisk();
@@ -165,13 +167,29 @@ public class MC extends Thread {
 					}
 					/*else*/ if (local != null) { //TODO: uncomment else 
 						local.decreaseCurReplicationDeg(msg.getChunkNo(), pkt.getIp());
+
+						if (local.getChunk(msg.getChunkNo()).getCurReplicationDeg() < local.getReplicationDeg()) {
+							new Thread (new Runnable() {
+
+								@Override
+								public void run() {
+									try {
+										sleep(ThreadLocalRandom.current().nextInt(0,401));
+										BackupStatusHandler.stopIt();
+										BackupService.getMdb().backupChunk(local, msg.getChunkNo());
+										BackupStatusHandler.startIt();
+									} catch (InterruptedException e) {
+										e.printStackTrace();
+									}			
+								}
+							}).start();
+						}
 					}
 
-					msg=null;
 				} else {
 					System.out.println(MESSAGE + " - Invalid message!");
 					Window.log(MESSAGE + " - Invalid message type!");
-					
+
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -181,15 +199,15 @@ public class MC extends Thread {
 
 
 	public void sendMessage(Message x) throws IOException {
-		
+
 		System.out.println(MESSAGE + "sended " + x.getType() + " FileID: " + x.getFileId() +
 				" ChunkNo: " + x.getChunkNo());
 		Window.log(MESSAGE + "sended " + x.getType() + " FileID: " + x.getFileId() +
 				" ChunkNo: " + x.getChunkNo());
-		
+
 		channel.send(x.getMessage());
 	}
-	
+
 	public void sendBytes(byte[] x) throws IOException {
 		System.out.println(MESSAGE + "Sending Message..");
 		channel.send(x);
@@ -200,27 +218,27 @@ public class MC extends Thread {
 
 		try {
 			System.out.println(MESSAGE + "Restoring file " + f.getFileName());
-			
+
 			for(int i=0; i<f.getNumberChunks(); i++) {
-				
+
 				int deltaT = 500;
 				int count = 0;
 				MessageGetChunk msg = new MessageGetChunk(f.getId(), i);
-	
+
 				while(count<5) {
-					
+
 					sendMessage(msg); //send Message
 					Thread.sleep(deltaT); //wait for chunk messages
 
 					Chunk x = f.getChunk(i);
 					//System.out.println(x.getRestored());
-					
+
 					if(x.getRestored())
 						break;
 
 					count++;
 					deltaT+=500;
-					
+
 					if(count == 5) {
 						System.out.println("Restore didn't work, aborting..");
 						Window.log(MESSAGE + "Restore " + f.getFileName() + " didn't work");
@@ -239,24 +257,37 @@ public class MC extends Thread {
 
 		try {
 			System.out.println(MESSAGE + "Deleting file " + f.getFileName());
-			
+
 			MessageDelete msg = new MessageDelete(f.getId());
 			sendMessage(msg); 
-			
-			//TODO: enhacment
-			
+
+
+			//Enhancement: other peers that have file resend the Delete Message: if I get enough deletes 
+			// everyone deleted it if I don't I'll try periodically later to send this message again
+			try {
+				Thread.sleep(1000);
+
+				if (!(f.getCountDeleted() >= f.getHighestReplicationDeg())) {
+					BackupStatusHandler.addPendentMessage(msg);
+				}
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+
+
+
 			BackupService.deleteLocalFile(f); //delete local file
-			
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void sayRemovedFile (Chunk c) {
-		
+
 		try {
 			System.out.println(MESSAGE + "removing fileId " + c.getFileId() + " chunkNo: " + c.getChunkNo());
-				
+
 			MessageRemoved msg = new MessageRemoved(c.getFileId(),c.getChunkNo());
 			sendMessage(msg); //send Message
 			//TODO: find a better way
@@ -264,6 +295,6 @@ public class MC extends Thread {
 		} catch (IOException e) {
 			e.printStackTrace();
 		} 
-		
+
 	}
 }

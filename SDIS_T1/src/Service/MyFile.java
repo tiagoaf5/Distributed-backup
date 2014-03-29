@@ -131,4 +131,18 @@ public abstract class MyFile {
 		}
 		return a;
 	}
+	
+	public int getHighestReplicationDeg() {
+		int i = -1;
+		
+		Iterator<Map.Entry<Integer,Chunk>> it = chunks.entrySet().iterator();
+		while (it.hasNext()) {
+			Map.Entry<Integer,Chunk> pair = it.next();
+
+			if (pair.getValue().getCurReplicationDeg() > i)
+				i = pair.getValue().getCurReplicationDeg();
+		}
+		
+		return i;
+	}
 }

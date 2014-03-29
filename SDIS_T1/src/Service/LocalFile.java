@@ -29,7 +29,7 @@ public class LocalFile extends MyFile{
 	private FileInputStream fileStream;
 	private int offset = -1; //next 64KBytes to read
 
-	private int countDeleted=0; //count number of deleted messages received
+	private int countDeleted = 0; //count number of deleted messages received
 
 	public LocalFile(String name, int replication) throws FileNotFoundException {
 
@@ -274,5 +274,5 @@ public class LocalFile extends MyFile{
 			getChunk(i).setRestored(false);
 		}
 	}
-
+	
 }

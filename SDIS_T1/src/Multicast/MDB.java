@@ -210,7 +210,7 @@ public class MDB extends Thread {
 		}
 	}
 
-	public void backupChunk(LocalFile f, int chunkNo) {
+	public synchronized void  backupChunk(LocalFile f, int chunkNo) {
 		try {
 
 			int deltaT = 500;

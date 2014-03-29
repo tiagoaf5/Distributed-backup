@@ -159,8 +159,13 @@ public class Window {
 		btnDelete = new JButton("Delete");
 		btnDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				BackupService.getMc().askDeleteFile(BackupService.getLocalByName((String) comboBox.getSelectedItem()));
-				comboBox.removeItem(comboBox.getSelectedItem());
+				new Thread(new Runnable() {
+					@Override
+					public void run() {
+						BackupService.getMc().askDeleteFile(BackupService.getLocalByName((String) comboBox.getSelectedItem()));
+						comboBox.removeItem(comboBox.getSelectedItem());
+					}
+				}).start();
 			}
 		});
 		btnDelete.setEnabled(false);
