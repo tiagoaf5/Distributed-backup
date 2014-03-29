@@ -134,7 +134,7 @@ public class Chunk implements Comparable<Chunk> {
 	}
 	
 	public synchronized int getCurReplicationDeg() {
-		return addresses.size(); //TODO: Changed
+		return addresses.size(); 
 	}
 
 	public boolean delete() {
