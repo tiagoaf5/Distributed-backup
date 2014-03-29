@@ -40,7 +40,7 @@ public class BackupService {
 	private static final String FOLDER_RESTORED_FILES = "RestoredFiles";
 	private static final String FOLDER_TMP = "tmp";
 
-	private static final String REMOTE_ON_DISK = "remotes.txt";
+	private static final String REMOTE_ON_DISK = "RemoteFiles/remotes.txt";
 	static private int diskSpace; //em Bytes
 	static private int currentDiskSpace; //em Bytes
 	
@@ -266,7 +266,7 @@ public class BackupService {
 		}
 	}
 	
-	public static void saveRemoteOnDisk() {
+	public static synchronized void  saveRemoteOnDisk() {
 		
 		File file=new File(REMOTE_ON_DISK); 
 
