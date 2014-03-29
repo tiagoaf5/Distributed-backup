@@ -23,21 +23,21 @@ public class UDP {
 	}
 
 	public UDP(InetAddress add, int port) throws SocketException {
-		
+
 		address=add;
 		portNumber=port;
 		socket=new DatagramSocket(port);
 	}
-	
+
 	public byte[] receive() {
-		
+
 		byte[] buf = new byte[SIZE];
-		
+
 		try {	
 			DatagramPacket sp = new DatagramPacket(buf, buf.length); 
 			socket.receive(sp);
 			//System.out.println("Received " + new String(p.getData()));
-			
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -57,9 +57,9 @@ public class UDP {
 		}
 		return new String(sp.getData());
 	}
-	
+
 	public void send(byte[] msg) {
-		
+
 		try {
 			DatagramPacket p = new DatagramPacket(msg, msg.length, address, portNumber);
 			socket.send(p);

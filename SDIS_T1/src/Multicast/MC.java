@@ -75,9 +75,16 @@ public class MC extends Thread {
 					final MessageGetChunk msg = new MessageGetChunk();
 
 					if(msg.parseMessage(rcv) == -1 || !(msg.getVersion().equals(BackupService.getVersion()))) {
-						System.out.println(MESSAGE + "Wrong format! Ignoring..");
-						Window.log(MESSAGE + "Wrong format! Ignoring..");
-						continue;
+						if(!msg.getVersion().equals(BackupService.getVersionEnhancement()))
+						{
+							System.out.println(MESSAGE + "Wrong format! Ignoring..");
+							Window.log(MESSAGE + "Wrong format! Ignoring..");
+							continue;
+						}
+						else {
+							System.out.println(MESSAGE + "Version 2.2..");
+							Window.log(MESSAGE + "Version 2.2..");
+						}
 					}
 
 					System.out.println(MESSAGE + "received: GETCHUNK FileId: " + msg.getFileId() + " ChunkNo: " + msg.getChunkNo());
@@ -99,8 +106,16 @@ public class MC extends Thread {
 
 									if(!BackupService.getRemote(msg.getFileId()).getChunk(msg.getChunkNo()).isChecked()) {
 										//if no other peer was faster than me
-										MessageChunk answer = msg.getAnswer(data);
-										BackupService.getMdr().sendMessage(answer);		
+										if(BackupService.getVersionEnhancement() == BackupService.getVersion()) {
+											MessageChunk answer = msg.getAnswer(data);
+											BackupService.getMdr().sendMessage(answer);		
+										}
+										else {
+											MessageChunk answer = msg.getAnswer(new byte[]{0x00});
+											answer.setVersion(BackupService.getVersionEnhancement());
+											BackupService.getMdr().sendMessage(answer);
+											
+										}
 									}
 
 									data = null;	
@@ -135,12 +150,12 @@ public class MC extends Thread {
 					if(remote == null) {
 						System.out.println(MESSAGE + " file not found");
 					} else {
-						
+
 						BackupService.deleteRemoteFile(msg.getFileId()); 
 						BackupService.saveRemoteOnDisk();
-						
+
 						sendMessage(msg); //Enhancement 3
-						
+
 						System.out.println(MESSAGE + " deleting file with FileId: " + msg.getFileId());
 						Window.log(MESSAGE + " deleting file with FileId: " + msg.getFileId());
 					}
@@ -227,12 +242,18 @@ public class MC extends Thread {
 
 		try {
 			System.out.println(MESSAGE + "Restoring file " + f.getFileName());
+			
+			if(BackupService.getVersion() != BackupService.getVersionEnhancement()) {
+				//TODO: Start UDP receive
+			}
 
 			for(int i=0; i<f.getNumberChunks(); i++) {
 
 				int deltaT = 500;
 				int count = 0;
 				MessageGetChunk msg = new MessageGetChunk(f.getId(), i);
+				msg.setVersion(BackupService.getVersionEnhancement());
+						
 
 				while(count<5) {
 
@@ -249,7 +270,7 @@ public class MC extends Thread {
 					deltaT+=500;
 
 					if(count == 5) {
-						System.out.println("Restore didn't work, aborting..");
+						System.out.println(MESSAGE + "Restore didn't work, aborting..");
 						Window.log(MESSAGE + "Restore " + f.getFileName() + " didn't work");
 						return;
 					}

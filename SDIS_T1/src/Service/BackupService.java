@@ -48,7 +48,8 @@ public class BackupService {
 	static private ArrayList<LocalFile> localFiles; 
 	static private HashMap<String, RemoteFile> remoteFiles;
 
-	private static String version="1.0";
+	private static final String VERSION = "1.0";
+	private static String versionEnhancement = "1.0";
 
 	private static BackupStatusHandler backupHandler;
 
@@ -171,11 +172,15 @@ public class BackupService {
 	}	
 
 	static public String getVersion() {
-		return version;
+		return VERSION;
 	}
 
-	static public void setVersion(String version1) {
-		version = version1;
+	static public void setVersionEnhancement(String version1) {
+		versionEnhancement = version1;
+	}
+	
+	static public String getVersionEnhancement() {
+		return versionEnhancement;
 	}
 
 	private void readFile() {

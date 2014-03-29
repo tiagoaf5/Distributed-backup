@@ -36,14 +36,26 @@ public class MDR extends Thread {
 					MessageChunk msg=new MessageChunk();
 					
 					if(msg.parseMessage(rcv) == -1 || !(msg.getVersion().equals(BackupService.getVersion()))) {
-						System.out.println(MESSAGE + "Wrong format! Ignoring..");
-						Window.log(MESSAGE + "Wrong format! Ignoring..");
-						continue;
+						if(!msg.getVersion().equals(BackupService.getVersionEnhancement()))
+						{
+							System.out.println(MESSAGE + "Wrong format! Ignoring..");
+							Window.log(MESSAGE + "Wrong format! Ignoring..");
+							continue;
+						}
+						else {
+							System.out.println(MESSAGE + "Version 2.2..");
+							Window.log(MESSAGE + "Version 2.2..");
+						}
 					}
 					
 					System.out.println(MESSAGE + " received - CHUNK FileId: " + msg.getFileId() + " ChunkNo: " + msg.getChunkNo());
 					//System.out.println(" received - CHUNK " + msg.getChunk().toString());
 					Window.log(MESSAGE + " received - CHUNK FileId: " + msg.getFileId() + " ChunkNo: " + msg.getChunkNo());
+					
+					
+					if(!msg.getVersion().equals(BackupService.getVersionEnhancement())) {
+						continue;
+					}
 					
 					final LocalFile file = BackupService.getLocal(msg.getFileId());
 					String fileId = msg.getFileId();

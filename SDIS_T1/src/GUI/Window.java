@@ -302,7 +302,7 @@ public class Window {
 							textMdrIp.getText(), textMdrP.getText()});
 					
 					
-					BackupService.setVersion((radioButtonV1.isSelected()) ? "1.0" : "2.2");
+					BackupService.setVersionEnhancement((radioButtonV1.isSelected()) ? "1.0" : "2.2");
 
 					textMcP.setEditable(false);
 					textMcIp.setEditable(false);
