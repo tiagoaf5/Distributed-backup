@@ -91,7 +91,7 @@ public class MC extends Thread {
 					Window.log(MESSAGE + "received: GETCHUNK FileId: " + msg.getFileId() + " ChunkNo: " + msg.getChunkNo());
 
 					if(BackupService.isRemote(msg.getFileId(), msg.getChunkNo())) {
-
+						final InetAddress ip = pkt.getIpInet();
 						new Thread(new Runnable() {
 
 							@Override
@@ -106,14 +106,18 @@ public class MC extends Thread {
 
 									if(!BackupService.getRemote(msg.getFileId()).getChunk(msg.getChunkNo()).isChecked()) {
 										//if no other peer was faster than me
+										MessageChunk answer = msg.getAnswer(data);
 										if(BackupService.getVersionEnhancement() == BackupService.getVersion()) {
-											MessageChunk answer = msg.getAnswer(data);
+											
 											BackupService.getMdr().sendMessage(answer);		
 										}
 										else {
-											MessageChunk answer = msg.getAnswer(new byte[]{0x00});
+											MessageChunk answer1 = msg.getAnswer(new byte[]{0x00});
+											answer1.setVersion(BackupService.getVersionEnhancement());
 											answer.setVersion(BackupService.getVersionEnhancement());
-											BackupService.getMdr().sendMessage(answer);
+											BackupService.getMdr().sendMessage(answer1);
+											UDP udp = new UDP(ip);
+											udp.send(answer.getMessage());
 											
 										}
 									}
@@ -242,10 +246,13 @@ public class MC extends Thread {
 
 		try {
 			System.out.println(MESSAGE + "Restoring file " + f.getFileName());
-			
+			UDP udp = new UDP();
+
 			if(BackupService.getVersion() != BackupService.getVersionEnhancement()) {
-				//TODO: Start UDP receive
+				udp.start();
 			}
+			else
+				udp = null;
 
 			for(int i=0; i<f.getNumberChunks(); i++) {
 
@@ -253,7 +260,7 @@ public class MC extends Thread {
 				int count = 0;
 				MessageGetChunk msg = new MessageGetChunk(f.getId(), i);
 				msg.setVersion(BackupService.getVersionEnhancement());
-						
+
 
 				while(count<5) {
 
