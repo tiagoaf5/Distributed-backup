@@ -50,9 +50,6 @@ public class MDB extends Thread {
 					Window.log(MESSAGE + " received - PUTCHUNK FileId: " + msg.getFileId() + " ChunkNo: " + msg.getChunkNo());
 
 					if(BackupService.getAvailableDiskSpace() - msg.getChunkSize() < 0) { 
-						//System.out.println("available: " + BackupService.getAvailableDiskSpace());
-						//System.out.println("chunk: " + msg.getChunkSize());
-						//System.out.println("disk: " + BackupService.getDiskSpace());
 						
 						System.out.println(MESSAGE + "Maximum disk space reached! Ignoring chunk");
 						Window.log(MESSAGE + "Maximum disk space reached! Ignoring chunk");

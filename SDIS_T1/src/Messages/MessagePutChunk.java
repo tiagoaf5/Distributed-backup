@@ -1,9 +1,5 @@
 package Messages;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-
-
 public class MessagePutChunk extends Message {
 
 	private static final String MESSAGE_TYPE = "PUTCHUNK";
@@ -15,7 +11,7 @@ public class MessagePutChunk extends Message {
 		super(fileId,chunkNo);
 		this.replicationDeg = replicationDeg;
 
-		/****testing purpose***/
+		/****testing purpose**
 		MessageDigest md;
 		try {
 			md = MessageDigest.getInstance("SHA-256");
@@ -25,7 +21,7 @@ public class MessagePutChunk extends Message {
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
 		}
-		/*********************/
+		*********************/
 
 	}
 
@@ -106,48 +102,6 @@ public class MessagePutChunk extends Message {
 		return 0;
 	}
 
-
-/*
-	public static void main(String[] args) throws NoSuchAlgorithmException {
-		MessageDigest md = MessageDigest.getInstance("SHA-256");
-		String text = "nabo";
-		md.update(text.getBytes(charset));
-		//byte[] digest = md.digest();
-
-
-		/*MessagePutChunk a = new MessagePutChunk(new String(digest),2,5);
-		byte[] message = a.getMessage();*/
-		
-	/*	MessagePutChunk a = new MessagePutChunk("41681c7cf03673502976034bfd68260d5663b8075192a89495265e3057ab8b7d", 5, 2);
-		a.setChunk(Message.hexStringToByteArray("41681c7cf03673502976034bfd68260d5663b8075192a89495265e3057ab8b7d41681c7cf03673502976034bfd68260d5663b8075192a89495265e3057ab8b7d"));
-
-		byte[] message = a.getMessage();
-		
-		/*for(int i = 0; i < message.length; i++)
-			System.out.print(String.format("%x", message[i] & 0xFF));*/
-
-	/*	System.out.println("Message: " + byteArrayToString(message) + "\n");
-
-		MessagePutChunk b = new MessagePutChunk();
-		b.parseMessage(message);
-
-
-		System.out.println("*************************************");
-		
-		System.out.println("version: '" + b.getVersion() + "'");
-		System.out.println("fileId: '" + b.getFileId() + "'");
-		System.out.println("chunkno: '" + b.getChunkNo() + "'");
-		System.out.println("replicationDeg: '" + b.getReplicationDeg() + "'");
-		System.out.println("Data: '" + byteArrayToHexString(b.getChunk()) + "'");
-
-		
-		/*MessageRemoved c = new MessageRemoved(byteArrayToString(digest), 2);
-		byte[] message1 = c.getMessage();
-
-		MessageRemoved d = new MessageRemoved();
-		d.parseMessage(message1);*/
-/*
-	}*/
 	
 	public int getReplicationDeg() {
 		return replicationDeg;
