@@ -33,8 +33,8 @@ public class BackupService {
 	private static MC mc;
 
 	private static final String FILENAME = "files.txt";
-	private static final String FILEBEGIN = "/*File format:";
-	private static final int COMMENTSIZE = 13;
+	//private static final String FILEBEGIN = "/*File format:";
+	//private static final int COMMENTSIZE = 13;
 
 	private static final String FOLDER_REMOTE_FILES = "RemoteFiles";
 	private static final String FOLDER_RESTORED_FILES = "RestoredFiles";
@@ -196,11 +196,11 @@ public class BackupService {
 			String line;
 
 			if((line=reader.readLine())!=null) {
-				if(line.startsWith(FILEBEGIN)) {
+				/*if(line.startsWith(FILEBEGIN)) {
 					for(int i=0; i<COMMENTSIZE; i++) {
 						line = reader.readLine();
 					}
-				}
+				}*/
 				try {
 					diskSpace = Integer.parseInt(line);
 					System.out.println("Total disk space: " + diskSpace);
