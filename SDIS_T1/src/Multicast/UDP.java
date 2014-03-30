@@ -56,12 +56,17 @@ public class UDP extends Thread {
 
 		try {	
 			DatagramPacket sp = new DatagramPacket(buf, buf.length); 
-			socket.receive(sp);
-			//System.out.println("Received " + new String(p.getData()));
 
+			socket.receive(sp);
+			
+			byte[] data = new byte[sp.getLength()];
+			System.arraycopy(sp.getData(), sp.getOffset(), data, 0, sp.getLength());
+
+			return data;
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
 		return buf;
 	}
 
@@ -81,7 +86,9 @@ public class UDP extends Thread {
 
 	public void send(byte[] msg) {
 
+		System.out.println(MESSAGE + "Sending");
 		try {
+			System.out.println("---------------->" +msg.length);
 			DatagramPacket p = new DatagramPacket(msg, msg.length, address, portNumber);
 			socket.send(p);
 		} catch (IOException e) {
@@ -165,6 +172,8 @@ public class UDP extends Thread {
 										file.unCheckReceivedAll();
 									}
 								}).start();
+								
+								return;
 						}
 					} 
 

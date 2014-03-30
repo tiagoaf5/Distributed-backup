@@ -106,9 +106,10 @@ public class MC extends Thread {
 
 									if(!BackupService.getRemote(msg.getFileId()).getChunk(msg.getChunkNo()).isChecked()) {
 										//if no other peer was faster than me
+										System.out.println("********Answering");
 										MessageChunk answer = msg.getAnswer(data);
 										if(BackupService.getVersionEnhancement() == BackupService.getVersion()) {
-											
+
 											BackupService.getMdr().sendMessage(answer);		
 										}
 										else {
@@ -118,7 +119,6 @@ public class MC extends Thread {
 											BackupService.getMdr().sendMessage(answer1);
 											UDP udp = new UDP(ip);
 											udp.send(answer.getMessage());
-											
 										}
 									}
 

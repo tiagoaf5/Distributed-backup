@@ -34,7 +34,7 @@ public class MDR extends Thread {
 				if(type.equals("CHUNK")) {
 
 					MessageChunk msg=new MessageChunk();
-					
+
 					if(msg.parseMessage(rcv) == -1 || !(msg.getVersion().equals(BackupService.getVersion()))) {
 						if(!msg.getVersion().equals(BackupService.getVersionEnhancement()))
 						{
@@ -47,16 +47,17 @@ public class MDR extends Thread {
 							Window.log(MESSAGE + "Version 2.2..");
 						}
 					}
-					
+
 					System.out.println(MESSAGE + " received - CHUNK FileId: " + msg.getFileId() + " ChunkNo: " + msg.getChunkNo());
 					//System.out.println(" received - CHUNK " + msg.getChunk().toString());
 					Window.log(MESSAGE + " received - CHUNK FileId: " + msg.getFileId() + " ChunkNo: " + msg.getChunkNo());
-					
-					
-					if(!msg.getVersion().equals(BackupService.getVersionEnhancement())) {
+
+
+					if(msg.getVersion().equals(BackupService.getVersionEnhancement()) && 
+							!(msg.getVersion().equals(BackupService.getVersion()))) {
 						continue;
 					}
-					
+
 					final LocalFile file = BackupService.getLocal(msg.getFileId());
 					String fileId = msg.getFileId();
 					int chunkNo = msg.getChunkNo();
@@ -67,31 +68,31 @@ public class MDR extends Thread {
 						Chunk c = file.getChunk(chunkNo);
 						c.setPath("tmp/");
 						c.setRestored(true);
-						
+
 						System.out.println(MESSAGE + c.getRestored());
 						int length = c.storeData(msg.getChunk());
 						System.out.println(MESSAGE + " received chunk with length " + length );
 
 						if(length<64000 || file.hasReceivedAll()) //last Chunk //TODO: && ou || ??
 						{
-								new Thread (new Runnable() {
+							new Thread (new Runnable() {
 
-									@Override
-									public void run() {
-										
-										System.out.println(MESSAGE + " restoring file " + file.getFileName());
-										Window.log(MESSAGE + " restoring file " + file.getFileName());
+								@Override
+								public void run() {
 
-										file.selfRestore();
-										
-										try {
-											Thread.sleep(1000);
-										} catch (InterruptedException e) {
-											e.printStackTrace();
-										}
-										file.unCheckReceivedAll();
+									System.out.println(MESSAGE + " restoring file " + file.getFileName());
+									Window.log(MESSAGE + " restoring file " + file.getFileName());
+
+									file.selfRestore();
+
+									try {
+										Thread.sleep(1000);
+									} catch (InterruptedException e) {
+										e.printStackTrace();
 									}
-								}).start();
+									file.unCheckReceivedAll();
+								}
+							}).start();
 						}
 					} 
 					else if(BackupService.isRemote(fileId, chunkNo)) {
@@ -114,7 +115,7 @@ public class MDR extends Thread {
 	}
 
 	public void sendMessage(Message x) throws IOException {
-		
+
 		System.out.println(MESSAGE + " sended " + x.getType() + " FileId: " + x.getFileId() +
 				" ChunkNo: " + x.getChunkNo());
 		Window.log(MESSAGE + " sended " + x.getType() + " FileId: " + x.getFileId() +
