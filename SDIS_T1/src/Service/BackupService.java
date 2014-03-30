@@ -236,8 +236,7 @@ public class BackupService {
 			input.close();
 
 		} catch (FileNotFoundException e) {
-			System.out.println("ERROR: files.txt nao encontrado");
-			e.printStackTrace();
+			System.out.println("files.txt nao encontrado");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
