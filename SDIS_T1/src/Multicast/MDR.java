@@ -73,7 +73,7 @@ public class MDR extends Thread {
 						int length = c.storeData(msg.getChunk());
 						System.out.println(MESSAGE + " received chunk with length " + length );
 
-						if(length<64000 || file.hasReceivedAll()) //last Chunk //TODO: && ou || ??
+						if(length<64000 || file.hasReceivedAll()) //last Chunk 
 						{
 							new Thread (new Runnable() {
 

@@ -49,7 +49,7 @@ public class MDB extends Thread {
 					System.out.println(MESSAGE + " received - PUTCHUNK FileId: " + msg.getFileId() + " ChunkNo: " + msg.getChunkNo());
 					Window.log(MESSAGE + " received - PUTCHUNK FileId: " + msg.getFileId() + " ChunkNo: " + msg.getChunkNo());
 
-					if(BackupService.getAvailableDiskSpace() - msg.getChunkSize() < 0) { //TODO: ver estes cálculos
+					if(BackupService.getAvailableDiskSpace() - msg.getChunkSize() < 0) { 
 						//System.out.println("available: " + BackupService.getAvailableDiskSpace());
 						//System.out.println("chunk: " + msg.getChunkSize());
 						//System.out.println("disk: " + BackupService.getDiskSpace());
