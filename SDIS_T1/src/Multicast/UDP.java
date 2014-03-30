@@ -18,14 +18,14 @@ public class UDP extends Thread {
 	private final String MESSAGE = "UDP Channel ";
 	private final int SERVER_PORT = 7652;
 	private final int SIZE = 65000; 
-	
+
 	/*
 	 * Destination address for sender
 	 * Not used for receiver
 	 */
 	private InetAddress address;
-	
-	
+
+
 	private int portNumber;
 	private DatagramSocket socket;
 
@@ -43,7 +43,7 @@ public class UDP extends Thread {
 		portNumber=SERVER_PORT;
 		socket=new DatagramSocket();
 	}
-	
+
 	//constructor for receiver
 	public UDP() throws SocketException {
 		portNumber = SERVER_PORT;
@@ -58,7 +58,7 @@ public class UDP extends Thread {
 			DatagramPacket sp = new DatagramPacket(buf, buf.length); 
 
 			socket.receive(sp);
-			
+
 			byte[] data = new byte[sp.getLength()];
 			System.arraycopy(sp.getData(), sp.getOffset(), data, 0, sp.getLength());
 
@@ -66,7 +66,7 @@ public class UDP extends Thread {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 		return buf;
 	}
 
@@ -88,12 +88,22 @@ public class UDP extends Thread {
 
 		System.out.println(MESSAGE + "Sending");
 		try {
-			System.out.println("---------------->" +msg.length);
 			DatagramPacket p = new DatagramPacket(msg, msg.length, address, portNumber);
 			socket.send(p);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public void send(Message x) {
+
+		System.out.println(MESSAGE + " sended " + x.getType() + " FileId: " + x.getFileId() +
+				" ChunkNo: " + x.getChunkNo());
+
+		Window.log(MESSAGE + " sended " + x.getType() + " FileId: " + x.getFileId() +
+				" ChunkNo: " + x.getChunkNo());
+		
+		send(x.getMessage());
 	}
 
 	public void sendString(String msg) {
@@ -106,7 +116,11 @@ public class UDP extends Thread {
 			e.printStackTrace();
 		}
 	}
-	
+
+	public void stopIt() {
+		socket.close();
+	}
+
 	public void run() {
 		while(true) {
 			//Can receive:
@@ -118,7 +132,7 @@ public class UDP extends Thread {
 				if(type.equals("CHUNK")) {
 
 					MessageChunk msg=new MessageChunk();
-					
+
 					if(msg.parseMessage(rcv) == -1 || !(msg.getVersion().equals(BackupService.getVersion()))) {
 						if(!msg.getVersion().equals(BackupService.getVersionEnhancement()))
 						{
@@ -131,12 +145,12 @@ public class UDP extends Thread {
 							Window.log(MESSAGE + "Version 2.2..");
 						}
 					}
-					
+
 					System.out.println(MESSAGE + " received - CHUNK FileId: " + msg.getFileId() + " ChunkNo: " + msg.getChunkNo());
 					//System.out.println(" received - CHUNK " + msg.getChunk().toString());
 					Window.log(MESSAGE + " received - CHUNK FileId: " + msg.getFileId() + " ChunkNo: " + msg.getChunkNo());
-					
-					
+
+
 					final LocalFile file = BackupService.getLocal(msg.getFileId());
 					String fileId = msg.getFileId();
 					int chunkNo = msg.getChunkNo();
@@ -147,33 +161,35 @@ public class UDP extends Thread {
 						Chunk c = file.getChunk(chunkNo);
 						c.setPath("tmp/");
 						c.setRestored(true);
-						
-						
+
+
 						int length = c.storeData(msg.getChunk());
 						System.out.println(MESSAGE + " received chunk with length " + length );
 
 						if(length<64000 || file.hasReceivedAll()) //last Chunk //TODO: && ou || ??
 						{
-								new Thread (new Runnable() {
+							new Thread (new Runnable() {
 
-									@Override
-									public void run() {
-										
-										System.out.println(MESSAGE + " restoring file " + file.getFileName());
-										Window.log(MESSAGE + " restoring file " + file.getFileName());
+								@Override
+								public void run() {
 
-										file.selfRestore();
-										
-										try {
-											Thread.sleep(1000);
-										} catch (InterruptedException e) {
-											e.printStackTrace();
-										}
-										file.unCheckReceivedAll();
+									System.out.println(MESSAGE + " restoring file " + file.getFileName());
+									Window.log(MESSAGE + " restoring file " + file.getFileName());
+
+									file.selfRestore();
+
+									try {
+										Thread.sleep(1000);
+									} catch (InterruptedException e) {
+										e.printStackTrace();
 									}
-								}).start();
-								
-								return;
+									file.unCheckReceivedAll();
+								}
+							}).start();
+
+							stopIt();
+							return;
+
 						}
 					} 
 

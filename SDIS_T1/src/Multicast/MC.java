@@ -45,6 +45,7 @@ public class MC extends Thread {
 				String type = Message.getMessageType(rcv);
 
 				if(type.equals("STORED")) {
+					
 					MessageStored msg=new MessageStored();
 
 					if(msg.parseMessage(rcv) == -1 || !(msg.getVersion().equals(BackupService.getVersion()))) {
@@ -106,8 +107,9 @@ public class MC extends Thread {
 
 									if(!BackupService.getRemote(msg.getFileId()).getChunk(msg.getChunkNo()).isChecked()) {
 										//if no other peer was faster than me
-										System.out.println("********Answering");
+										
 										MessageChunk answer = msg.getAnswer(data);
+										
 										if(BackupService.getVersionEnhancement() == BackupService.getVersion()) {
 
 											BackupService.getMdr().sendMessage(answer);		
@@ -118,7 +120,7 @@ public class MC extends Thread {
 											answer.setVersion(BackupService.getVersionEnhancement());
 											BackupService.getMdr().sendMessage(answer1);
 											UDP udp = new UDP(ip);
-											udp.send(answer.getMessage());
+											udp.send(answer);
 										}
 									}
 
