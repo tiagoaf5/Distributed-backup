@@ -1,12 +1,12 @@
 package Service;
-import java.io.BufferedReader;
-import java.io.DataInputStream;
+//import java.io.BufferedReader;
+//import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
+//import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -129,7 +129,7 @@ public class LocalFile extends MyFile{
 		return res;
 	}
 
-	private String readChars() {
+	/*private String readChars() {
 
 		try {
 			fileStream = new FileInputStream(name);
@@ -160,7 +160,7 @@ public class LocalFile extends MyFile{
 		}
 		
 		return finalText;
-	}
+	}*/
 
 	private int getRandom() {
 		Random randomGenerator = new Random();

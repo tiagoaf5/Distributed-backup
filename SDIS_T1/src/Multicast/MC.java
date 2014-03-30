@@ -195,7 +195,7 @@ public class MC extends Thread {
 						BackupService.saveRemoteOnDisk();
 						remote.decreaseCurReplicationDeg(msg.getChunkNo(), pkt.getIp());
 					}
-					/*else*/ if (local != null) { //TODO: uncomment else 
+					/*else*/ if (local != null) { 
 						local.decreaseCurReplicationDeg(msg.getChunkNo(), pkt.getIp());
 
 						if (local.getChunk(msg.getChunkNo()).getCurReplicationDeg() < local.getReplicationDeg()) {
@@ -329,7 +329,6 @@ public class MC extends Thread {
 
 			MessageRemoved msg = new MessageRemoved(c.getFileId(),c.getChunkNo());
 			sendMessage(msg); //send Message
-			//TODO: find a better way
 
 		} catch (IOException e) {
 			e.printStackTrace();
