@@ -39,6 +39,7 @@ public class UDP extends Thread {
 
 	//constructor for sender
 	public UDP(InetAddress add) throws SocketException {
+		System.out.println(add.toString());
 		address = add;
 		portNumber=SERVER_PORT;
 		socket=new DatagramSocket();

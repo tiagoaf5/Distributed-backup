@@ -2,8 +2,8 @@
 SizeAvailable (Bytes): 
 xxx
 Files (Path - replicationDegree) :
-<filename>
-<replicationDegree>
+<replicationDegree> - <filename>
+
 
 Example:
 100000000 
@@ -13,4 +13,3 @@ Example:
 
 100000000
 1 - oi.txt
-1 - 1.pdf

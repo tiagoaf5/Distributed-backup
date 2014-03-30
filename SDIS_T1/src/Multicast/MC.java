@@ -250,7 +250,7 @@ public class MC extends Thread {
 			System.out.println(MESSAGE + "Restoring file " + f.getFileName());
 			
 
-			if(BackupService.getVersion() != BackupService.getVersionEnhancement()) {
+			if(!BackupService.getVersion().equals(BackupService.getVersionEnhancement())) {
 				UDP udp = new UDP();
 				udp.start();
 			}

@@ -60,7 +60,7 @@ public class MDB extends Thread {
 					}
 
 					
-					if(!BackupService.isLocal(msg.getFileId())/* || true*/) { // Remove this true
+					if(!BackupService.isLocal(msg.getFileId()) /*|| true*/) { // Remove this true
 						RemoteFile file = BackupService.getRemote(msg.getFileId());
 
 						final String fileId = msg.getFileId();
