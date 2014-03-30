@@ -18,7 +18,7 @@ public class Chunk implements Comparable<Chunk> {
 	 * 
 	 */
 	boolean check = false;
-	
+
 	/*Used as a flag to:
 	 * - If a peer received a CHUNK message MDR will change check flag to let  a peer know 
 	 *   that another peer already answered with a CHUNK message for this Chunk
@@ -52,11 +52,11 @@ public class Chunk implements Comparable<Chunk> {
 	public Chunk (String fileId, int chunkNo, int replicationDeg) {
 		this.fileId = fileId;
 		this.chunkNo = chunkNo;
-		
+
 		this.replicationDeg = replicationDeg;
 		//this.currentReplicationDeg = 0;
 		addresses = new ArrayList<String>();
-		
+
 		size = 0;
 	}
 
@@ -69,10 +69,10 @@ public class Chunk implements Comparable<Chunk> {
 		FileOutputStream o = new FileOutputStream(f); 
 		o.write(data);
 		o.close();
-		
+
 		int length = data.length;
 		data = null;
-		
+
 		return length;
 		//currentReplicationDeg++;
 	}
@@ -96,7 +96,7 @@ public class Chunk implements Comparable<Chunk> {
 
 		return b;
 	}
-	
+
 	public byte[] recoverData() throws IOException {
 		File f = new File(getNameOnDisk());
 
@@ -121,18 +121,17 @@ public class Chunk implements Comparable<Chunk> {
 		return true;
 		//currentReplicationDeg++;
 	}
-	
+
 	public boolean decreaseCurReplicationDeg(String ip) {
 		if(addresses.contains(ip)) {
 			addresses.remove(ip);
 			return true;
 		}
 		else
-			
-		return false;
-		
+			return false;
+
 	}
-	
+
 	public synchronized int getCurReplicationDeg() {
 		return addresses.size(); 
 	}
@@ -141,7 +140,7 @@ public class Chunk implements Comparable<Chunk> {
 		File f = new File(getNameOnDisk());
 
 		BackupService.decrementDiskUsage(size);
-		
+
 		if (!f.exists())
 			return true;
 
@@ -151,7 +150,7 @@ public class Chunk implements Comparable<Chunk> {
 	public synchronized boolean isChecked() {
 		boolean current = check;
 		this.check = false; //after I checked I want it to be false again
-		
+
 		return current;
 	}
 
@@ -166,7 +165,7 @@ public class Chunk implements Comparable<Chunk> {
 	public synchronized void setRestored(boolean restored) {
 		this.restored = restored;
 	}
-	
+
 	public String getPath() {
 		return path;
 	}
@@ -186,21 +185,21 @@ public class Chunk implements Comparable<Chunk> {
 	public int getReplicationDeg() {
 		return replicationDeg;
 	}
-	
+
 	public int compareTo(Chunk x2) {
 		Float ratio1 = new Float((getCurReplicationDeg() - 1) / getReplicationDeg());
 		Float ratio2 = new Float((x2.getCurReplicationDeg() - 1) / x2.getReplicationDeg());
-			
+
 		return ratio1.compareTo(ratio2) * -1;
 	}
 
 	@Override
 	public boolean equals(Object x) {
 		Chunk x2 = (Chunk) x;
-		
+
 		Float ratio1 = new Float((getCurReplicationDeg() - 1) / getReplicationDeg());
 		Float ratio2 = new Float((x2.getCurReplicationDeg() - 1) / x2.getReplicationDeg());
-			
+
 		return ratio1 == ratio2;
 	}
 
@@ -208,6 +207,6 @@ public class Chunk implements Comparable<Chunk> {
 		return size;
 	}
 
-	
-	
+
+
 }

@@ -61,7 +61,7 @@ public class MDB extends Thread {
 					else
 						System.out.println(BackupService.getAvailableDiskSpace()); //TODO: remove
 					
-					if(!BackupService.isLocal(msg.getFileId()) || true) { //TODO: Remove this true
+					if(!BackupService.isLocal(msg.getFileId())/* || true*/) { //TODO: Remove this true
 						RemoteFile file = BackupService.getRemote(msg.getFileId());
 
 						final String fileId = msg.getFileId();

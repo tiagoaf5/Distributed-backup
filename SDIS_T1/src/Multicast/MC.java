@@ -248,13 +248,13 @@ public class MC extends Thread {
 
 		try {
 			System.out.println(MESSAGE + "Restoring file " + f.getFileName());
-			UDP udp = new UDP();
+			
 
 			if(BackupService.getVersion() != BackupService.getVersionEnhancement()) {
+				UDP udp = new UDP();
 				udp.start();
 			}
-			else
-				udp = null;
+
 
 			for(int i=0; i<f.getNumberChunks(); i++) {
 

@@ -152,7 +152,6 @@ public class UDP extends Thread {
 
 
 					final LocalFile file = BackupService.getLocal(msg.getFileId());
-					String fileId = msg.getFileId();
 					int chunkNo = msg.getChunkNo();
 
 					if(file != null) {
